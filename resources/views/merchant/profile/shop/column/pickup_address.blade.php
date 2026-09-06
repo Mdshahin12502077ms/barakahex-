@@ -1,0 +1,1 @@
+<span>{{ $shop->address }} </span>

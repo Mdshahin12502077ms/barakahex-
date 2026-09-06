@@ -1,0 +1,94 @@
+/*********************************
+/* Pricing Form Start
+*********************************/
+.pricing__section {
+	padding-top: 130px;
+}
+.pricing__wrapper {
+	background: $primary-50;
+	border-radius: 24px;
+	padding: 95px 0 130px;
+	max-width: 1660px;
+	margin: auto;
+
+	@include respond (tabland) {
+		border-radius: 0;
+		padding: 70px 0;
+	}
+	@include respond (tabland) {
+		padding: 40px 0;
+	}
+}
+
+.pricing__form {
+	background: $white;
+	padding: 55px 24px;
+	border-radius: 20px;
+	box-shadow: 10px 34px 65px rgba(#283F5A, 0.13);
+
+	@include respond (phone-sm) {
+		padding: 30px 15px;
+	}
+	.form__title {
+		margin-bottom: 32px;
+		// max-width: 500px;
+		text-align: center;
+		.title {
+			font-family: $default;
+			font-size: 18px;
+			font-weight: $semibold;
+			line-height: 22px;
+			letter-spacing: 0.16px;
+			color: $heading;
+			text-transform: capitalize;
+			margin-bottom: 0px;
+		}
+		p,
+		.desc {
+			font-family: $default;
+			font-size: 16px;
+			line-height: 24px;
+			letter-spacing: 0.16px;
+			font-weight: $regular;
+			color: $content;
+			margin: 16px 0 0 ;
+		}
+	}
+	form .input__group {
+		margin-bottom: 20px;
+	}
+}
+
+
+.pricing__content {
+	padding-left: 48px;
+
+	@include respond (tabland) {
+		padding-left: 28px;
+		margin-top: 40px;
+	}
+	.content__list {
+		li {
+			font-family: $default;
+			font-size: 18px;
+			line-height: 28px;
+			font-weight: $medium;
+			letter-spacing: 0.16px;
+			color: $content;
+			margin-bottom: 16px;
+
+			&:last-of-type {
+				margin-bottom: 0px;
+			}
+
+			@include respond (phone-sm) {
+				font-size: 16px;
+				line-height: 24px;
+			}
+		}
+	}
+}
+
+/*********************************
+/* Pricing Form End
+*********************************/

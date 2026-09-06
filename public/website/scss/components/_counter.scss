@@ -1,0 +1,95 @@
+/*********************************
+/*  Counter Start
+*********************************/
+.counter__section {
+	padding: 130px 0;
+}
+.counterItem {
+	position: relative;
+	background: $primary-50;
+	border: 1.5px solid $primary-200;
+	border-radius: 16px;
+	padding: 38px 30px 35px;
+	text-align: center;
+
+	@include respond (medium) {
+		padding: 30px 20px;
+	}
+	@include respond (tabland) {
+		margin-bottom: 30px;
+	}
+
+	.counterIcon {
+		height: 80px;
+		width: 80px;
+		border-radius: 50%;
+		background: $white;
+		border: 2px solid $primary-200;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 24px;
+		box-shadow: 0px 8px 16px rgba($primary-800, 0.2);
+
+		svg {
+			path {
+				fill: $primary-500;
+			}
+		}
+		img {
+			width: auto;
+			height: auto;
+			max-width: 44px;
+			display: inline-block;
+		}
+	}
+
+	.counter__count {
+		position: relative;
+		z-index: 1;
+		line-height: 100%;
+	}
+	&__content {
+		display: block;
+		gap: 20px;
+
+		.title {
+			font-family: $default;
+			font-size: 32px;
+			line-height: 35px;
+			font-weight: $semibold;
+			color: $heading;
+			display: inline-flex;
+			position: relative;
+			z-index: 1;
+			margin-bottom: 8px;
+
+			@include respond (xl) {
+				font-size: 26px;
+			}
+			@include respond (medium) {
+				font-size: 24px;
+			}
+
+			.plus {
+				position: relative;
+				z-index: 9;
+				// color: $primary;
+				line-height: 100%;
+			}
+		}
+		.subtitle {
+			font-size: 18px;
+			line-height: 24px;
+			font-weight: $regular;
+			color: $content;
+			display: block;
+			position: relative;
+			z-index: 1;
+		}
+	}
+}
+
+/*********************************
+/*  Counter End
+*********************************/

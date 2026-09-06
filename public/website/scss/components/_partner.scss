@@ -1,0 +1,48 @@
+/*********************************
+/*  Partner Section Start
+*********************************/
+.partner__section {
+	position: relative;
+	
+}
+.partner__title {
+	margin-bottom: 40px;
+
+	@include respond (phone) {
+		margin-bottom: 24px;
+	}
+	.title {
+		font-family: $default;
+		color: $heading;
+		font-size: 16px;
+		line-height: 22px;
+		letter-spacing: 0.5px;
+		margin-bottom: 0;
+	}
+}
+
+.partner__wrapper {
+	.partner__image {
+		cursor: pointer;
+		transition: $transition;
+
+		img {
+			width: auto;
+			height: auto;
+			display: block;
+			// margin: auto;
+			max-width: 90%;
+			// opacity: 0.5;
+			transition: $transition;
+		}
+		&:hover {
+			img {
+				opacity: 1;
+			}
+		}
+	}
+}
+
+/*********************************
+/*  Partner Section End
+*********************************/

@@ -1,0 +1,124 @@
+/*********************************
+/*  Event Section Start
+*********************************/
+.event__section {
+	padding-top: 70px;
+	padding-bottom: 100px;
+}
+.eventBox {
+	background: $white;
+	padding: 8px;
+	border: 1px solid $border;
+	border-radius: 8px;
+	position: relative;
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+	transition: $transition;
+	overflow: hidden;
+
+	@include respond (tabport) {
+		padding: 16px 15px;
+	}
+
+	&__thumb {
+		overflow: hidden;
+		max-height: 287px;
+		// height: 100%;
+		background: #f9f9f9;
+		border-radius: 8px 8px 0 0 ;
+		position: relative;
+		display: block;
+		
+		img {
+			width: 100%;
+			height: 100%;
+			border-radius: 8px 8px 0 0 ;
+			object-fit: cover;
+			position: relative;
+			transition: all 400ms ease-in-out;
+
+			// &:nth-child(1) {
+			// 	transform: translatex(50%) scalex(2);
+			// 	opacity: 0;
+			// 	filter: blur(10px);
+			// 	position: absolute;
+			// 	top: 0;
+			// 	left: 0;
+			// 	z-index: 1;
+			// }
+		}
+	}
+	
+	&__content {
+		padding: 24px 16px 16px 16px; 
+		position: relative;
+		z-index: 99;
+
+		@include respond (tabport) {
+			padding: 24px 8px 16px 8px;
+		}
+
+		.title {
+			font-family: $default;
+			font-size: 20px;
+			line-height: 24px;
+			letter-spacing: 0.5px;
+			color: $heading;
+			font-weight: $semibold;
+			display: block;
+			margin-bottom: 16px;
+			text-transform: capitalize;
+
+			a {
+				color: currentColor;
+				display: block;
+				transition: $transition;
+
+				&:hover {
+					color: $primary-500;
+				}
+			}
+		}
+		.desc {
+			// color: $white;
+			font-size: 16px;
+			line-height: 24px;
+			letter-spacing: 0.5px;
+			color: $content;
+			margin-bottom: 0;
+			transition: $transition;
+		}
+	}
+
+	&:hover {
+		border: 1px solid $primary-700;
+		.eventBox {
+			// &__thumb {
+			// 	img {
+			// 		&:nth-child(1) {
+			// 			transform: translatex(0) scalex(1);
+			// 			opacity: 1;
+			// 			filter: blur(0);
+			// 		}
+
+			// 		&:nth-child(2) {
+			// 			transform: translatex(-50%) scalex(2);
+			// 			opacity: 0;
+			// 			filter: blur(10px);
+			// 		}
+			// 	}
+			// }
+			&__content {
+				.title {
+					a {
+						color: $primary-500;
+					}
+				}
+			}
+		}
+	}
+}
+
+/*********************************
+/*  Event Section End
+*********************************/

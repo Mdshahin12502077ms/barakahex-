@@ -1,0 +1,37 @@
+/*********************************
+/* RTL Css Start
+*********************************/
+[dir="rtl"] .language__dropdown .selected::after {
+    left: 0;
+    right: auto;
+}
+
+[dir="rtl"] .language__dropdown .list {
+    right: auto;
+    left: 0;
+}
+
+[dir="rtl"] .track__form .btn {
+    right: auto;
+    left: 9px;
+}
+@media screen and (max-width: 575px) {
+    [dir="rtl"] .track__form .btn {
+        left: 0;
+    }
+}
+
+[dir="rtl"] .track__form .form-control {
+    padding: 16px 24px;
+    padding-right: 24px;
+    padding-left: 200px;
+}
+@media screen and (max-width: 575px) {
+    [dir="rtl"] .track__form .form-control {
+        padding: 11px 24px;
+        text-align: center;
+    }
+}
+/*********************************
+/* RTL Css End
+*********************************/

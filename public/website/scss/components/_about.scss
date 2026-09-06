@@ -1,0 +1,150 @@
+/*********************************
+/* About Section Start
+*********************************/
+.about__section {
+	padding-bottom: 130px;
+}
+.about__wrapper {
+	background: $primary-50;
+	border-radius: 32px;
+	padding: 95px 0 130px;
+	max-width: 1660px;
+	margin: auto;
+
+	@include respond (tabland) {
+		border-radius: 0;
+		padding: 70px 0;
+	}
+}
+
+.about__figure {
+	max-width: 526px;
+	aspect-ratio: 5.2/6.1;
+	display: block;
+	width: 100%;
+	height: 100%;
+
+	@include respond (tabland) {
+		// margin: auto;
+	}
+
+	img {
+		width: 100%;
+		height: 100%;
+		display: block;
+		object-fit: cover;
+		object-position: center;
+		border-radius: 25px;
+	}
+}
+
+
+.aboutBox__wrapper {
+	@include respond (tabport) {
+		margin-top: 40px;
+	}
+}
+
+.aboutIcon__box {
+	display: flex;
+	align-items: center;
+	gap: 32px;
+	margin-bottom: 60px;
+	max-width: 90%;
+	width: 100%;
+
+	@include respond (tabland) {
+		max-width: 100%;
+		gap: 25px;
+		margin-bottom: 32px;
+	}
+
+	@include respond (phone-sm) {
+		flex-direction: column;
+		text-align: center;
+		background: $white;
+		border-radius: 16px;
+		box-shadow: 0px 8px 16px rgba(#0E4636, 0.1);
+		gap: 22px;
+		padding: 24px 24px 44px;
+	}
+
+	.icon {
+		height: 87px;
+		width: 87px;
+		border-radius: 50%;
+		background: $white;
+		border: 2px solid $primary-200;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		margin-bottom: 32px;
+
+		@include respond (tabland) {
+			height: 75px;
+			width: 75px;
+		}
+
+		@include respond (phone-sm) {
+			height: 64px;
+			width: 64px;
+			margin-bottom: 0px;
+		}
+
+		svg {
+			path {
+				fill: $primary-500;
+			}
+			@include respond (tabland) {
+				width: 35px;
+			}
+		}
+		img {
+			width: auto;
+			height: auto;
+			display: block;
+
+			@include respond (tabland) {
+				max-width: 35px;
+			}
+		}
+	}
+
+	.content {
+		flex: 1;
+		border-bottom: 1px solid rgba(#868E96, 0.2);
+		padding-bottom: 32px;
+
+		@include respond (phone-sm) {
+			border: none;
+			padding: 0;		}
+
+		.title {
+			font-size: 24px;
+			line-height: 28px;
+			letter-spacing: 0.16px;
+			font-weight: $semibold;
+			color: $heading;
+			margin-bottom: 16px;
+			display: block;
+
+			@include respond (phone-sm) {
+				font-size: 18px;
+				line-height: 24px;
+			}
+		}
+		p,
+		.desc {
+			font-size: 16px;
+			line-height: 24px;
+			letter-spacing: 0.16px;
+			color: $content;
+			margin-bottom: 0;
+		}
+	}
+}
+
+
+/*********************************
+/* About Section End
+*********************************/

@@ -1,0 +1,137 @@
+.sticker-print{
+    width: 138mm !important;
+    height: 65mm !important;
+    padding: 0 .8rem !important;
+    font-weight: 600;
+}
+.sticker-print .sticker-top{
+    max-height: 24mm !important;
+}
+
+.sticker-print .sticker-top .image{
+    width: 30%;
+}
+.sticker-print .merchant-details{
+    border-left: 1.5px solid #000000;
+    display: grid !important;
+}
+.sticker-print .merchant-details .merchant{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+.sticker-print .merchant-details .name{
+    font-size: 14px;
+}
+.sticker-print .merchant-details .address{
+    font-size: 13px;
+}
+.sticker-print .merchant-details .phone{
+    font-size: 13px;
+}
+.sticker-print .customer-details{
+    max-height: 42mm !important;
+    border-top: 1.5px solid #000000;
+    border-bottom: 1.5px solid #000000;
+}
+
+.sticker-print .customer-details .customer{
+    width: 70% !important;
+    display: grid !important;
+}
+
+.sticker-print .customer-details .area-details{
+    display: grid !important;
+    border-left: 1.5px solid #000000;
+}
+
+.sticker-print .customer-details .area-details .area{
+    font-size: 13px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .area-details .branch{
+    font-size: 13px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .area-details .zone{
+    font-size: 13px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .customer .customer{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .customer .name{
+    font-size: 15px;
+}
+
+.sticker-print .customer-details .customer .customer-detail .c{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .customer .phone{
+    font-size: 16px;
+}
+
+.sticker-print .customer-details .customer .address{
+    font-size: 14px;
+}
+.sticker-print .invoice-details{
+    max-height: 16mm !important;
+    border-bottom: 1.5px solid #000000;
+}
+.sticker-print .invoice-details .invoice{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+.sticker-print .invoice-details .price{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+.sticker-print .invoice-details .route{
+    font-size: 13px;
+}
+
+.sticker-print .codes{
+    max-height: 50mm !important;
+}
+.sticker-print .codes img{
+    bottom: -24px !important;
+}
+.sticker-print .codes .text{
+    bottom: -42px !important;
+}
+.sticker-print .codes p{
+    font-size: 13px;
+}
+.sticker-print .codes .bar-code{
+    width: 100% !important;
+}
+
+.sticker-print .codes .bar-code .image{
+    bottom: 0;
+    height: 40px;
+    position: absolute;
+}
+
+.sticker-print .codes .bar-code .text{
+    position: absolute;
+    bottom: -1px;
+}
+.lines {
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    display: -webkit-box;
+
+    -webkit-line-clamp: 2;
+
+    -webkit-box-orient: vertical;
+
+}

@@ -1,0 +1,44 @@
+/*********************************
+/* Breadcrumb Section Start
+*********************************/
+.breadcrumb__area {
+    padding: 230px 0 100px;
+    background: $primary-100;
+
+    @include respond (tabport) {
+        padding: 120px 0 70px;
+    }
+    .breadcrumb__title {
+        .title {
+            font-family: $default;
+            font-size: 54px;
+            line-height: 77px;
+            font-weight: $semibold;
+            color: $heading;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+
+            @include respond(tabport) {
+                font-size: 48px;
+                line-height: 50px;
+            }
+            @include respond(phone-sm) {
+                font-size: 36px;
+                line-height: 45px;
+            }
+        }
+        p,
+        .desc {
+            font-size: 18px;
+            margin-bottom: 0;
+
+            @include respond(phone-sm) {
+                font-size: 16px;
+            }
+        }
+    }
+}
+
+/*********************************
+/* Breadcrumb Section End
+*********************************/

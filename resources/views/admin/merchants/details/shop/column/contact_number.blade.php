@@ -1,0 +1,1 @@
+{{ $shop->contact_number }}

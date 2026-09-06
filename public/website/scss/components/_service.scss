@@ -1,0 +1,119 @@
+/*********************************
+/*  Service Section Start
+*********************************/
+.service__section {
+	padding: 130px 0 100px;
+}
+.serviceBox {
+	background: $white;
+	padding: 16px 25px;
+	border: 1px solid #E9ECEF;
+	border-radius: 16px;
+	position: relative;
+	height: calc(100% - 30px);
+	margin-bottom: 30px;
+	transition: $transition;
+	// box-shadow: $shadow;
+	text-align: center;
+	overflow: hidden;
+
+	@include respond (tabport) {
+		padding: 16px 15px;
+	}
+
+	&__thumb {
+		overflow: hidden;
+		max-height: 287px;
+		// height: 100%;
+		background: #f9f9f9;
+		border-radius: 12px;
+		position: relative;
+		display: block;
+		
+		img {
+			width: 100%;
+			height: 100%;
+			border-radius: 12px;
+			object-fit: cover;
+			position: relative;
+			transition: all 400ms ease-in-out;
+
+			// &:nth-child(1) {
+			// 	transform: translatex(50%) scalex(2);
+			// 	opacity: 0;
+			// 	filter: blur(10px);
+			// 	position: absolute;
+			// 	top: 0;
+			// 	left: 0;
+			// 	z-index: 1;
+			// }
+		}
+	}
+	
+	&__content {
+		padding: 25px 0 9px; 
+		position: relative;
+		z-index: 99;
+
+		.title {
+			font-family: $default;
+			font-size: 20px;
+			line-height: 28px;
+			color: $heading;
+			font-weight: $semibold;
+			display: block;
+			margin-bottom: 14px;
+			text-transform: capitalize;
+
+			a {
+				color: currentColor;
+				display: block;
+				transition: $transition;
+
+				&:hover {
+					color: $primary-500;
+				}
+			}
+		}
+		.desc {
+			// color: $white;
+			font-size: 17px;
+			line-height: 27px;
+			color: $content3;
+			margin-bottom: 0;
+			transition: $transition;
+		}
+	}
+
+	&:hover {
+		border: 1px solid $primary-700;
+		.serviceBox {
+			// &__thumb {
+			// 	img {
+			// 		&:nth-child(1) {
+			// 			transform: translatex(0) scalex(1);
+			// 			opacity: 1;
+			// 			filter: blur(0);
+			// 		}
+
+			// 		&:nth-child(2) {
+			// 			transform: translatex(-50%) scalex(2);
+			// 			opacity: 0;
+			// 			filter: blur(10px);
+			// 		}
+			// 	}
+			// }
+			&__content {
+				.title {
+					a {
+						color: $primary-500;
+					}
+				}
+			}
+		}
+	}
+}
+
+/*********************************
+/*  Service Section End
+*********************************/

@@ -1,0 +1,76 @@
+/*********************************
+/* RTL Css Start
+*********************************/
+[dir="rtl"] .main-wrapper {
+    padding-left: 0;
+    padding-right: 312px;
+}
+@media (max-width: 991px) {
+    [dir="rtl"] .main-wrapper {
+        padding-right: 0;
+
+    }
+
+    [dir="rtl"] .navbar-toggler {
+        margin-left: 0 !important;
+        margin-right: auto;
+    }
+}
+
+[dir="rtl"] .navbar-left-content {
+    margin-left: auto;
+    margin-right: 0 !important;
+}
+[dir="rtl"] .sidebar-collapse .main-wrapper {
+    padding-left: 00px;
+    padding-right: 80px;
+}
+[dir="rtl"] .popup-card {
+    left: 0 !important;
+    right: auto;
+}
+
+[dir="rtl"] table .text-start {
+    text-align: start !important;
+}
+[dir="rtl"] table .text-end {
+    text-align: end !important;
+}
+
+[dir="rtl"] .side-nav ul li ul.sub-menu li a::after {
+    right: 0;
+}
+[dir="rtl"] .side-nav ul li ul.sub-menu {
+    padding-left: 0;
+    padding-right: 60px;
+}
+
+[dir="rtl"] .custom-checkbox label span {
+    padding-left: 0;
+    padding-right: 30px;
+}
+
+[dir="rtl"] .custom-checkbox input[type="checkbox"] + span::after {
+    right: 0;
+}
+[dir="rtl"] .custom-checkbox input[type="checkbox"]:checked + span::before {
+    left: auto;
+    right: 7px;
+}
+
+[dir="rtl"] #toast-container {
+    text-align: left;
+}
+
+[dir="rtl"] .btn-close.modal-close {
+    left: 40px;
+    right: auto;
+}
+
+[dir="rtl"] .file-upload-text {
+    padding-left: 0px;
+    padding-right: 16px;
+}
+/*********************************
+/* RTL Css End
+*********************************/

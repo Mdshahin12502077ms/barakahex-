@@ -1,0 +1,59 @@
+// Font family
+$default: "Jost", sans-serif;
+
+// Font weight
+$light: 300;
+$regular: 400;
+$medium: 500;
+$semibold: 600;
+$bold: 700;
+$extrabold: 800;
+$black: 900;
+
+// Colors
+$black: #000000;
+$white: #fff;
+$primary-50:  rgba(#FF204E, 0.05);
+$primary-100: rgba(#FF204E, 0.1);
+$primary-200: rgba(#FF204E, 0.2);
+$primary-300: rgba(#FF204E, 0.3);
+$primary-400: rgba(#FF204E, 0.4);
+$primary-500: #FF204E;
+$primary-600: #d90833;
+$primary-700: #A0153E;
+$primary-800: #5D0E41;
+
+$secondary: #00224D;
+
+$heading: #212529;
+$content: #495057;
+$content2: #868E96;
+$content3: #555B68;
+$border: $primary-200;
+$border2: rgba(#465058, 0.4);
+
+// $black: #000000;
+// $white: #fff;
+// $primary-50: #EEFBF5;
+// $primary-100: #D6F5E4;
+// $primary-200: #B0EACE;
+// $primary-300: #7CD9B2;
+// $primary-400: #47C092;
+// $primary-500: #25AB7C;
+// $primary-600: #168561;
+// $primary-700: #126A4F;
+// $primary-800: #105540;
+// $secondary: #1B5948;
+// $heading: #212529;
+// $content: #495057;
+// $content2: #868E96;
+// $content3: #555B68;
+// $border: $primary-200;
+
+
+// Border Radius
+$radius: 30px;
+$shadow: 0px 15px 35px 0px rgba(0, 0, 0, 0.1);
+
+// Common transition
+$transition: all 300ms ease-in-out;

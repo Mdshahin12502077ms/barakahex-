@@ -1,0 +1,148 @@
+/*********************************
+/*  Section Tittle Start
+*********************************/
+.section__title {
+	margin: auto;
+
+	&-wrapper {
+		margin-bottom: 60px;
+
+		@include respond(tabport) {
+			margin-bottom: 40px;
+		}
+
+		&.text-center {
+			.section__title {
+				margin: auto;
+				text-align: center;
+			}
+		}
+		&.text-start {
+			.section__title {
+				margin-right: auto;
+				text-align: left;
+			}
+		}
+		&.text-end {
+			.section__title {
+				margin-left: auto;
+				text-align: right;
+			}
+		}
+
+		&.flex-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 20px;
+
+			@include respond(tabland) {
+				display: block;
+				text-align: center;
+				// flex-direction: column;
+				// align-items: flex-start;
+				// text-align: center;
+			}
+		}
+		.section__btn {
+			@include respond(tabport) {
+				margin-top: 20px;
+			}
+			.btn {
+				white-space: nowrap;
+			}
+		}
+	}
+
+	.subtitle {
+		font-family: $default;
+		font-size: 18px;
+		line-height: 100%;
+		font-weight: $medium;
+		margin-bottom: 24px;
+		color: $primary-600;
+		display: inline-block;
+		position: relative;
+		z-index: 1;
+	}
+	.title {
+		font-family: $default;
+		font-size: 48px;
+		line-height: 57px;
+		font-weight: $semibold;
+		color: $heading;
+		margin-bottom: 0;
+		text-transform: capitalize;
+
+		@include respond(tabland) {
+			font-size: 44px;
+			line-height: 55px;
+		}
+		@include respond(tabport) {
+			font-size: 40px;
+			line-height: 50px;
+		}
+		@include respond(phone-sm) {
+			font-size: 34px;
+			line-height: 48px;
+		}
+		@include respond(phone-mid) {
+			font-size: 28px;
+			line-height: 34px;
+		}
+	}
+	p,
+	.desc {
+		font-family: $default;
+		font-size: 18px;
+		font-weight: $regular;
+		line-height: 28px;
+		color: $heading;
+		letter-spacing: 0.16px;
+		margin: 20px 0 0;
+
+		@include respond(phone-sm) {
+			margin: 15px 0 0;
+		}
+	}
+
+	&.v2 {
+		.subtitle {
+			position: relative;
+			padding-left: 62px;
+
+			&::after {
+				content: "";
+				position: absolute;
+				left: 0;
+				width: 50px;
+				height: 2px;
+				background: $primary-600;
+				top: 50%;
+    			transform: translateY(-50%);
+			}
+
+			@include respond (tabland) {
+				padding-left: 0;
+				&::after {
+					display: none;
+				}
+			}
+		}
+		p,
+		.desc {
+			padding-left: 25%;
+
+			@include respond (xl) {
+				padding-left: 10%;
+			}
+			@include respond (medium) {
+				padding-left: 0;
+			}
+		}
+	}
+}
+
+/*********************************
+/*  Section Tittle End
+*********************************/

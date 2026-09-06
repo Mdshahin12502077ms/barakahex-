@@ -1,0 +1,71 @@
+/*********************************
+/*  Button Start
+*********************************/
+
+.btn {
+	font-family: $default;
+	font-size: 16px;
+	line-height: 24px;
+	font-weight: $semibold;
+	letter-spacing: 0.5px;
+	padding: 12px 24px;
+	border-radius: $radius;
+	border: none;
+	outline: none;
+	display: inline-block;
+	text-transform: capitalize;
+	transition: $transition;
+
+	svg,
+	img,
+	i {
+		margin-right: 10px;
+		display: inline-block;
+	}
+
+	&:focus {
+		box-shadow: none;
+		outline: none;
+	}
+
+	&-primary {
+		background-color: $primary-500;
+		color: $white;
+		// transition: $transition;
+
+		&:focus,
+		&:hover {
+			border-color: $secondary;
+			background: $secondary;
+			color: $white;
+			box-shadow: none;
+		}
+	}
+	&-outline {
+		background-color: transparent;
+		color: $primary-500;
+		border: 2px solid $primary-500;
+
+		&:focus,
+		&:hover {
+			background: $primary-500;
+			color: $white;
+			box-shadow: none;
+			border-color: $primary-500;
+		}
+	}
+}
+
+.solid__btn {
+	font-family: $default;
+	font-size: 16px;
+	line-height: 24px;
+	font-weight: $semibold;
+	letter-spacing: 0.5px;
+	color: $heading;
+	transition: $transition;
+
+	&:hover {
+		color: $primary-500;
+	}
+}

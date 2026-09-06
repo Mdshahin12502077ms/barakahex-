@@ -1,0 +1,177 @@
+/*********************************
+/*  Common Css Start
+*********************************/
+.border-none {
+	border: none !important;
+}
+
+.btn-round {
+	border-radius: 4px !important;
+}
+
+.bg-white {
+	background-color: $white !important;
+}
+.bg-color {
+	background: $secondary !important;
+}
+
+button {
+	&:hover,
+	&:focus {
+		outline: 0px;
+	}
+}
+
+/*********************************
+/*  Input Apperance Start
+*********************************/
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+	-webkit-appearance: none;
+}
+
+input[type="number"] {
+	-moz-appearance: textfield !important;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+	cursor: pointer;
+	border-radius: 4px;
+	margin-right: 2px;
+	-webkit-filter: invert(1);
+	filter: invert(1);
+}
+/*********************************
+/*  Input Apperance End
+*********************************/
+
+/*********************************
+/*  Custom Scroll Bar Css
+*********************************/
+::-webkit-scrollbar {
+	width: 8px;
+	border-radius: $radius;
+}
+
+::-webkit-scrollbar-track {
+	background-color: rgba($white, 0.1);
+	border-radius: $radius;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: $primary-500;
+	border-radius: $radius;
+	// outline: 1px solid $primary;
+}
+/*********************************
+/*  Custom Scroll Bar Css
+*********************************/
+
+/*********************************
+/*  row Custom
+*********************************/
+
+.row > * {
+	max-width: 100%;
+	padding-right: calc(var(--bs-gutter-x) * 1);
+	padding-left: calc(var(--bs-gutter-x) * 1);
+	margin-top: var(--bs-gutter-y);
+}
+
+.column-reverse {
+	&-lg {
+		@include respond (tabland) {
+			flex-direction: column-reverse !important;
+		}
+	}
+	&-md {
+		@include respond (tabport) {
+			flex-direction: column-reverse !important;
+		}
+	}
+}
+
+@media (min-width: 479px) and (max-width: 575px) {
+	.col-xs-6 {
+		flex: 0 0 auto;
+		width: 50%;
+	}
+}
+
+/*********************************
+/*  Heading Typography
+*********************************/
+h1 {
+	font-family: $default;
+	font-size: 64px;
+	line-height: 77px;
+	font-weight: $semibold;
+	color: $heading;
+
+	// @include respond(xl) {
+	//     font-size: 56px;
+	//     line-height: 70px;
+	// }
+	@include respond(xl) {
+		font-size: 50px;
+		line-height: 60px;
+	}
+	@include respond(phone) {
+		font-size: 48px;
+		// line-height: 45px;
+	}
+	@include respond(phone-sm) {
+		font-size: 36px;
+		line-height: 45px;
+	}
+	@include respond(phone-xm) {
+		font-size: 32px;
+	}
+}
+h2 {
+	font-family: $default;
+	font-size: 48px;
+	line-height: 57px;
+	font-weight: $semibold;
+	color: $heading;
+
+	@include respond(tabport) {
+		font-size: 42px;
+		line-height: 55px;
+	}
+	@include respond(phone-sm) {
+		font-size: 34px;
+		line-height: 48px;
+	}
+	@include respond(phone-mid) {
+		font-size: 28px;
+		line-height: 34px;
+	}
+}
+h3 {
+	font-family: $default;
+	font-size: 32px;
+	line-height: 40px;
+	font-weight: $semibold;
+	color: $heading;
+}
+h4 {
+	font-family: $default;
+	font-size: 24px;
+	line-height: 28px;
+	font-weight: $medium;
+	color: $heading;
+}
+
+/*********************************
+/*  Content Typography
+*********************************/
+p {
+	font-family: $default;
+	font-size: 16px;
+	font-weight: $regular;
+	line-height: 28px;
+	color: $content;
+}
+

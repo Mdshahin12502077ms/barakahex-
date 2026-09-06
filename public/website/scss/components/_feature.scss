@@ -1,0 +1,83 @@
+/*********************************
+/*  Feature Section Start
+*********************************/
+.feature__section {
+    position: relative;
+    padding: 95px 0 70px; 
+
+    &::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: url("../images/feature/feature-mask.png");
+        background-repeat: no-repeat;
+        background-size: auto;
+        background-position: top left;
+		z-index: -1;
+
+        @include respond (phone) {
+            background-size: 180px;
+        }
+        @include respond (phone-sm) {
+            background-size: 140px;
+        }
+	}
+
+}
+.featureBox {
+    // background: #24775E;
+
+    background: #0e2c56;
+    border: 1px solid rgba(#787878, 0.4);
+    display: flex;
+    align-items: center;
+    border-radius: 16px;
+    gap: 16px;
+    padding: 30px 20px;
+    height: calc(100% - 30px);
+    margin-bottom: 30px;
+
+    &__icon {
+        height: 60px;
+        width: 60px;
+        // background: $primary-600;
+        background: #293e5b;
+        border: 2px solid #3c4d66;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+            width: auto;
+            height: auto;
+            max-width: 37px;
+            display: inline-block;
+        }
+    }
+    &__content {
+        flex: 1;
+        .title {
+            font-family: $default;
+            font-size: 20px;
+            line-height: 28px;
+            font-weight: $semibold;
+            letter-spacing: 0.16px;
+            color: $white;
+            margin-bottom: 0;
+
+            @include respond(tabport) {
+                font-size: 18px;
+            }
+            @include respond(phone) {
+                font-size: 20px;
+            }
+        }
+    }
+}
+/*********************************
+/*  Feature Section End
+*********************************/

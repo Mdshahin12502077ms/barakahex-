@@ -1,0 +1,186 @@
+/*********************************
+/* Banner Section Start
+*********************************/
+.banner__section {
+	// background: $primary-50;
+	background: #b8b8b81a;
+	background-position: bottom center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	position: relative;
+	padding: 280px 0 50px;
+	z-index: 1;
+
+	@include respond(tabland) {
+		padding: 210px 0 50px !important;
+	}
+	@include respond(tabport) {
+		padding: 180px 0 50px !important;
+	}
+	@include respond(phone) {
+		padding: 140px 0 50px !important;
+	}
+}
+
+
+/* Hero Text Start */
+.hero__text {
+	position: relative;
+	max-width: 570px;
+	z-index: 1;
+
+	@include respond(tabland) {
+		// max-width: 100%;
+		margin: auto;
+		text-align: center;
+	}
+
+	.sub__title {
+		font-family: $default;
+		color: $heading;
+		font-size: 18px;
+		font-weight: $regular;
+		line-height: 20px;
+		letter-spacing: 0.5px;
+		margin: 0 0 24px;
+		text-transform: capitalize;
+		background: $primary-50;
+		border: 1px solid $primary-100;
+		padding: 12px 20px;
+		display: inline-block;
+		border-radius: 30px;
+
+		@include respond (phone) {
+			font-size: 16px;
+		}
+	}
+
+	.title {
+		color: $heading;
+		margin-bottom: 0;
+	}
+
+	.desc {
+		font-size: 18px;
+		line-height: 28px;
+		letter-spacing: 0.5px;
+		color: $content;
+		margin-top: 24px;
+		margin-bottom: 0;
+		
+		@include respond(phone-sm) {
+			font-size: 16px;
+			line-height: 24px;
+		}
+	}
+}
+
+  
+.track__form {
+	background: $white;
+	border-radius: 100px;
+	padding: 8px;
+	display: inline-flex;
+	align-items: center;
+	position: relative;
+	margin-top: 36px;
+	max-width: 526px;
+	width: 100%;
+	box-shadow: 0px 0px 10px #ebebeb;
+
+	@include respond(tabland) {
+		margin: 36px auto 0;
+	}
+
+	@include respond(phone) {
+		flex-direction: column;
+	}
+
+	.form-control {
+		font-family: $default;
+		font-size: 16px;
+		line-height: 24px;
+		letter-spacing: 0.5px;
+		font-weight: $regular;
+		background: #F8F9FA;
+		color: $content;
+		display: block;
+		padding: 16px 24px;
+		padding-right: 200px;
+		border-radius: 100px;
+		border: 1px solid #E9ECEF;
+		flex: 1;
+		position: relative;
+
+		&:focus {
+			box-shadow: none;
+		}
+
+		@include respond (phone) {
+			padding: 11px 24px;
+		}
+	}
+	.btn {
+		position: absolute;
+		top: 50%;
+		right: 9px;
+		transform: translateY(-50%);
+		padding: 16px 32px;
+
+		@include respond (phone) {
+			top: 100%;
+			transform: initial;
+			right: 0;
+			width: 100%;
+			margin-top: 12px;
+		}
+
+		img {
+			max-width: 24px;
+			width: auto;
+		}
+	}
+}
+
+/* Hero Text End */
+
+/* Hero Figure Start */
+.hero__figure {
+	position: relative;
+
+	@include respond(tabland) {
+		margin-top: 40px;
+	}
+	@include respond(phone) {
+		margin-top: 110px;
+	}
+
+	img {
+		width: auto;
+		height: auto;
+		display: block;
+		max-width: 661px;
+		position: relative;
+		margin: auto;
+
+		@include respond (xl) {
+			max-width: 100%;
+		}
+	}
+	.animation__01 {
+		animation: MoveMain 3s linear infinite alternate;
+		z-index: 11;
+	}
+}
+@keyframes MoveMain {
+	0% {
+		transform: translateX(0);
+	}
+	100% {
+		transform: translateX(-30px);
+	}
+}
+
+/*********************************
+/* Banner Section End
+*********************************/

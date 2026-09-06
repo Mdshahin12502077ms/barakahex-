@@ -1,0 +1,595 @@
+.nk-tb-actions {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    position: relative;
+}
+
+.bg-lighter {
+    background-color: #e6eff8  !important;
+}
+
+.label-default {
+    background-color: #0fac81;
+    color: #444;
+}
+
+.label {
+    padding: 3px, 10px;
+    line-height: 13px;
+    color: #fff;
+    font-weight: 400;
+    border-radius: 2px;
+    font-size: 75%;
+}
+
+.custom-pagination svg {
+	height: 0% !important;
+    max-width: 100%;
+}
+
+.nk-tb-item {
+    height: 60px;
+}
+.link-list-opt button .icon {
+    font-size: 1.125rem;
+    width: 1.75rem;
+    opacity: .8;
+}
+
+.theme-green-color{
+    background-color: #0fac81 !important;
+}
+
+.role-create-table tr th{
+    border: 0px solid #fff;
+}
+
+.dark-mode .ql-picker.ql-expanded .ql-picker-label, .dark-mode .active > .nk-menu-link, .dark-mode .is-theme .nk-menu-link:hover .nk-menu-icon, .dark-mode .is-theme .nk-menu-item.active > .nk-menu-link .nk-menu-icon, .dark-mode .is-theme .nk-menu-item.current-menu > .nk-menu-link .nk-menu-icon, .dark-mode .is-theme .nk-menu-sub .nk-menu-link:hover, .dark-mode .is-theme .nk-menu-sub .active > .nk-menu-link, .dark-mode .page-link:hover {
+    color: #0fac81 !important;
+}
+
+.dark-mode .custom-control-input:checked ~ .custom-control-label::before {
+    background-color: #0fac81 !important;
+    border-color: #0fac81 !important;
+}
+.link-list a:hover {
+    color: #0fac81 !important;
+}
+
+.dark-switch.active:before {
+    background-color: #0fac81;
+    border-color: #0fac81;
+}
+
+.user-profile{
+    width: 140px;
+    text-align: center;
+    height: 140px;
+}
+
+.profile{
+    margin-top: 20px !important;
+}
+
+.nk-tb-col {
+    position: relative;
+    display: table-cell;
+    vertical-align: top !important;
+    padding: 1rem .5rem;
+}
+
+.column-max-width{
+    max-width: 250px !important;
+}
+
+.shadow-box{
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.175) !important;
+    padding: 10px;
+}
+
+.card-body .shadow-lg:first-child{
+    margin-right: 5px;
+}
+
+.card-body .shadow-lg:last-child{
+    margin-left: 5px;
+}
+
+.print .card{
+    background-color: transparent !important;
+}
+
+.role-permission .custom-control {
+    display: block !important;
+    min-height: 2.5rem;
+}
+
+.wave .card-body, .history .card-body {
+    background-image: url(../images/default/wave.svg) !important;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+}
+.dark-mode .wave .card-body, .dark-mode .history .card-body{
+    background-image: url(../images/default/dark-wave.svg) !important;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+}
+.card-body .shadow-lg{
+    width: 50%;
+}
+.card .card-body .text{
+    font-weight: 900;
+}
+
+
+.card .parcel-history{
+    width: 100%;
+}
+
+.parcel-history .text{
+    margin-right: 1rem;
+    margin-bottom: 0;
+}
+
+.parcel-history .indicator{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 3rem;
+    width: 3rem;
+    border-radius: 100%;
+}
+.indicator .icon:before {
+    font-size: xxx-large !important;
+}
+.parcel-history .indicator .logo{
+    width: 100%;
+}
+
+.print .border {
+    border: 1px solid #000000 !important;
+}
+
+.parcel-history .content{
+    margin-left: 1rem;
+}
+
+.print-bg-lighter{
+    background-image: url(../images/default/pdf.png);
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+}
+.print-bg-lighter .page-header{
+    margin-top:130px;
+}
+.print-bg-lighter .page-title{
+    font-size: 2.75rem;
+}
+.print-bg-lighter .date{
+    font-size: 1.5rem;
+}
+.print-bg-lighter td{
+    font-size: 1.5rem;
+}
+
+.print .print-table{
+    width: 100%;
+}
+.print .print-table .separator{
+    border-right: 1px solid #000000;
+    border-left: 1px solid #000000;
+}
+
+.print .print-table table{
+    margin: 2rem;
+    width: 50% !important;
+}
+.print .print-table table td{
+    font-size: 1.2rem;
+}
+
+.invoice .title{
+    font-size: 1rem;
+}
+
+/*sticker design*/
+.print .card{
+    margin: 5rem;
+    color: #000000;
+}
+.sticker-print{
+    width: 140mm !important;
+    height: 78mm !important;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    font-weight: 600;
+}
+.sticker-print .sticker-top{
+    max-height: 24mm !important;
+}
+
+.sticker-print .sticker-top .image{
+    width: 40%;
+}
+.sticker-print .merchant-details{
+    border-left: 1.5px solid #000000;
+    display: grid !important;
+}
+.sticker-print .merchant-details .merchant{
+    font-size: 14px;
+    font-weight: bold !important;
+    font-family: 'Nunito', sans-serif;
+}
+.sticker-print .merchant-details .name{
+    font-size: 14px;
+}
+.sticker-print .merchant-details .address{
+    font-size: 13px;
+}
+.sticker-print .merchant-details .phone{
+    font-size: 13px;
+}
+.sticker-print .customer-details{
+    max-height: 42mm !important;
+    border-top: 1.5px solid #000000;
+    border-bottom: 1.5px solid #000000;
+}
+
+.sticker-print .customer-details .customer{
+    width: 70% !important;
+    display: grid !important;
+}
+
+.sticker-print .customer-details .area-details{
+    display: grid !important;
+    border-left: 1.5px solid #000000;
+}
+
+.sticker-print .customer-details .area-details .area{
+    font-size: 13px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .area-details .branch{
+    font-size: 13px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .area-details .zone{
+    font-size: 13px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .customer .customer{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+
+.sticker-print .customer-details .customer .name{
+    font-size: 15px;
+}
+
+.sticker-print .customer-details .customer .customer-detail .c{
+    font-size: 14px;
+    font-weight: bold !important;
+    font-family: 'Nunito', sans-serif;
+}
+
+.sticker-print .customer-details .customer .phone{
+    font-size: 16px;
+}
+
+.sticker-print .customer-details .customer .address{
+    font-size: 14px;
+}
+.sticker-print .invoice-details{
+    max-height: 16mm !important;
+    border-bottom: 1.5px solid #000000;
+}
+.sticker-print .invoice-details .invoice{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+.sticker-print .invoice-details .price{
+    font-size: 14px;
+    font-weight: bold !important;
+}
+.sticker-print .invoice-details .route{
+    font-size: 13px;
+}
+.sticker-print .codes{
+    max-height: 50mm !important;
+}
+
+.sticker-print .codes .qr-code{
+    width: 20% !important;
+}
+
+.sticker-print .codes .bar-code{
+    width: 80% !important;
+    position: relative;
+}
+
+.sticker-print .codes .bar-code .image{
+    bottom: 0;
+    width: 350px;
+    height: 63px;
+    position: absolute;
+}
+
+.sticker-print .codes .bar-code .text{
+    position: absolute;
+    bottom: -1px;
+}
+
+.dark-mode .link-list-menu a:hover, .dark-mode .link-list-menu a.active, .dark-mode .list-plain a:hover, .dark-mode .list-plain a.active {
+    color: #0c8665 !important;
+}
+.cod-invoice div{
+    color: black;
+    border: 1px solid;
+    margin: 1rem;
+    width: 50% !important;
+    font-size: 1.5rem;
+}
+.dark-mode .text-danger{
+    color: #e85347 !important;
+}
+.dark-mode .text-success{
+    color: #0c8665 !important;
+}
+.text-pear{
+    color: #ffa353 !important;
+}
+.text-brown{
+    color: #964B00 !important;
+}
+@media (min-width: 576px) {
+    .modal-body-lg {
+        padding: 1.75rem 2.75rem !important;
+    }
+}
+@media (max-width: 575.98px) {
+    .table-ulogs tr.delivery-charge td.tb-col-os {
+        width: 20%;
+    }
+    .table-ulogs tr.delivery-charge td span {
+        font-size: 8px !important;
+    }
+    .table-ulogs tr.delivery-charge th.tb-col-os {
+        width: 20%;
+        min-width: 54px;
+        flex-grow: 0;
+        font-size: x-small;
+    }
+    .table-ulogs tr.delivery-charge .overline-title {
+        font-size: 6px !important;
+    }
+    .table-ulogs tr.charge td.tb-col-os {
+        width: 50%;
+    }
+    .table-ulogs tr.shops td.tb-col-os {
+        width: 20%;
+    }
+    .table-ulogs tr.shops th.tb-col-os {
+        width: 20%;
+        min-width: 74px;
+        flex-grow: 0;
+        font-size: x-small;
+    }
+    .table-ulogs tr.shops td span {
+        font-size: 8px !important;
+    }
+    .table-ulogs tr.shops .overline-title {
+        font-size: 6px !important;
+    }
+    .table-ulogs tr.shops-profile td.tb-col-os {
+        width: 11%;
+    }
+    .table-ulogs tr.shops-profile th.tb-col-os {
+        width: 20%;
+        min-width: 49px;
+        flex-grow: 0;
+        font-size: x-small;
+    }
+    .table-ulogs tr.shops-profile td span {
+        font-size: 8px !important;
+    }
+    .table-ulogs tr.shops-profile .overline-title {
+        font-size: 6px !important;
+    }
+    .table-ulogs tr.statement td.tb-col-os {
+        width: 25%;
+    }
+    .table-ulogs tr.statement td span {
+        font-size: 8px !important;
+    }
+    .table-ulogs tr.statement th.tb-col-os {
+        width: 25%;
+        min-width: 69px;
+        flex-grow: 0;
+        font-size: x-small;
+    }
+    .table-ulogs tr.statement .overline-title {
+        font-size: 6px !important;
+    }
+}
+.btn-sm, .btn-group-sm > .btn, .dual-listbox .btn-group-sm > .dual-listbox__button {
+    padding: 0.2rem 0.5rem;
+    font-size: 10px;
+    line-height: 13px;
+    border-radius: 3px;
+}
+
+.account-income-expense .page-title{
+    font-size: 1.05rem !important;
+}
+.input-parcel{
+    width: 150% !important;
+}
+
+.right{
+    text-align: right !important;
+}
+
+.link-list-opt .report-type{
+    display: flex;
+    align-items: center;
+    padding: .625rem 1.125rem;
+    font-size: 12px;
+    font-weight: 500;
+    color: #526484;
+    transition: all .4s;
+    line-height: 1.3rem;
+    position: relative;
+    cursor: pointer;
+}
+.link-list-opt .report-type:hover {
+    color: #0fac81;
+    background: #f5f6fa;
+}
+.invalid{
+    color: red !important;
+}
+.dark-mode .cbp_tmtimeline:before {
+    background: #213347;
+}
+.dark-mode .cbp_tmtimeline>li:first-child .cbp_tmicon {
+    background: #213347;
+    color: #fff;
+}
+.dark-mode .cbp_tmtimeline>li:nth-child(odd) .cbp_tmlabel {
+    background: #213347;
+}
+.dark-mode .cbp_tmtimeline>li:nth-child(odd) .cbp_tmlabel:after {
+    border-right-color: #203247;
+}
+.dark-mode .cbp_tmtimeline>li .cbp_tmlabel {
+    background: #213347;
+}
+.dark-mode .cbp_tmtimeline>li .cbp_tmlabel:after  {
+    border-right-color: #213347;
+}
+.dark-mode .cbp_tmtimeline>li .cbp_tmlabel p {
+    color: #8094ae;
+}
+.history-row{
+    margin-bottom: 150px;
+}
+.print-table-parcels {
+    width: 100% !important;
+}
+.print-table-parcels .table {
+    color: #000000;
+}
+
+.print-table-parcels .table td {
+    font-size: .8rem !important;
+}
+.signature-section{
+    margin-top: -10px;
+    font-size: 14px;
+}
+
+.card.assign-delivery .page-title {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.card.assign-delivery .date {
+    font-size: 1rem;
+}
+
+.card.assign-delivery td {
+    font-size: 1rem;
+}
+
+.assign-delivery .page-header {
+    margin-top: 70px !important;
+}
+@media print {
+
+    input[type="checkbox"][checked="checked"] {
+        display: inline-block;
+    }
+
+}
+
+.assign-delivery .table td {
+    padding: 0.2rem !important;
+    font-size: 12px !important;
+}
+
+.signature-section .border {
+    border: 1px solid #000000 !important;
+    width: 120%;
+}
+.card.assign-delivery{
+    margin-top: 0px;
+}
+.parcel-details{
+    font-size: 12px;
+}
+.table td:first-child, .table th:first-child {
+    padding-left: .5rem !important;
+}
+.right-content .image{
+    width: 173px;
+    height: 40px;
+}
+.table thead th {
+    font-size: 12px !important;
+}
+
+.copy-to-clipboard input {
+    border: none;
+    cursor: pointer;
+    background: transparent;
+
+}
+.copy-to-clipboard input:focus
+{
+    outline: none;
+}
+.filter-button .badge{
+    padding: 0.5rem 0.5rem !important;
+    font-size: 12px !important;
+    line-height: 13px;
+    border-radius: 3px;
+    margin-bottom: 5px !important;
+}
+.text-yale{
+    color: #159d78;
+}
+.text-pigeon{
+    color: #7285e5;
+}
+.text-prussian{
+    color: #003151;
+}
+.text-mint{
+    color: #3bb143;
+}
+
+.invoice .tb-tnx-item td {
+    padding: 0.25rem 0.25rem;
+    vertical-align: middle;
+}
+.icon[class*="bg-red-dim"] {
+    color: #FF0000;
+}
+.bg-red-dim {
+    background-color: #ff00002e !important;
+}
+
+.nk-store-statistics.merchant .item {
+    padding: 0.1rem 0 !important;
+}
+.is-dark .nk-menu-link:hover, .is-dark .active > .nk-menu-link {
+    background: #002f5c;
+}
+
+

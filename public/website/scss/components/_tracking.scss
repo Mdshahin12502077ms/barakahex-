@@ -1,0 +1,114 @@
+/*********************************
+/* Tracking Section Start
+*********************************/
+.tracking__item {
+    background: rgba(255, 32, 78, 0.05);
+    padding: 100px ;
+    border-radius: 12px;
+    max-width: 800px;
+    margin: auto;
+
+    @include respond (tabport) {
+        padding: 50px;
+    }
+    @include respond (phone) {
+        padding: 30px 15px;
+    }
+    @include respond (phone-sm) {
+        padding: 30px 10px;
+    }
+
+    &:last-child {
+        .tracking__inner {
+            &:last-of-type {
+                .tracking__item-step {
+                    &:last-of-type {
+                        .tracking__item-status-line {
+                            display: none;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .tracking__date {
+        font-size: 18px;
+        font-weight: $semibold;
+        line-height: 24px;
+        padding: 4px 10px;
+        background: $white;
+        color: $primary-500;
+        border: 2px solid $primary-300;
+        display: inline-block;
+        border-radius: 10px;
+        margin-bottom: 30px;
+
+        @include respond (phone-mid) {
+            font-size: 15px;
+        }
+    }
+    &-step {
+        display: flex;
+        min-height: 80px;
+        height: 100%;
+        gap: 12px;
+    }
+    &-status {
+        &-dot {
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: $white;
+            border: 4px solid $primary-500;
+        }
+        &-line {
+            display: block;
+            margin: 0 auto;
+            width: 2px;
+            height: calc(100% + 50px);
+            background: $primary-500;
+            position: relative;
+            top: -50px;
+            z-index: -1;
+        }
+    }
+    &-time {
+        font-size: 14px;
+        line-height: 18px;
+        color: $primary-500;
+        font-weight: $medium;
+        text-transform: uppercase;
+        white-space: nowrap;
+
+        @include respond (phone-mid) {
+            font-size: 12px;
+        }
+    }
+    &-title {
+        font-size: 18px;
+        line-height: 24px;
+        color: $heading;
+        margin-bottom: 0;
+
+        @include respond (phone-mid) {
+            font-size: 15px;
+        }
+    }
+    &-desc {
+        font-size: 14px;
+        line-height: 18px;
+        color: $primary-500;
+        font-weight: $regular;
+        text-transform: capitalize;
+        display: block;
+
+        @include respond (phone-mid) {
+            font-size: 12px;
+        }
+    }
+}
+
+/*********************************
+/* Tracking Section End
+*********************************/
