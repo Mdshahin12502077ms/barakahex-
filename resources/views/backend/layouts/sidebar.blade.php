@@ -150,6 +150,7 @@
                             (hasPermission('transaction_history_read') ||
                                 (hasPermission('parcels_summary_read') || hasPermission('total_summary_read')) ||
                                 hasPermission('income_report_read') ||
+                                hasPermission('rider_report_read') ||
                                 hasPermission('expense_report_read'))
                         )
                         <li
@@ -192,6 +193,19 @@
                                             class="{{ menuActivation(['admin/reports/merchant-summary*', 'admin/merchant-summary-report*'], 'active') }}"><span>{{ __('merchant_summary') }}</span></a>
                                     </li>
                                 @endif
+
+                                @if (hasPermission('rider_report_read'))
+                                <li id="rider-report-sub">
+                                    <a href="{{ route('admin.rider.report') }}"
+                                        class="{{ menuActivation(['admin/reports/rider-report*', 'admin/reports/search-rider-report*'], 'active') }}">
+                                        <span>{{ __('rider_report') }}</span>
+                                    </a>
+                                </li>
+                            @endif
+
+
+
+
                             </ul>
                         </li>
                     @endif
@@ -405,6 +419,7 @@
                         </ul>
                     </li>
                 @endif
+
                 @if (hasPermission('apikeys.index'))
                     <li class="{{ menuActivation(['admin/apikeys*'], 'active') }}">
                         <a href="{{ route('apikeys.index') }}">
@@ -413,6 +428,8 @@
                         </a>
                     </li>
                 @endif
+
+
                 @if (hasPermission('email_template_read') || hasPermission('server_configuration_update'))
                     <li
                         class="{{ menuActivation(['admin/email/server-configuration*', 'admin/email/template*'], 'active') }}">
@@ -436,6 +453,47 @@
                         </ul>
                     </li>
                 @endif
+
+
+
+
+
+
+                @if (hasPermission('percel_otp_read') || hasPermission('audit_log_read'))
+                    <li
+                        class="{{ menuActivation(['admin/percel-otp*', 'admin/audit-logs*'], 'active') }}">
+                        <a href="#logsMenu" class="dropdown-icon" data-bs-toggle="collapse"
+                            aria-expanded="{{ menuActivation(['admin/percel-otp*', 'admin/audit-logs*'], 'true', 'false') }}"
+                            aria-controls="logsMenu">
+                            <i class="las la-history"></i>
+                            <span>{{ __('logs') }}</span>
+                        </a>
+                        <ul class="sub-menu collapse {{ menuActivation(['admin/percel-otp*', 'admin/audit-logs*'], 'show') }}"
+                            id="logsMenu">
+                            @if (hasPermission('percel_otp_read'))
+                                <li class="{{ menuActivation(['admin/percel-otp', 'admin/percel-otp/*'], 'active') }}">
+                                    <a href="{{ route('percel-otp.index') }}">
+                                        <i class="las la-shield-alt"></i>
+                                        <span>{{ __('otp_logs') }}</span>
+                                    </a>
+                                </li>
+                            @endif
+                            @if (hasPermission('audit_log_read'))
+                                <li class="{{ menuActivation(['admin/audit-logs', 'admin/audit-logs/*'], 'active') }}">
+                                    <a href="{{ Route::has('audit.logs') ? route('audit.logs') : url('admin/audit-logs') }}">
+                                        <i class="las la-user-shield"></i>
+                                        <span>{{ __('audit_logs') }}</span>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+
+
+
+
+
                 @if (hasPermission('notice_read'))
                     <li class="{{ menuActivation(['admin/notice', 'admin/notice/*'], 'active') }}">
                         <a href="{{ route('notice') }}">
@@ -447,14 +505,7 @@
 
                 <!-- #region -->
 
-                @if (hasPermission('percel_otp_read'))
-                    <li class="{{ menuActivation(['admin/percel-otp', 'admin/percel-otp/*'], 'active') }}">
-                        <a href="{{ route('percel-otp.index') }}">
-                            <i class="las la-shield-alt"></i>
-                            <span>{{ __('otp_logs') }}</span>
-                        </a>
-                    </li>
-                @endif
+                
 
 
 

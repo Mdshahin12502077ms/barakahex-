@@ -2075,5 +2075,7 @@
     "from_branch": "من الفرع",
     "to_branch": "إلى الفرع",
     "sent_by": "أرسلت بواسطة",
-    "pending_receive": "في انتظار الاستلام"
+    "pending_receive": "في انتظار الاستلام",
+    "audit_log": "سجل التدقيق",
+    "audit_logs": "سجلات التدقيق"
 }

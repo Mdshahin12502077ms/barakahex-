@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AreaController;
+use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\BagController;
 use App\Http\Controllers\Admin\BankAccountController;
 use App\Http\Controllers\Admin\BranchController;
@@ -28,6 +29,7 @@ use App\Http\Controllers\Admin\PaymentMethodController;
 use App\Http\Controllers\Admin\PercelOtpController;
 use App\Http\Controllers\Admin\PreferenceController;
 use App\Http\Controllers\Admin\ReportController;
+use App\Http\Controllers\Admin\RiderReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\StaffController;
@@ -65,6 +67,8 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 
@@ -452,6 +456,21 @@ Route::group(['middleware' => 'XSS'], function () {
                     Route::get('/', 'index')->name('percel-otp.index')->middleware('PermissionCheck:percel_otp_read');
                     Route::delete('/delete/{id}', 'delete')->name('percel-otp.delete')->middleware('PermissionCheck:percel_otp_delete');
                 });
+
+               ////Audit log
+
+               Route::controller(AuditLogController::class)->prefix('audit-logs')->group(function () {
+                   Route::get('/', 'index')->name('audit.logs')->middleware('PermissionCheck:audit_log_read');
+                 
+               });
+
+               /////
+
+                Route::controller(RiderReportController::class)->prefix('rider-reports')->group(function(){
+                    Route::get('/', 'index')->name('admin.rider.report')->middleware('PermissionCheck:rider_report_read');
+                    Route::get('/export-csv', 'exportCsv')->name('admin.rider.report.csv')->middleware('PermissionCheck:rider_report_read');
+                });
+
                 //third party routes
                 Route::get('third-parties', [ThirdPartyController::class, 'index'])->name('admin.third-parties')->middleware('PermissionCheck:third_party_read');
                 Route::get('third-party/create', [ThirdPartyController::class, 'create'])->name('admin.third-party.create')->middleware('PermissionCheck:third_party_create');

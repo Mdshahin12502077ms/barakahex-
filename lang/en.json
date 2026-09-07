@@ -1,4 +1,22 @@
 {
+    "rider_report": "Rider Report",
+    "rider_info": "Rider Info",
+    "assigned": "Assigned",
+    "total_assigned": "Total Assigned",
+    "success_rate": "Success Rate",
+    "average_success_rate": "Average Success Rate",
+    "total_cod_collected": "Total COD Collected",
+    "cash_collection": "Cash Collection",
+    "overall_efficiency": "Overall Efficiency",
+    "all_branches": "All Branches / Hubs",
+    "all_riders": "All Riders",
+    "export_to_csv": "Export to CSV",
+    "export_to_pdf": "Export to PDF",
+    "rider_performance_details": "Rider Performance Details",
+    "all_status": "All Status",
+    "transit": "Transit",
+    "failed": "Failed",
+    "total": "Total",
     "paid": "Paid",
     "merchant_settlement": "Merchant Settlement",
     "all_merchant_settlement": "All Merchant Settlement",
@@ -2264,5 +2282,7 @@
     "sent_at": "Sent At",
     "received_at": "Received At",
     "dispatched_at": "Dispatched At",
-    "bag_per_page": "bags per page"
+    "bag_per_page": "bags per page",
+    "audit_log": "Audit Log",
+    "audit_logs": "Audit Logs"
 }

@@ -612,7 +612,7 @@ $(document).ready(function () {
         }
     });
 
-    $('#customer_address').on('input paste keyup', function () {
+    $('#customer_address').on('input paste keyup change keydown', function () {
         clearTimeout(parseTimeout);
         parseTimeout = setTimeout(detectLocationFromAddress, 300);
     });
@@ -690,7 +690,16 @@ $(document).ready(function () {
         const address = $('#customer_address').val().trim().toLowerCase();
         if (address.length < 3) {
             $('#address_auto_detect_badge').addClass('d-none');
+
+               if ($('#city_to_thana').val() !== '') {
+                $('#city_to_thana').val('').trigger('change');
+            }
+            if ($('#thana_to_area').val() !== '') {
+                $('#thana_to_area').val('').trigger('change');
+            }
+
             return;
+           
         }
 
         let detectedDistrict = null;
@@ -733,7 +742,7 @@ $(document).ready(function () {
                         detectedThana = th;
                         break;
                     }
-                    const cleaned = thName.replace(/\s+sadar$/, '').trim();
+                    const cleaned = thName.replace(/district$/i, '').trim();
                     if (cleaned.length > 2 && address.includes(cleaned)) {
                         detectedThana = th;
                         break;
@@ -777,6 +786,10 @@ $(document).ready(function () {
                     selectMatchingThana(thanaToSelect);
                 }
 
+                else{
+                    $('#thana_to_area').val('').trigger('change');
+                }
+
                 // 5. Auto-update delivery area (parcel_type)
                 if (detectedThana && detectedThana.is_sub_city) {
                     $('select[name="parcel_type"]').val('sub_city').trigger('change');
@@ -800,9 +813,17 @@ $(document).ready(function () {
                 $('#address_auto_detect_badge').removeClass('d-none');
             }
         }
+
+        else {
+            const address = $('#customer_address').val().trim().toLowerCase();
+            $('#city_to_thana').val('').trigger('change');
+
+            $('#thana_to_area').val('').trigger('change');
+
+        }
     }
 });
 </script>
 @endpush
 
-@endsection
+@endsection

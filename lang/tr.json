@@ -2075,5 +2075,7 @@
     "from_branch": "Çıkış Şubesi",
     "to_branch": "Varış Şubesi",
     "sent_by": "Gönderen",
-    "pending_receive": "Kabul Bekliyor"
+    "pending_receive": "Kabul Bekliyor",
+    "audit_log": "Denetim Günlüğü",
+    "audit_logs": "Denetim Günlükleri"
 }

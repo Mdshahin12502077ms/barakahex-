@@ -527,8 +527,12 @@ try {
 
             $parcel->user_id = $request->created_by != "" ? $request->created_by : Sentinel::getUser()->id;
             $parcel->parcel_type = $parcelType;
-            // $parcel->district_id = $request->district_id;
-            // $parcel->thana_id = $request->thana_id;
+            if($request->district_id){
+             $parcel->district_id = $request->district_id   ;
+            }
+            if($request->thana_id){
+             $parcel->thana_id = $request->thana_id;
+            }
             $parcel->save();
 
             $this->parcelEvent($parcel->id, 'parcel_update_event');
@@ -1398,34 +1402,73 @@ try {
         $parcel = $this->get($parcel_id);
         $parcel_event = new ParcelEvent();
 
+      
+        $actionMap = [
+            'parcel_create_event'                        => 'status_change',
+            'parcel_update_event'                        => 'status_change',
+            'parcel_delete_event'                        => 'status_change',
+            'parcel_cancel_event'                        => 'status_change',
+            'assign_pickup_man_event'                    => 'rider_assign',
+            'assign_delivery_man_event'                  => 'rider_assign',
+            'parcel_received_by_pickup_man_event'        => 'status_change',
+            'parcel_received_event'                      => 'status_change',
+            'parcel_transferred_to_branch_event'         => 'status_change',
+            'parcel_transferred_to_branch_assigned_event'=> 'rider_assign',
+            'parcel_return_to_warehouse_event'           => 'return',
+            'parcel_delivered_event'                     => 'status_change',
+            'parcel_delivered_and_verified_event'        => 'status_change',
+            'parcel_returned_to_merchant_event'          => 'return',
+            'parcel_return_assign_to_merchant_event'     => 'return',
+            'parcel_re_schedule_pickup_event'            => 'status_change',
+            'parcel_re_schedule_delivery_event'          => 'status_change',
+            'parcel_re_request_event'                    => 'status_change',
+            'parcel_partial_delivered_event'             => 'status_change',
+            'delivery_reverse_event'                     => 'status_change',
+            'cancel_reverse_event'                       => 'status_change',
+            'delete_reverse_event'                       => 'status_change',
+        ];
+        $auditAction = $actionMap[$title] ?? 'status_change';
+
+        $oldStatus = ParcelEvent::$lastOldStatus[$parcel_id] ?? ($parcel->status_before_cancel ?? $parcel->status);
+
         if ($title == 'delivery_reverse_event' || $title == 'cancel_reverse_event' || $status == 'reverse'):
 
-            $parcel_event->parcel_id = $parcel_id;
+            $parcel_event->parcel_id   = $parcel_id;
             $parcel_event->delivery_man_id = $parcel->delivery_man_id;
-            $parcel_event->pickup_man_id = $parcel->pickup_man_id;
-            $parcel_event->user_id = Sentinel::getUser()->id ?? $parcel->user_id;
-            $parcel_event->title = $title;
-            $parcel_event->cancel_note = $cancel_note;
-            $parcel_event->branch_id = $branch ?? $parcel->branch_id;
-            $parcel_event->third_party_id = $parcel->third_party_id;
+            $parcel_event->pickup_man_id   = $parcel->pickup_man_id;
+            $parcel_event->user_id         = Sentinel::getUser()->id ?? $parcel->user_id;
+            $parcel_event->title           = $title;
+            $parcel_event->cancel_note     = $cancel_note;
+            $parcel_event->branch_id       = $branch ?? $parcel->branch_id;
+            $parcel_event->third_party_id  = $parcel->third_party_id;
             $parcel_event->transfer_delivery_man_id = $transfer_delivery_man ?? $parcel->transfer_delivery_man_id;
+            // Audit fields
+            $parcel_event->old_status  = $oldStatus;
+            $parcel_event->new_status  = $parcel->status ?? null;
+            $parcel_event->ip_address  = request()->ip();
+            $parcel_event->action      = $auditAction;
             $parcel_event->save();
 
             return true;
         else:
-            $parcel_event->parcel_id = $parcel_id;
+            $parcel_event->parcel_id       = $parcel_id;
             $parcel_event->delivery_man_id = $parcel->delivery_man_id;
-            $parcel_event->pickup_man_id = $parcel->pickup_man_id;
+            $parcel_event->pickup_man_id   = $parcel->pickup_man_id;
             if ($created_at != ''):
                 $parcel_event->user_id = 2260;
             else:
                 $parcel_event->user_id = Sentinel::getUser()->id ?? $parcel->user_id;
             endif;
-            $parcel_event->title = $title;
-            $parcel_event->cancel_note = $cancel_note;
-            $parcel_event->branch_id = $branch ?? $parcel->branch_id;
-            $parcel_event->third_party_id = $parcel->third_party_id;
+            $parcel_event->title           = $title;
+            $parcel_event->cancel_note     = $cancel_note;
+            $parcel_event->branch_id       = $branch ?? $parcel->branch_id;
+            $parcel_event->third_party_id  = $parcel->third_party_id;
             $parcel_event->transfer_delivery_man_id = $transfer_delivery_man ?? $parcel->transfer_delivery_man_id;
+            // Audit fields
+            $parcel_event->old_status  = $oldStatus;
+            $parcel_event->new_status  = $parcel->status ?? null;
+            $parcel_event->ip_address  = request()->ip();
+            $parcel_event->action      = $auditAction;
 
             if ($created_at != ''):
                 $parcel_event->created_at = $created_at;

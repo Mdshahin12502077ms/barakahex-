@@ -48,11 +48,40 @@ class RoleSeeder extends Seeder
             'permissions' => $this->adminPermissions(),
             'status' => StatusEnum::ACTIVE
         ]);
+
+        Role::create([
+            'name' => 'Customer Support Executive',
+            'slug' => Str::slug('Customer Support Executive'),
+            'permissions' => $this->customerSupportExecutivePermissions(),
+            'status' => StatusEnum::ACTIVE
+        ]);
+
+        Role::create([
+            'name' => 'Merchant Support',
+            'slug' => Str::slug('Merchant Support'),
+            'permissions' => $this->merchantSupportPermissions(),
+            'status' => StatusEnum::ACTIVE
+        ]);
+
+        Role::create([
+            'name' => 'Data Entry',
+            'slug' => Str::slug('Data Entry'),
+            'permissions' => $this->dataEntryPermissions(),
+            'status' => StatusEnum::ACTIVE
+        ]);
+
+        Role::create([
+            'name' => 'Auditor',
+            'slug' => Str::slug('Auditor'),
+            'permissions' => $this->auditorPermissions(),
+            'status' => StatusEnum::ACTIVE
+        ]);
     }
 
     public function superAdminPermissions()
     {
         return [
+            'audit_log_read',
             'user_create',
             'user_read',
             'user_update',
@@ -296,6 +325,7 @@ class RoleSeeder extends Seeder
     public function adminPermissions()
     {
         return [
+            'audit_log_read',
             'user_create',
             'user_read',
             'user_update',
@@ -677,6 +707,194 @@ class RoleSeeder extends Seeder
             "manage_shops",
             "delivery_charge",
             "cash_on_delivery_charge"
+        ];
+    }
+
+    
+
+    public function customerSupportExecutivePermissions()
+    {
+        return [
+           
+            'user_read',
+            'merchant_read',
+            'parcel_read',
+            'read_all_parcel',
+            'deliveryman_read',
+            'report_read',
+            'dashboard_statistics_read',
+            'transaction_history_read',
+            'parcels_summary_read',
+
+          
+            'parcel_create',
+
+           
+            'parcel_update',
+            'parcel_reschedule_pickup',
+            'parcel_reschedule_delivery',
+
+            
+            'parcel_cancel',
+
+           
+            'parcel_received',
+            'parcel_received_by_pickup_man',
+
+           
+            'parcel_pickup_assigned',
+            'parcel_delivery_assigned',
+            'parcel_return_assigned_to_merchant',
+
+        
+            'withdraw_read',
+            'withdraw_process',
+
+           
+            'download_closing_report',
+            'download_payment_sheet',
+        ];
+    }
+
+    public function merchantSupportPermissions()
+    {
+        return [
+            
+            'merchant_read',
+            'read_all_merchant',
+            'merchant_shop_read',
+            'merchant_payment_account_read',
+            'merchant_account_activity_read',
+            'merchant_cod_charge_read',
+            'merchant_charge_read',
+            'merchant_payment_logs_read',
+            'merchant_api_credentials_read',
+            'merchant_staff_read',
+            'parcel_read',
+            'read_all_parcel',
+            'report_read',
+            'merchant_summary_report_read',
+            'dashboard_statistics_read',
+
+           
+            'merchant_create',
+            'merchant_shop_create',
+            'merchant_staff_create',
+
+           
+            'merchant_update',
+            'merchant_shop_update',
+            'merchant_payment_account_update',
+            'merchant_staff_update',
+            'merchant_api_credentials_update',
+
+           
+            'merchant_delete',
+            'merchant_shop_delete',
+
+            
+            'withdraw_read',
+            'read_all_withdraw',
+            'withdraw_process',
+            'withdraw_reject',
+
+           
+            'parcel_return_assigned_to_merchant',
+            'parcel_delivery_assigned',
+
+            
+            'add_to_bulk_withdraw',
+            'bulk_withdraw_read',
+            'bulk_withdraw_process',
+
+          
+            'download_closing_report',
+            'download_payment_sheet',
+        ];
+    }
+
+    public function dataEntryPermissions()
+    {
+        return [
+           
+            'merchant_read',
+            'parcel_read',
+            'deliveryman_read',
+            'branch_read',
+            'dashboard_statistics_read',
+
+        
+            'parcel_create',
+            'merchant_create',
+            'merchant_shop_create',
+
+            
+            'parcel_update',
+            'merchant_update',
+            'merchant_shop_update',
+
+           
+            'parcel_cancel',
+
+            
+            'parcel_pickup_assigned',
+            'parcel_received_by_pickup_man',
+
+            
+            'download_closing_report',
+        ];
+    }
+
+    public function auditorPermissions()
+    {
+       
+        return [
+            'audit_log_read',
+            'user_read',
+            'user_account_activity_read',
+            'user_payment_logs_read',
+            'role_read',
+            'merchant_read',
+            'read_all_merchant',
+            'merchant_shop_read',
+            'merchant_payment_account_read',
+            'merchant_account_activity_read',
+            'merchant_cod_charge_read',
+            'merchant_charge_read',
+            'merchant_payment_logs_read',
+            'merchant_staff_read',
+            'deliveryman_read',
+            'read_all_delivery_man',
+            'deliveryman_account_activity_read',
+            'deliveryman_payment_logs_read',
+            'parcel_read',
+            'read_all_parcel',
+            'income_read',
+            'read_all_income',
+            'expense_read',
+            'read_all_expense',
+            'withdraw_read',
+            'read_all_withdraw',
+            'report_read',
+            'transaction_history_read',
+            'parcels_summary_read',
+            'total_summary_read',
+            'income_expense_report_read',
+            'profit_summary_report_read',
+            'merchant_summary_report_read',
+            'dashboard_statistics_read',
+            'account_read',
+            'read_all_account',
+            'account_statement',
+            'fund_transfer_read',
+            'read_all_fund_transfer',
+            'branch_read',
+            'bulk_withdraw_read',
+            'read_all_bulk_withdraw',
+
+            
+            'download_closing_report',
+            'download_payment_sheet',
         ];
     }
 }

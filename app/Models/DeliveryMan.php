@@ -44,6 +44,11 @@ class DeliveryMan extends Model
     {
         return $this->belongsTo(CompanyAccount::class, 'id', 'delivery_man_id')->where('source', 'opening_balance');
     }
+
+    public function parcels()
+    {
+        return $this->hasMany(Parcel::class, 'delivery_man_id');
+    }
     public function balance($id)
     {
         $stats = DeliveryManAccount::where('delivery_man_id', $id)

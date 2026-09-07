@@ -15,66 +15,85 @@ use DB;
 class ReportRepository implements ReportInterface {
     public function parcelSearch($request)
     {
-        try{
+        try {
             $start_date = date('Y-m-d', strtotime($request->start_date));
             $end_date   = date('Y-m-d', strtotime($request->end_date));
+            $merchant   = $request->merchant;
+            $status     = $request->status;
 
-            $merchant = $request->merchant;
-            if ($request->status != ''):
-                if ($request->status == 'pending'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'deleted'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'received-by-pickup-man'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'pickup-assigned'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 're-schedule-pickup'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'received'):
-                    $data[__('received_by_warehouse')] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'delivery-assigned'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 're-schedule-delivery'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'returned-to-warehouse'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'return-assigned-to-merchant'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'returned-to-merchant'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'delivered'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'cancelled'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 're-request'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                elseif ($request->status == 'partially-delivered'):
-                    $data[__($request->status)] = $this->eventQuery($start_date, $end_date, $merchant, $request->status);
-                endif;
-            else:
-                $data[__('pending')]                      = $this->eventQuery($start_date, $end_date, $merchant, 'pending');
-                $data[__('pickup-assigned')]              = $this->eventQuery($start_date, $end_date, $merchant, 'pickup-assigned');
-                $data[__('re-schedule-pickup')]           = $this->eventQuery($start_date, $end_date, $merchant, 're-schedule-pickup');
-                $data[__('received-by-pickup-man')]       = $this->eventQuery($start_date, $end_date, $merchant, 'received-by-pickup-man');
-                $data[__('received_by_warehouse')]        = $this->eventQuery($start_date, $end_date, $merchant, 'received');
-                $data[__('delivery-assigned')]            = $this->eventQuery($start_date, $end_date, $merchant, 'delivery-assigned');
-                $data[__('re-schedule-delivery')]         = $this->eventQuery($start_date, $end_date, $merchant, 're-schedule-delivery');
-                $data[__('returned-to-warehouse')]        = $this->eventQuery($start_date, $end_date, $merchant, 'returned-to-warehouse');
-                $data[__('return-assigned-to-merchant')]  = $this->eventQuery($start_date, $end_date, $merchant, 'return-assigned-to-merchant');
-                $data[__('returned-to-merchant')]         = $this->eventQuery($start_date, $end_date, $merchant, 'returned-to-merchant');
-                $data[__('delivered')]                    = $this->eventQuery($start_date, $end_date, $merchant, 'delivered');
-                $data[__('partially-delivered')]          = $this->eventQuery($start_date, $end_date, $merchant, 'partially-delivered');
-                $data[__('cancelled')]                    = $this->eventQuery($start_date, $end_date, $merchant, 'cancel');
-                $data[__('deleted')]                      = $this->eventQuery($start_date, $end_date, $merchant, 'deleted');
-                $data[__('re-request')]                   = $this->eventQuery($start_date, $end_date, $merchant, 're-request');
-            endif;
+            $data = [];
+
+            if (!empty($status)) {
+                if ($status == 'pending') {
+                    $data[__('pending')] = $this->queryByStatuses($start_date, $end_date, $merchant, ['pending']);
+                } elseif (in_array($status, ['pickup', 'pickup-assigned', 're-schedule-pickup', 'received-by-pickup-man'])) {
+                    $data[__('pickup')] = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                        'pickup-assigned', 're-schedule-pickup', 'received-by-pickup-man'
+                    ]);
+                } elseif (in_array($status, ['transit', 'received', 'delivery-assigned', 're-schedule-delivery', 'transfer-to-hub', 'received-by-hub'])) {
+                    $data[__('transit')] = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                        'received', 'delivery-assigned', 're-schedule-delivery', 'transfer-to-hub', 'received-by-hub'
+                    ]);
+                } elseif (in_array($status, ['delivered', 'delivered-and-verified', 'partially-delivered'])) {
+                    $data[__('delivered')] = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                        'delivered', 'delivered-and-verified', 'partially-delivered'
+                    ]);
+                } elseif (in_array($status, ['failed', 'cancelled', 'cancel', 'deleted'])) {
+                    $data[__('failed')] = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                        'cancelled', 'cancel', 'deleted'
+                    ]);
+                } elseif (in_array($status, ['return', 'returned-to-warehouse', 'return-assigned-to-merchant', 'returned-to-merchant'])) {
+                    $data[__('return')] = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                        'returned-to-warehouse', 'return-assigned-to-merchant', 'returned-to-merchant'
+                    ]);
+                } else {
+                    $data[__($status)] = $this->queryByStatuses($start_date, $end_date, $merchant, [$status]);
+                }
+            } else {
+                $totalQuery = Parcel::query()
+                    ->where('date', '>=', $start_date)
+                    ->where('date', '<=', $end_date);
+                if (!empty($merchant)) {
+                    $totalQuery->where('merchant_id', $merchant);
+                }
+
+                $data[__('total')]     = $totalQuery->count();
+                $data[__('pending')]   = $this->queryByStatuses($start_date, $end_date, $merchant, ['pending']);
+                $data[__('pickup')]    = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                    'pickup-assigned', 're-schedule-pickup', 'received-by-pickup-man'
+                ]);
+                $data[__('transit')]   = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                    'received', 'delivery-assigned', 're-schedule-delivery', 'transfer-to-hub', 'received-by-hub'
+                ]);
+                $data[__('delivered')] = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                    'delivered', 'delivered-and-verified', 'partially-delivered'
+                ]);
+                $data[__('failed')]    = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                    'cancelled', 'cancel', 'deleted'
+                ]);
+                $data[__('return')]    = $this->queryByStatuses($start_date, $end_date, $merchant, [
+                    'returned-to-warehouse', 'return-assigned-to-merchant', 'returned-to-merchant'
+                ]);
+            }
 
             return $data;
 
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    public function queryByStatuses($start_date, $end_date, $merchant, array $statuses)
+    {
+        $query = Parcel::query()
+            ->where('date', '>=', $start_date)
+            ->where('date', '<=', $end_date);
+
+        if (!empty($merchant)) {
+            $query->where('merchant_id', $merchant);
+        }
+
+        return $query->whereIn('status', $statuses)->count();
     }
 
     public function eventQuery($start_date, $end_date, $merchant, $status)

@@ -10,11 +10,21 @@ class ParcelEvent extends Model
 {
     use HasFactory;
 
+    public static $lastOldStatus = [];
+
     protected $fillable = [
         'parcel_id',
         'user_id',
         'branch_id',
-        'title'
+        'delivery_man_id',
+        'pickup_man_id',
+        'return_delivery_man_id',
+        'title',
+        'old_status',
+        'new_status',
+        'ip_address',
+        'action',
+        'additional_info',
     ];
 
     public function parcel(){

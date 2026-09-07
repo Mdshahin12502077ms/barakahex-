@@ -1,4 +1,24 @@
 {
+    "rider_report": "রাইডার রিপোর্ট",
+    "rider_info": "রাইডারের তথ্য",
+    "assigned": "অ্যাসাইনড",
+    "total_assigned": "মোট অ্যাসাইনড",
+    "success_rate": "সফলতার হার",
+    "average_success_rate": "গড় সফলতার হার",
+    "total_cod_collected": "মোট সংগৃহীত সিওডি",
+    "cash_collection": "ক্যাশ কালেকশন",
+    "overall_efficiency": "সামগ্রিক দক্ষতা",
+    "all_branches": "সকল ব্রাঞ্চ / হাব",
+    "all_riders": "সকল রাইডার",
+    "export_to_csv": "সিএসভি এক্সপোর্ট",
+    "export_to_pdf": "পিডিএফ এক্সপোর্ট",
+    "rider_performance_details": "রাইডার পারফরম্যান্স বিস্তারিত",
+    "all_status": "সকল স্ট্যাটাস",
+    "transit": "ট্রানজিট",
+    "failed": "ব্যর্থ / বাতিল",
+    "total": "সর্বমোট",
+    "pickup": "পিকআপ",
+    "return": "রিটার্ন",
     "paid": "পেমেন্ট সম্পন্ন",
     "merchant_settlement": "মার্চেন্ট সেটেলমেন্ট",
     "all_merchant_settlement": "সকল মার্চেন্ট সেটেলমেন্ট",
@@ -2290,5 +2310,7 @@
     "bag_info": "ব্যাগের তথ্য",
     "scan_here": "এখানে স্ক্যান করুন...",
     "no_parcels_found": "কোনো পার্সেল পাওয়া যায়নি",
-    "dispatched_by": "ডিসপ্যাচ করেছেন"
+    "dispatched_by": "ডিসপ্যাচ করেছেন",
+    "audit_log": "অডিট লগ",
+    "audit_logs": "অডিট লগসমূহ"
 }
