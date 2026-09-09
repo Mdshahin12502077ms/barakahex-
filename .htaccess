@@ -11,56 +11,26 @@ Options -Indexes +FollowSymLinks
 
     RewriteEngine On
 
-    # 1. Stop rewrite loop if already internally rewritten
-    RewriteCond %{ENV:REDIRECT_STATUS} 200
-    RewriteRule ^ - [L]
-
-    # 2. Stop further rewrite if request is already inside public/
-    RewriteRule ^public/ - [L]
-
-    # 3. Handle Authorization Header
+    # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # 4. Redirect Trailing Slashes If Not A Folder...
+    # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # 5. Allow existing root files and directories directly
+    # 1. Serve static files (CSS, JS, Images) from public/ directory if found there
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # 2. Allow existing root files/directories directly
     RewriteCond %{REQUEST_FILENAME} -f [OR]
     RewriteCond %{REQUEST_FILENAME} -d
     RewriteRule ^ - [L]
 
-    # 6. Serve static files (CSS, JS, Images, Fonts, etc.) from public/ directory
-    RewriteCond %{REQUEST_URI} !^/public/
-    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f [OR]
-    RewriteCond public/$1 -f [OR]
-    RewriteCond %{REQUEST_URI} \.(css|js|jpe?g|png|gif|ico|svg|webp|woff2?|ttf|eot|mp4|webm|ogg|mp3|pdf|map|json|txt)$ [NC]
-    RewriteRule ^(.*)$ public/$1 [L]
-
-    # 7. Send all remaining requests to Front Controller
+    # 3. Send all remaining requests to Front Controller
     RewriteRule ^ index.php [L]
 </IfModule>
 
-# Block Sensitive Files
-<FilesMatch "^\.(env|git|gitignore|gitattributes|lock)">
-    <IfModule mod_authz_core.c>
-        Require all denied
-    </IfModule>
-    <IfModule !mod_authz_core.c>
-        Order deny,allow
-        Deny from all
-    </IfModule>
-</FilesMatch>
-
-<FilesMatch "\.(mp4|mov|avi|wmv|flv|webm|ogv|mpeg|mpg|mpe|m4p|m4v|m4a|3gp|3g2)$">
-    ForceType video/mp4
-</FilesMatch>
-
-# php -- BEGIN cPanel-generated handler, do not edit
-# Set the “ea-php83” package as the default “PHP” programming language.
-<IfModule mime_module>
-  AddHandler application/x-httpd-ea-php83 .php .php8 .phtml
-</IfModule>
-# php -- END cPanel-generated handler, do not edit
