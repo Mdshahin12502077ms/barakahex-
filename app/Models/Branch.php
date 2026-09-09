@@ -40,6 +40,11 @@ class Branch extends Model
         return $query->where('type', 'branch');
     }
 
+    public function parcels()
+    {
+        return $this->hasMany(Parcel::class, 'branch_id');
+    }
+
     public static function boot()
     {
         parent::boot();

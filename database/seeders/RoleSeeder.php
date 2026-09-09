@@ -194,6 +194,8 @@ class RoleSeeder extends Seeder
             'profit_summary_report_read',
             'merchant_summary_report_read',
             'dashboard_statistics_read',
+            'branch_hub_report_read',
+            'financial_report_read',
 
             'account_read',
             'account_create',
@@ -443,6 +445,8 @@ class RoleSeeder extends Seeder
             'profit_summary_report_read',
             'merchant_summary_report_read',
             'dashboard_statistics_read',
+            'branch_hub_report_read',
+            'financial_report_read',
 
             'account_read',
             'account_create',
@@ -590,7 +594,8 @@ class RoleSeeder extends Seeder
             "parcel_return_assigned_to_merchant",
             "parcel_transfer_receive_to_branch",
             "parcel_delivered",
-            "parcel_returned_to_merchant"
+            "parcel_returned_to_merchant",
+            "branch_hub_report_read"
         ];
     }
     public function agentPermissions()

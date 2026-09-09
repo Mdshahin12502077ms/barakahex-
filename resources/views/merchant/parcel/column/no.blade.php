@@ -28,6 +28,14 @@
         </div>
     @endif
 
+    @if (!empty($parcel->destination_branch_id) && $parcel->destinationBranch)
+        <div class="small mt-1">
+            <span class="badge badge-info bg-info text-white" style="font-size: 11px;">
+                <i class="las la-warehouse"></i> {{ __('target_branch') }}: {{ $parcel->destinationBranch->name }}
+            </span>
+        </div>
+    @endif
+
     {{-- Return Rider Info --}}
     @if (($parcel->status == 'returned-to-merchant' || $parcel->status == 'return-assigned-to-merchant') && $returnRider && $returnRider->user)
         <div class="small text-danger mt-1 p-1 rounded bg-light border border-danger-subtle d-inline-block">

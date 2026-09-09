@@ -151,7 +151,10 @@
                                 (hasPermission('parcels_summary_read') || hasPermission('total_summary_read')) ||
                                 hasPermission('income_report_read') ||
                                 hasPermission('rider_report_read') ||
-                                hasPermission('expense_report_read'))
+                                hasPermission('expense_report_read') ||
+                                hasPermission('branch_hub_report_read')||
+                                hasPermission('financial_report_read')
+                                )
                         )
                         <li
                             class="{{ menuActivation(['admin/reports/*', 'admin/parcels', 'admin/total-summary', 'admin/income-expense', 'admin/merchant-summary', 'admin/search-parcels', 'admin/total-summery-report', 'admin/merchant-summary-report', 'admin/transactions', 'admin/search-income-expense'], 'active') }}">
@@ -199,6 +202,26 @@
                                     <a href="{{ route('admin.rider.report') }}"
                                         class="{{ menuActivation(['admin/reports/rider-report*', 'admin/reports/search-rider-report*'], 'active') }}">
                                         <span>{{ __('rider_report') }}</span>
+                                    </a>
+                                </li>
+                            @endif
+
+
+
+                             @if (hasPermission('branch_hub_report_read'))
+                                <li id="branch-hub-report-sub">
+                                    <a href="{{ route('admin.branch_hub.report') }}"
+                                        class="{{ menuActivation(['admin/reports/branch_hub-report*', 'admin/reports/search-branch_hub-report*'], 'active') }}">
+                                        <span>{{ __('branch_hub_report') }}</span>
+                                    </a>
+                                </li>
+                            @endif
+
+                            @if(hasPermission('financial_report_read'))
+                                <li id="financial-report-sub">
+                                    <a href="{{ route('admin.financial.report') }}"
+                                    class="{{ menuActivation(['admin/reports/financial-report*'], 'active') }}">
+                                    <span>{{ __('financial_report') }}</span>
                                     </a>
                                 </li>
                             @endif
@@ -258,6 +281,19 @@
                         </ul>
                     </li>
                 @endif
+
+
+
+
+                @if(hasPermission('crm_history_read'))
+                    <li class="{{ menuActivation(['admin/crm-history', 'admin/crm-history/*'], 'active') }}">
+                        <a href="{{ route('crm-history.index') }}">
+                            <i class="las la-box"></i>
+                            <span>{{ __('crm_history') }}</span>
+                        </a>
+                    </li>
+                @endif
+
 
                 @if (hasPermission('sms_setting_read') || hasPermission('sms_campaign_message_send') || hasPermission('custom_sms_send'))
                     <li

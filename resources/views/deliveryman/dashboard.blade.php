@@ -136,7 +136,7 @@
                                 </div>
                                 <div class="analytics-content no-line-braek">
                                     <h4>{{ $completed_pickups }}</h4>
-                                    <p>{{ __('completed_pickups') }}</p>
+                                    <p>{{ __('pickup_received') }}</p>
                                 </div>
                             </div>
                         </div>

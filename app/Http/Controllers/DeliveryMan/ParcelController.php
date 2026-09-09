@@ -33,6 +33,8 @@ class ParcelController extends Controller
     public function pickups(Request $request)
     {
         $pickups = $this->pickupRepo->all($request);
+            
+     
         $statistics = $this->pickupRepo->statistics();
 
         return view('deliveryman.pickups.index', compact('pickups', 'statistics'));

@@ -13,6 +13,8 @@ use App\Models\Merchant;
 use App\Models\CodCharge;
 use App\Models\ThirdParty;
 use App\Models\Warehouse;
+use App\Models\District;
+use App\Models\Thana;
 use Illuminate\Http\Request;
 use App\Exports\ClosingReport;
 use App\Traits\SmsSenderTrait;
@@ -62,11 +64,31 @@ class ParcelController extends Controller
     {
         if (@settingHelper('preferences')->where('title', 'create_parcel')->first()->staff):
             $charges = Charge::all();
+            $cod_charges = CodCharge::all();
             $branchs = Branch::all();
-            return view('admin.parcel.create', compact('charges', 'branchs'));
+            $districts = District::with(['thanas' => function($q) { $q->where('status', 'active')->orderBy('name'); }])->active()->orderBy('name')->get();
+            $city = $districts;
+            $branch = Branch::all();
+            return view('admin.parcel.create', compact('charges', 'cod_charges', 'branchs', 'districts', 'city', 'branch'));
         else:
             return back()->with('danger', __('service_unavailable'));
         endif;
+    }
+
+    public function thanabook(Request $request)
+    {
+        $district_id = $request->district_id ?? $request->city_id;
+        $thanas = Thana::where('district_id', $district_id)->where('status', 'active')->orderBy('name')->get();
+
+        if ($request->ajax() && $request->wantsJson()) {
+            return response()->json($thanas);
+        }
+
+        $output = "<option value=''>Select Thana</option>";
+        foreach ($thanas as $thana) {
+            $output .= "<option value='" . $thana->id . "'>" . $thana->name . "</option>";
+        }
+        return response($output);
     }
     public function store(ParcelStoreRequest $request)
     {
@@ -993,7 +1015,8 @@ class ParcelController extends Controller
                 'movements.toBranch',
                 'movements.sender',
                 'movements.receiver',
-                'movements.deliveryMan.user'
+                'movements.deliveryMan.user',
+                'destinationBranch'
             ])->find($id);
             if (
                 hasPermission('read_all_parcel') || $parcel->branch_id == \Sentinel::getUser()->branch_id || $parcel->pickup_branch_id == ''

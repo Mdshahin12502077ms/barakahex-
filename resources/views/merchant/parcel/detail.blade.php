@@ -123,6 +123,10 @@
                                     class="text">{{ $parcel->customer_address }}</span><br>
                                 <span>{{ __('location') }}:&nbsp;&nbsp;</span> <span
                                     class="text">{{ __($parcel->location) }}</span><br>
+                                @if (!blank($parcel->destinationBranch))
+                                    <span>{{ __('target_branch') }}:&nbsp;&nbsp;</span>
+                                    <span class="badge badge-info bg-info text-white font-12">{{ $parcel->destinationBranch->name }}</span><br>
+                                @endif
                                 @if ($parcel->note != '' && $parcel->note != null)
                                     <span>{{ __('note') }}:&nbsp;&nbsp;</span> <span
                                         class="text">{{ $parcel->note }}</span><br>

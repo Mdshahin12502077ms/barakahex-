@@ -129,8 +129,9 @@ $(document).on('click', '#fragile', function(e) {
                 return;
             }
  
+            var thanaUrl = "{{ (Sentinel::getUser() && Sentinel::getUser()->user_type == 'merchant') ? route('merchant.parcel.thanabook') : route('admin.parcel.thanabook') }}";
             $.ajax({
-                'url': "{{ route('merchant.parcel.thanabook') }}",
+                'url': thanaUrl,
                 'type': 'get',
                 'dataType': 'text',
                 data: { city_id: city_id, district_id: city_id },

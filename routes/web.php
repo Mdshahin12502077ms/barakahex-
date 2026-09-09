@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\BranchManagerDashboardController;
 use App\Http\Controllers\Admin\BulkController;
 use App\Http\Controllers\Admin\BulkWithdrawController;
 use App\Http\Controllers\Admin\CountryController;
+use App\Http\Controllers\Admin\CrmHistoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DeliveryManController;
 use App\Http\Controllers\Admin\DeliveryZoneController;
@@ -17,7 +18,9 @@ use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\DivisionController;
 use App\Http\Controllers\Admin\Email\EmailController;
 use App\Http\Controllers\Admin\ExpenseController;
+use App\Http\Controllers\Admin\FinancialController;
 use App\Http\Controllers\Admin\FundTransferController;
+use App\Http\Controllers\Admin\HubReportController;
 use App\Http\Controllers\Admin\ImportExportController;
 use App\Http\Controllers\Admin\LanguageController;
 use App\Http\Controllers\Admin\LiveSearchController;
@@ -67,6 +70,9 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
+
+
+
 
 
 
@@ -236,6 +242,7 @@ Route::group(['middleware' => 'XSS'], function () {
                 Route::get('parcel', [ParcelController::class, 'index'])->name('parcel')->middleware('PermissionCheck:parcel_read');
                 Route::get('parcel/create', [ParcelController::class, 'create'])->name('parcel.create')->middleware('PermissionCheck:parcel_create');
                 Route::post('parcel/store', [ParcelController::class, 'store'])->name('parcel.store')->middleware('PermissionCheck:parcel_create');
+                Route::get('parcelbookthana', [ParcelController::class, 'thanabook'])->name('admin.parcel.thanabook');
                 Route::get('parcel/edit/{id}', [ParcelController::class, 'edit'])->name('parcel.edit')->middleware('PermissionCheck:parcel_update');
                 Route::post('parcel/update', [ParcelController::class, 'update'])->name('parcel.update')->middleware('PermissionCheck:parcel_update');
                 Route::post('parcel/delete', [ParcelController::class, 'parcelDelete'])->name('parcel-delete')->middleware('PermissionCheck:parcel_delete');
@@ -249,6 +256,8 @@ Route::group(['middleware' => 'XSS'], function () {
 
                 Route::get('parcel/import', [ImportExportController::class, 'importExportView'])->name('import.csv')->middleware('PermissionCheck:parcel_create');
                 Route::post('parcel/import', [ImportExportController::class, 'import'])->name('import')->middleware('PermissionCheck:parcel_create');
+                Route::post('parcel/import-preview', [ImportExportController::class, 'preview'])->name('import.preview')->middleware('PermissionCheck:parcel_create');
+                Route::post('parcel/import-confirm', [ImportExportController::class, 'confirm'])->name('import.confirm')->middleware('PermissionCheck:parcel_create');
                 //bulk work routes
                 Route::get('parcel/assigning-delivery-man', [BulkController::class, 'create'])->name('bulk.assigning')->middleware('PermissionCheck:parcel_delivery_assigned');
                 Route::get('add-parcel-row/{parcel_no}', [BulkController::class, 'add'])->name('bulk.assigning.parcel');
@@ -471,6 +480,19 @@ Route::group(['middleware' => 'XSS'], function () {
                     Route::get('/export-csv', 'exportCsv')->name('admin.rider.report.csv')->middleware('PermissionCheck:rider_report_read');
                 });
 
+                // branch hub report
+
+                Route::controller(HubReportController::class)->prefix('branch-hub-reports')->group(function(){
+                    Route::get('/', 'index')->name('admin.branch_hub.report')->middleware('PermissionCheck:hub_report_read');
+                    Route::get('/export-csv', 'exportCsv')->name('admin.hub.report.csv')->middleware('PermissionCheck:hub_report_read');
+                });
+                
+              //Financial Report
+                Route::controller(FinancialController::class)->prefix('financial-reports')->group(function(){
+                    Route::get('/', 'index')->name('admin.financial.report')->middleware('PermissionCheck:financial_report_read');
+                    Route::get('/export-csv', 'exportCsv')->name('admin.financial.report.csv')->middleware('PermissionCheck:financial_report_read');
+                });
+
                 //third party routes
                 Route::get('third-parties', [ThirdPartyController::class, 'index'])->name('admin.third-parties')->middleware('PermissionCheck:third_party_read');
                 Route::get('third-party/create', [ThirdPartyController::class, 'create'])->name('admin.third-party.create')->middleware('PermissionCheck:third_party_create');
@@ -562,8 +584,13 @@ Route::group(['middleware' => 'XSS'], function () {
                     Route::get('/barcode/{id}', 'barcode')->name('barcode')->middleware('PermissionCheck:bag_read');
                 });
             
+                  /////////////////crm history //////////////
 
-
+                  Route::controller(CrmHistoryController::class)->prefix('crm-history')->name('crm-history.')->group(function () {
+                    Route::get('/', 'index')->name('index')->middleware('PermissionCheck:crm_history_read');
+                    Route::post('/search','search')->name('crm.search')->middleware('PermissionCheck:crm_history_read');
+                   
+                  });
 
 
 
@@ -808,6 +835,8 @@ Route::group(['middleware' => 'XSS'], function () {
 
                 Route::get('parcel/import', [ImportExportController::class, 'importExportView'])->name('merchant.import.csv');
                 Route::post('parcel/import', [ImportExportController::class, 'import'])->name('merchant.import');
+                Route::post('parcel/import-preview', [ImportExportController::class, 'preview'])->name('merchant.import.preview');
+                Route::post('parcel/import-confirm', [ImportExportController::class, 'confirm'])->name('merchant.import.confirm');
                 //merchant withdraw routes
                 Route::get('withdraws', [MerchantWithdrawController::class, 'index'])->name('merchant.withdraw');
                 Route::get('request-withdraw', [MerchantWithdrawController::class, 'create'])->name('merchant.withdraw.create');
@@ -842,6 +871,12 @@ Route::group(['middleware' => 'XSS'], function () {
                 Route::get('logout-staff-all-devices/{id}', [UserController::class, 'logoutUserDevices']);
                 Route::get('download-sample', [ImportExportController::class, 'export'])->name('merchant.export');
                 Route::get('download', [MerchantParcelController::class, 'download'])->name('merchant.closing.report');
+
+                // Merchant Customer CRM History
+                Route::controller(CrmHistoryController::class)->prefix('crm-history')->name('merchant.crm-history.')->group(function () {
+                    Route::get('/', 'index')->name('index');
+                    Route::post('/search', 'search')->name('search');
+                });
             });
         });
 

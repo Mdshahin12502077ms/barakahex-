@@ -68,7 +68,8 @@ trait MerchantBalanceTrait {
                     ->orWhere(function ($q){
                         $q->where('source','vat_adjustment')
                             ->whereIn('details',['govt_vat_for_parcel_return','govt_vat_for_parcel_return_reversed']);
-                    });
+                    })
+                    ->orWhereIn('source', ['previous_balance', 'cash_given_for_delivery_charge', 'opening_balance']);
             })
             ->where('payment_withdraw_id', null)->where('is_paid',false)->get();
 

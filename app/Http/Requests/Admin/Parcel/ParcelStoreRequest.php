@@ -38,6 +38,11 @@ class ParcelStoreRequest extends FormRequest
             'price' => 'required|numeric',
             'selling_price' => 'nullable|numeric',
             'pickup_branch_id' => 'required',
+            'city_id' => 'nullable',
+            'thana_id' => 'nullable',
+            'transfer_to_branch' => 'nullable',
+            'destination_branch_id' => 'nullable|required_if:transfer_to_branch,1|exists:branches,id',
+            'transfer_branch_select_id' => 'nullable|exists:branches,id',
         ];
     }
 

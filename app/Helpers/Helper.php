@@ -440,8 +440,20 @@
 
     function hasPermission($key_word)
     {
-        if (in_array($key_word, \Sentinel::getUser()->permissions)) {
+        $user = \Sentinel::getUser();
+        if (!$user) {
+            return false;
+        }
+        $userPermissions = $user->permissions ?? [];
+        if (is_array($userPermissions) && in_array($key_word, $userPermissions)) {
             return true;
+        }
+        if (!empty($user->roles)) {
+            foreach ($user->roles as $role) {
+                if (is_array($role->permissions) && in_array($key_word, $role->permissions)) {
+                    return true;
+                }
+            }
         }
         return false;
     }

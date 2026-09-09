@@ -38,6 +38,12 @@
                             <span>{{ __('returned_parcels') }}</span>
                         </a>
                     </li>
+                    <li class="{{ menuActivation(['merchant/crm-history', 'merchant/crm-history/*'], 'active') }}">
+                        <a href="{{ route('merchant.crm-history.index') }}">
+                            <i class="icon las la-user-check"></i>
+                            <span>{{ __('Customer CRM') }}</span>
+                        </a>
+                    </li>
                     <li
                         class="{{ menuActivation(['merchant/withdraws', 'merchant/statements', 'merchant/payment-invoice/*', 'merchant/request-withdraw'], 'active') }}">
                         <a href="{{ route('merchant.withdraw') }}">

@@ -18,7 +18,7 @@ class PermissionCheck
      */
     public function handle(Request $request, Closure $next, $permission)
     {
-        if (Sentinel::check() && in_array($permission, Sentinel::getUser()->permissions)) :
+        if (Sentinel::check() && hasPermission($permission)) :
             return $next($request);
         endif;
         return abort(403, 'Access Denied');

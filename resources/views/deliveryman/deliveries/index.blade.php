@@ -45,7 +45,7 @@
                     </div>
                     <div class="analytics-content no-line-braek">
                         <h4>{{ $statistics['completed'] ?? 0 }}</h4>
-                        <p>{{ __('completed_deliveries') }}</p>
+                        <p>{{ __('delivered_deliveries') }}</p>
                     </div>
                 </div>
             </div>
@@ -102,20 +102,20 @@
                            class="btn btn-sm {{ !request('status') || request('status') == 'all' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('all') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 'processing']) }}" 
-                           class="btn btn-sm {{ request('status') == 'processing' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 'delivery-assigned']) }}" 
+                           class="btn btn-sm {{ request('status') == 'delivery-assigned' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('processing') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 'completed']) }}" 
-                           class="btn btn-sm {{ request('status') == 'completed' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 'delivered']) }}" 
+                           class="btn btn-sm {{ request('status') == 'delivered' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('delivered') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 'rescheduled']) }}" 
-                           class="btn btn-sm {{ request('status') == 'rescheduled' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 're-schedule-delivery']) }}" 
+                           class="btn btn-sm {{ request('status') == 're-schedule-delivery' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('rescheduled') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 'cancelled']) }}" 
-                           class="btn btn-sm {{ request('status') == 'cancelled' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 'cancel']) }}" 
+                           class="btn btn-sm {{ request('status') == 'cancel' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('cancelled') }}
                         </a>
                     </div>

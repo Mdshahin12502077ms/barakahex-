@@ -3,10 +3,10 @@
         <strong class="text-dark" style="font-size: 13px;">{{ $query->name }}</strong>
         @php
             $typeConfig = match($query->type) {
-                'head_office' => ['class' => 'bg-dark text-white', 'icon' => 'la-building', 'label' => 'Head Office'],
-                'hub'         => ['class' => 'bg-primary text-white', 'icon' => 'la-warehouse', 'label' => 'Hub'],
-                'sort_center' => ['class' => 'bg-info text-white', 'icon' => 'la-boxes', 'label' => 'Sort Center'],
-                default       => ['class' => 'bg-success text-white', 'icon' => 'la-store', 'label' => 'Branch'],
+                'head_office' => ['class' => 'bg-dark text-white', 'icon' => 'la-building', 'label' => __('head_office')],
+                'hub'         => ['class' => 'bg-primary text-white', 'icon' => 'la-warehouse', 'label' => __('hub')],
+                'sort_center' => ['class' => 'bg-info text-white', 'icon' => 'la-boxes', 'label' => __('sort_center')],
+                default       => ['class' => 'bg-success text-white', 'icon' => 'la-store', 'label' => __('branch')],
             };
         @endphp
         <span class="badge {{ $typeConfig['class'] }}" style="font-size: 10px; font-weight: 600; padding: 2px 6px;">

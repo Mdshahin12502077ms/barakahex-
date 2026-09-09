@@ -70,6 +70,8 @@ Route::group(['middleware'=>'XSS'], function() {
         Route::get('download-sample', [ImportExportController::class, 'export'])->name('merchant.staff.export');
         Route::get('import', [ImportExportController::class, 'importExportView'])->name('merchant.staff.import.csv');
         Route::post('import', [ImportExportController::class, 'import'])->name('merchant.staff.import');
+        Route::post('import-preview', [ImportExportController::class, 'preview'])->name('merchant.staff.import.preview');
+        Route::post('import-confirm', [ImportExportController::class, 'confirm'])->name('merchant.staff.import.confirm');
     });
 });
 });

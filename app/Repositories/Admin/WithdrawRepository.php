@@ -127,6 +127,10 @@ class WithdrawRepository implements WithdrawInterface
                     $merchant_accounts->save();
                 endforeach;
 
+                MerchantAccount::where('merchant_withdraw_id', $merchant_withdraw->id)
+                    ->where('source', 'previous_balance')
+                    ->delete();
+
                 //company table data insertion and calculation
                 $company_account                        = new CompanyAccount();
                 $company_account->source                = 'withdraw_rejected';

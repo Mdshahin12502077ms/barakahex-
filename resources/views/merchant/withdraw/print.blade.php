@@ -187,6 +187,16 @@
                                                 <th scope="row">{{ __('withdraw_amount') }}</th>
                                                 <td>{{ format_price($withdraw->amount) }}</td>
                                             </tr>
+                                            @php
+                                                $total_settlement = $withdraw->parcels->sum('payable') + ($income ?? 0) - ($expense ?? 0);
+                                                $rem_balance = round($total_settlement - $withdraw->amount, 2);
+                                            @endphp
+                                            @if ($rem_balance > 0)
+                                                <tr>
+                                                    <th scope="row">{{ __('remaining_balance') }}</th>
+                                                    <td>{{ format_price($rem_balance) }}</td>
+                                                </tr>
+                                            @endif
                                             </tbody>
                                         </table>
                                     </div>

@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers\Merchant;
 
+use App\DataTables\Merchant\ParcelsDataTable;
 use App\Exports\ClosingReport;
 use App\Exports\Merchant\MerchantFilteredParcel;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Parcel\ParcelStoreRequest;
 use App\Http\Requests\Admin\Parcel\ParcelUpdateRequest;
+use App\Models\Branch;
 use App\Models\Charge;
-use App\Models\CodCharge;
-use App\Models\Parcel;
 use App\Models\City;
+use App\Models\CodCharge;
 use App\Models\District;
+use App\Models\Parcel;
 use App\Models\Thana;
 use App\Repositories\Interfaces\DeliveryManInterface;
 use App\Repositories\Interfaces\ParcelInterface;
 use App\Traits\ApiReturnFormatTrait;
-use Illuminate\Http\Request;
-use App\DataTables\Merchant\ParcelsDataTable;
-use Maatwebsite\Excel\Facades\Excel;
 use Brian2694\Toastr\Facades\Toastr;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ParcelController extends Controller
 {
@@ -59,9 +60,13 @@ class ParcelController extends Controller
             $cod_charges = CodCharge::all();
             $districts = District::with(['thanas' => function($q) { $q->where('status', 'active')->orderBy('name'); }])->active()->orderBy('name')->get();
             $city = $districts;
+            $user_branch_id=Sentinel::getUser()->branch_id;
+         
+            $branch = Branch::when($user_branch_id, function ($query) use ($user_branch_id) {
+            $query->where('id', '!=', $user_branch_id);
+            })->get();  
 
-
-            return view('merchant.parcel.create', compact('charges', 'cod_charges', 'shops', 'default_shop', 'districts', 'city'));
+            return view('merchant.parcel.create', compact('charges', 'cod_charges', 'shops', 'default_shop', 'districts', 'city','branch'));
         else:
             return back()->with('danger', __('service_unavailable'));
         endif;
@@ -114,7 +119,11 @@ class ParcelController extends Controller
         $cod_charges = CodCharge::all();
 
         if (($parcel->status == 'pending' || $parcel->status == 'pickup-assigned' || $parcel->status == 're-schedule-pickup') && $parcel->merchant->id == Sentinel::getUser()->merchant->id):
-            return view('merchant.parcel.edit', compact('parcel', 'charges', 'cod_charges', 'shops', 'default_shop'));
+            $user_branch_id = Sentinel::getUser()->branch_id;
+            $branch = Branch::when($user_branch_id, function ($query) use ($user_branch_id) {
+                $query->where('id', '!=', $user_branch_id);
+            })->get();
+            return view('merchant.parcel.edit', compact('parcel', 'charges', 'cod_charges', 'shops', 'default_shop', 'branch'));
         else:
             return back()->with('danger', __('you_are_not_allowed_to_update_this_parcel'));
         endif;
@@ -233,7 +242,8 @@ class ParcelController extends Controller
                 'movements.toBranch',
                 'movements.sender',
                 'movements.receiver',
-                'movements.deliveryMan.user'
+                'movements.deliveryMan.user',
+                'destinationBranch'
             ])->find($id);
             if ($parcel->merchant->id == Sentinel::getUser()->merchant->id):
                 $charges = Charge::all();

@@ -317,6 +317,11 @@ try {
 
     $parcel->shop_id = $request->shop != '' ? $request->shop : ($merchant->shops->where('default', true)->first() ? $merchant->shops->where('default', true)->first()->id : null);
     $parcel->user_id = $request->created_by != "" ? $request->created_by : Sentinel::getUser()->id;
+
+    $destBranchId = $request->destination_branch_id ?? $request->transfer_branch_select_id;
+    if ($request->has('transfer_to_branch') && !empty($destBranchId)) {
+        $parcel->destination_branch_id = $destBranchId;
+    }
     if ($request->parcel_type == 'frozen') {
 
         $pickup_date = date('Y-m-d');
@@ -490,6 +495,13 @@ try {
             }
 
             $parcel->shop_id = $request->shop != '' ? $request->shop : ($merchant->shops->where('default', true)->first() ? $merchant->shops->where('default', true)->first()->id : null);
+
+            $destBranchId = $request->destination_branch_id ?? $request->transfer_branch_select_id;
+            if ($request->has('transfer_to_branch') && !empty($destBranchId)) {
+                $parcel->destination_branch_id = $destBranchId;
+            } else {
+                $parcel->destination_branch_id = null;
+            }
 
             if ($parcel->parcel_type != $parcelType):
                 if ($parcelType == 'frozen') {

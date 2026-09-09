@@ -25,10 +25,11 @@
                                         <input type="text" name="merchant" hidden
                                             value="{{ Sentinel::getUser()->user_type == 'merchant' ? Sentinel::getUser()->merchant->id : Sentinel::getUser()->merchant_id }}">
                                         <label class="form-label"
-                                            for="amount">{{ __('amount') }} ({{ setting('default_currency') }})</label>
-                                        <input type="text" class="form-control @error('amount') is-invalid @enderror" id="amount"
-                                            value="{{ $current_payable }}"
-                                            placeholder="{{ __('amount') }}"  readonly>
+                                            for="amount">{{ __('amount') }} ({{ setting('default_currency') }}) <span class="text-danger">*</span></label>
+                                        <input type="number" step="any" min="1" max="{{ $current_payable }}" name="amount" class="form-control @error('amount') is-invalid @enderror" id="amount"
+                                            value="{{ old('amount', $current_payable) }}"
+                                            placeholder="{{ __('amount') }}" required>
+                                        <small class="text-muted d-block mt-1">{{ __('payable_amount') }}: {{ format_price($current_payable) }}</small>
                                         @if ($errors->has('amount'))
                                             <div class="invalid-feedback help-block">
                                                 <p>{{ $errors->first('amount') }}</p>
@@ -38,8 +39,6 @@
                                     <div class="mb-3">
                                         <label class="form-label" for="amount">{{ __('payout_to') }} <span
                                                 class="text-danger">*</span></label>
-                                        <input type="text" value="{{ $current_payable }}"
-                                            name="amount" hidden>
                                         <select class="without_search form-select form-control @error('withdraw_to') is-invalid @enderror" name="withdraw_to">
                                             <option value="">{{ __('select_account') }}</option>
                                             @foreach ($payment_account as $account)

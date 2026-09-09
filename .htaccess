@@ -1,3 +1,9 @@
+# Ensure index.php is loaded first
+DirectoryIndex index.php index.html
+
+# Prevent Directory Browsing but allow SymLinks (Required for LiteSpeed / Apache)
+Options -Indexes +FollowSymLinks
+
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
         Options -MultiViews -Indexes
@@ -14,15 +20,30 @@
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
 
-    # Send Requests To Front Controller...
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteCond %{REQUEST_FILENAME} !-f
+    # 1. Serve static files (CSS, JS, Images) from public/ directory if found there
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # 2. Allow existing root files/directories directly
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # 3. Send all remaining requests to Front Controller
     RewriteRule ^ index.php [L]
 </IfModule>
 
-<Files ~ "\.(env|json|config.js|md|gitignore|gitattributes|lock)$">
-    Require all denied
-</Files>
+# Block Sensitive Files
+<FilesMatch "^\.(env|git|gitignore|gitattributes)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order deny,allow
+        Deny from all
+    </IfModule>
+</FilesMatch>
 
 ## EXPIRES CACHING ##
 <IfModule mod_expires.c>
@@ -40,30 +61,6 @@
 <FilesMatch "\.(mp4|mov|avi|wmv|flv|webm|ogv|mpeg|mpg|mpe|m4p|m4v|m4a|3gp|3g2)$">
     ForceType video/mp4
 </FilesMatch>
-
-# BEGIN cPanel-generated php ini directives, do not edit
-# Manual editing of this file may result in unexpected behavior.
-# To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
-# For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
-<IfModule php8_module>
-
-</IfModule>
-<IfModule lsapi_module>
-
-</IfModule>
-# END cPanel-generated php ini directives, do not edit
-
-# BEGIN cPanel-generated php ini directives, do not edit
-# Manual editing of this file may result in unexpected behavior.
-# To make changes to this file, use the cPanel MultiPHP INI Editor (Home >> Software >> MultiPHP INI Editor)
-# For more information, read our documentation (https://go.cpanel.net/EA4ModifyINI)
-<IfModule php8_module>
-
-</IfModule>
-<IfModule lsapi_module>
-
-</IfModule>
-# END cPanel-generated php ini directives, do not edit
 
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php83” package as the default “PHP” programming language.

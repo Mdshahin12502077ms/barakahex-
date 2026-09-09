@@ -48,9 +48,8 @@
                                         <label class="form-label"
                                             for="amount">{{ __('amount') }}({{ setting('default_currency') }})
                                             <span class="text-danger">*</span></label>
-                                        <input type="text" class="form-control @error('amount') is-invalid @enderror" id="amount"
-                                            value="{{ old('amount') }}" placeholder="{{ __('amount') }}"
-                                            readonly>
+                                        <input type="number" step="any" min="1" class="form-control @error('amount') is-invalid @enderror" id="amount"
+                                            value="{{ old('amount') }}" placeholder="{{ __('amount') }}">
                                         @error('amount')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -200,6 +199,7 @@
                     })
                     .done(function(response) {
                         $("#amount").val(response['balance']);
+                        $("#amount").attr('max', response['balance']);
                         $("#current-amount").val(response['balance']);
                         $("#parcels").empty();
                         $("#parcels").append(response['parcels']);
@@ -215,6 +215,10 @@
                             '{{ __('something_went_wrong_with_ajax') }}', 'error');
                     })
 
+            });
+
+            $(document).on('input', '#amount', function() {
+                $('#current-amount').val($(this).val());
             });
             $('#customCheck1').on('click', function() {
                 if ($(this).is(':checked')) {

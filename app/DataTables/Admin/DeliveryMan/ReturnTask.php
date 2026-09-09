@@ -116,6 +116,7 @@ class ReturnTask extends DataTable
 
         $query = Parcel::with(['merchant.user', 'shop', 'events'])
             ->where('return_delivery_man_id', $deliveryManId)
+            ->whereIn('status', ['return-assigned-to-merchant', 'returned-to-merchant', 'return-cancel'])
             ->latest('id');
 
         $query->when(request('search')['value'] ?? false, function ($query, $search) {

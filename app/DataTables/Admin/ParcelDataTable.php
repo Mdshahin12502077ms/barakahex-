@@ -30,13 +30,17 @@ class ParcelDataTable extends DataTable
                 return view('admin.parcel.column.action', compact('parcel'));
             })
             ->addColumn('no_date', function ($parcel) {
+                $targetBranch = '';
+                if (!empty($parcel->destination_branch_id) && $parcel->destinationBranch) {
+                    $targetBranch = '<div class="mt-1"><span class="badge badge-info bg-info text-white" style="font-size: 11px;"><i class="las la-warehouse"></i> ' . __('target_branch') . ': ' . e($parcel->destinationBranch->name) . '</span></div>';
+                }
                 return '
                 <a href="' . route('admin.parcel.detail', $parcel->id) . '">
                     <div>' . __('id') . ':' . $parcel->parcel_no . '</div>
                     <span class="d-block">' . __('invno') . ':' . $parcel->customer_invoice_no . '</span>
                     <div>' . \Carbon\Carbon::parse($parcel->created_at)->format('d/m/Y') . '</div>
                 </a>
-            ';
+                ' . $targetBranch;
             })
             ->addColumn('charges', function ($parcel) {
                 $merchantName = $parcel->merchant_id == 1802 && $parcel->user->user_type == 'merchant_staff'
@@ -88,6 +92,7 @@ class ParcelDataTable extends DataTable
             'merchant',
             'shop',
             'events',
+            'destinationBranch',
         ])
             ->withPermission()
             ->when($this->request->order[0]['dir'] ?? false, function ($query, $orderBy) {

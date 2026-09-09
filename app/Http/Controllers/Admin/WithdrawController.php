@@ -127,9 +127,10 @@ class WithdrawController extends Controller
                     }
                     $data = $this->merchantBalance($request->merchant);
 
-                    $current_payable = $data['current_payable'];
+                    $current_payable = (float)$data['current_payable'];
+                    $request_amount  = (float)$request->amount;
 
-                    if (number_format($current_payable, 2, '.', '') != number_format($request->amount, 2, '.', '')):
+                    if ($request_amount <= 0 || $request_amount > $current_payable):
                         return back()->with('danger', __('incorrect_amount_please_try_again'));
                     else:
                         if ($this->withdraws->store($request)):

@@ -257,7 +257,7 @@
                                             @endif
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <div class="">
                                             <label class="form-label"
                                                 for="fv-full-name">{{ __('choose_which_needed_for_parcel') }}</label>
@@ -278,7 +278,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div
                                         class="col-md-6 packaging-area  {{ isset($parcel) ? ($parcel->fragile == 0 ? 'd-none' : '') : 'd-none' }}">
                                         <div class="mb-3">

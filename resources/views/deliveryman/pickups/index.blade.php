@@ -29,7 +29,7 @@
                         <i class="las la-truck-pickup"></i>
                     </div>
                     <div class="analytics-content no-line-braek">
-                        <h4>{{ $statistics['pending'] ?? 0 }}</h4>
+                        <h4>{{ $statistics['pickup-assigned'] ?? 0 }}</h4>
                         <p>{{ __('pending_pickups') }}</p>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                         <i class="las la-check-circle"></i>
                     </div>
                     <div class="analytics-content no-line-braek">
-                        <h4>{{ $statistics['completed'] ?? 0 }}</h4>
+                        <h4>{{ $statistics['delivered'] ?? 0 }}</h4>
                         <p>{{ __('completed_pickups') }}</p>
                     </div>
                 </div>
@@ -102,13 +102,13 @@
                            class="btn btn-sm {{ !request('status') || request('status') == 'all' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('all') }}
                         </a>
-                        <a href="{{ route('deliveryman.pickups', ['status' => 'pickup_assigned']) }}" 
-                           class="btn btn-sm {{ request('status') == 'pickup_assigned' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
+                        <a href="{{ route('deliveryman.pickups', ['status' => 'pickup-assigned']) }}" 
+                           class="btn btn-sm {{ request('status') == 'pickup-assigned' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('pending') }}
                         </a>
                         <a href="{{ route('deliveryman.pickups', ['status' => 'received-by-pickup-man']) }}" 
                            class="btn btn-sm {{ request('status') == 'received-by-pickup-man' || request('status') == 'pickup_received' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
-                            {{ __('completed') }}
+                            {{ __('Received') }}
                         </a>
                         <a href="{{ route('deliveryman.pickups', ['status' => 're-schedule-pickup']) }}" 
                            class="btn btn-sm {{ request('status') == 're-schedule-pickup' || request('status') == 'pickup_re_schedule' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">

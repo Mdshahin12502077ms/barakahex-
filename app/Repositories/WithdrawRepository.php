@@ -108,8 +108,10 @@ class WithdrawRepository implements WithdrawInterface {
             $withdraw->save();
 
 
+            $total_payable = 0;
             if (isset($request->parcels)):
                 $parcels = Parcel::whereIn('id', $request->parcels)->get();
+                $total_payable += (double)$parcels->sum('payable');
                 foreach ($parcels as $parcel):
                     $parcel->withdraw_id = $withdraw->id;
                     $parcel->is_paid = $request->status == 'processed' ? true : false;
@@ -119,11 +121,29 @@ class WithdrawRepository implements WithdrawInterface {
 
             if (isset($request->merchant_accounts)):
                 $merchant_accounts = MerchantAccount::whereIn('id', $request->merchant_accounts)->get();
+                $income = (double)$merchant_accounts->where('type', 'income')->sum('amount');
+                $expense = (double)$merchant_accounts->where('type', 'expense')->sum('amount');
+                $total_payable += ($income - $expense);
                 foreach ($merchant_accounts as $merchant_account):
                     $merchant_account->payment_withdraw_id = $withdraw->id;
                     $merchant_account->save();
                 endforeach;
             endif;
+
+            $remaining_balance = round($total_payable - (double)$withdraw->amount, 2);
+            if ($remaining_balance > 0) {
+                $remaining_account                       = new MerchantAccount();
+                $remaining_account->source               = 'previous_balance';
+                $remaining_account->type                 = 'income';
+                $remaining_account->amount               = $remaining_balance;
+                $remaining_account->merchant_id          = $withdraw->merchant_id;
+                $remaining_account->merchant_withdraw_id = $withdraw->id;
+                $remaining_account->details              = 'Remaining balance from payout #' . $withdraw->withdraw_id;
+                $remaining_account->date                 = date('Y-m-d');
+                $remaining_account->payment_withdraw_id  = null;
+                $remaining_account->is_paid              = false;
+                $remaining_account->save();
+            }
 
             //company table data insertion and calculation
             $company_account                       = new CompanyAccount();
@@ -166,6 +186,7 @@ class WithdrawRepository implements WithdrawInterface {
             $merchant_account->merchant_withdraw_id = $withdraw->id;
             $merchant_account->details              = $request->details ?? __('payment_withdraw_by_merchant');
             $merchant_account->date                 = date('Y-m-d');
+            $merchant_account->type                 = 'expense';
             $merchant_account->amount               = $withdraw->amount;
             $merchant_account->merchant_id          = $withdraw->merchant_id;
             $merchant_account->company_account_id   = $company_account->id;
@@ -330,7 +351,24 @@ class WithdrawRepository implements WithdrawInterface {
         DB::beginTransaction();
         try{
             $withdraw = MerchantWithdraw::find($id);
-            $withdraw->delete();
+            if ($withdraw) {
+                foreach ($withdraw->parcels as $parcel):
+                    $parcel->is_paid = false;
+                    $parcel->withdraw_id = null;
+                    $parcel->save();
+                endforeach;
+
+                foreach ($withdraw->merchantAccounts as $merchant_accounts):
+                    $merchant_accounts->payment_withdraw_id = null;
+                    $merchant_accounts->save();
+                endforeach;
+
+                MerchantAccount::where('merchant_withdraw_id', $withdraw->id)
+                    ->where('source', 'previous_balance')
+                    ->delete();
+
+                $withdraw->delete();
+            }
             DB::commit();
             return true;
 
@@ -528,6 +566,10 @@ class WithdrawRepository implements WithdrawInterface {
                 $merchant_accounts->payment_withdraw_id = null;
                 $merchant_accounts->save();
             endforeach;
+
+            MerchantAccount::where('merchant_withdraw_id', $merchant_withdraw->id)
+                ->where('source', 'previous_balance')
+                ->delete();
 
             // merchant sms start
             $sms_template = WithdrawSmsTemplate::where('subject','payment_cancelled_event')->first();

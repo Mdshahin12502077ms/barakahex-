@@ -193,7 +193,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    {{-- <div class="col-md-6">
                                         <label class="form-label mt-4" for="fv-full-name"></label>
                                         <div class="row pt-1">
                                             <div class="col-md-6">
@@ -212,7 +212,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label" for="fv-full-name">{{ __('packaging') }}</label>
                                         <select class="without_search form-select form-control packaging" name="packaging">
@@ -260,6 +260,48 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 mb-3">
+                                        <div class="row pt-1">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <div class="preview-block">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <label class="custom-control-label" for="transfer_to_branch">
+                                                                <input type="checkbox" class="custom-control-input"
+                                                                    id="transfer_to_branch" value="1" name="transfer_to_branch"
+                                                                    {{ (old('transfer_to_branch', !empty($parcel->destination_branch_id)) ? 'checked' : '') }}>
+                                                                <span class="text-capitalize">
+                                                                    {{ __('transfer_to_branch') }}</span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6 mb-3 {{ (old('transfer_to_branch', !empty($parcel->destination_branch_id)) ? '' : 'd-none') }}" id="transfer_branch_wrapper">
+                                            <label class="form-label" for="destination_branch_id">{{ __('select_branch') }}
+                                                <span class="text-danger">*</span>
+                                            </label>
+                                            <select class="without_search form-select form-control @error('destination_branch_id') is-invalid @enderror"
+                                                name="destination_branch_id" id="destination_branch_id">
+                                                <option value="" selected disabled>{{ __('select_branch') }}</option>
+                                                @if(isset($branch))
+                                                    @foreach ($branch as $item)
+                                                        <option value="{{ $item->id }}"
+                                                            {{ old('destination_branch_id', $parcel->destination_branch_id) == $item->id ? 'selected' : '' }}>
+                                                            {{ $item->name }}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
+                                            </select>
+                                            @if ($errors->has('destination_branch_id'))
+                                                <div class="invalid-feedback help-block">
+                                                    <p>{{ $errors->first('destination_branch_id') }}</p>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
@@ -411,4 +453,18 @@
         </div>
     </div>
     @include('admin.parcel.charge-script')
+@push('script')
+<script>
+$(document).ready(function () {
+    $('#transfer_to_branch').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#transfer_branch_wrapper').removeClass('d-none');
+        } else {
+            $('#transfer_branch_wrapper').addClass('d-none');
+            $('select[name="destination_branch_id"]').val('').trigger('change');
+        }
+    });
+});
+</script>
+@endpush
 @endsection

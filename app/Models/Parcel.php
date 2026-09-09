@@ -31,6 +31,8 @@ class Parcel extends Model
         'price',
         'merchant_id',
         'pickup_branch_id',
+        'transfer_to_branch_id',
+        'destination_branch_id',
         'user_id',
         'customer_name',
         'customer_invoice_no',
@@ -147,6 +149,11 @@ class Parcel extends Model
     public function transferToBranch()
     {
         return $this->belongsTo(Branch::class, 'transfer_to_branch_id', 'id');
+    }
+
+    public function destinationBranch()
+    {
+        return $this->belongsTo(Branch::class, 'destination_branch_id', 'id');
     }
 
     public function thirdParty()

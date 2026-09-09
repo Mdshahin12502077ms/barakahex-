@@ -107,7 +107,7 @@ class ParcelController extends Controller
     public function detail($id)
     {
         try {
-            $parcel = Parcel::with('merchant.user','events','branch')->find($id);
+            $parcel = Parcel::with('merchant.user','events','branch','destinationBranch')->find($id);
             if(($parcel->merchant->id == Sentinel::getUser()->merchant_id && hasPermission('all_parcel')) || ($parcel->merchant->id == Sentinel::getUser()->merchant_id && $parcel->user_id == Sentinel::getUser()->id)):
                 $charges        = Charge::all();
                 $cod_charges    = CodCharge::all();

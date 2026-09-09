@@ -38,7 +38,8 @@ class ParcelsDataTable extends DataTable
             'deliveryMan.user',
             'returnDeliveryMan.user',
             'pickupMan.user',
-            'shop'
+            'shop',
+            'destinationBranch'
         ]);
 
         if (Sentinel::getUser()->user_type == 'merchant_staff') {

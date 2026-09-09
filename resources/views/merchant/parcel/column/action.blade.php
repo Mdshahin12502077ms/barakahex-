@@ -7,10 +7,10 @@
             </a>
         </li>
         <div class="dropdown">
-            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" data-bs-boundary="viewport" aria-expanded="false">
                 <i class="las la-ellipsis-v"></i>
             </a>
-            <ul class="dropdown-menu">
+            <ul class="dropdown-menu" style="max-height: 140px; overflow-y: auto;">
                 <li>
                     <a class="dropdown-item"
                         href="{{ Sentinel::getUser()->user_type == 'merchant' ? route('merchant.parcel.detail', $parcel->id) : route('merchant.staff.parcel.detail', $parcel->id) }}"

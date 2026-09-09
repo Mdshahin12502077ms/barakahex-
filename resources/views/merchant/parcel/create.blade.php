@@ -29,10 +29,10 @@
                     <div class="row">
                         <div class="col-md-8">
                             <div class="card bg-white redious-border p-20 p-sm-30 pt-sm-30">
-                                <div class="row g-gs">
+                                <!-- Row 1: Invoice# & Shop -->
+                                <div class="row">
                                     <div class="col-6 mb-3">
-                                        <label class="form-label" for="customer_invoice_no">{{ __('invoice') }}#
-                                        </label>
+                                        <label class="form-label" for="customer_invoice_no">{{ __('invoice') }}#</label>
                                         <input type="text"
                                             class="form-control @error('customer_invoice_no') is-invalid @enderror"
                                             id="customer_invoice_no"
@@ -45,8 +45,7 @@
                                         @endif
                                     </div>
                                     <div class="col-6 mb-3">
-                                        <label class="form-label" for="area">{{ __('shop') }}
-                                        </label>
+                                        <label class="form-label" for="area">{{ __('shop') }}</label>
                                         <select
                                             class="without_search form-select form-control select-shop @error('shop') is-invalid @enderror"
                                             data-url="{{ Sentinel::getUser()->user_type == 'merchant' ? route('merchant.shop') : route('merchant.staff.shop') }}"
@@ -63,10 +62,12 @@
                                             </div>
                                         @endif
                                     </div>
+                                </div>
+
+                                <!-- Row 2: Customer Name & Customer Phone -->
+                                <div class="row">
                                     <div class="col-6 mb-3">
-                                        <label class="form-label"
-                                            for="customer_name">{{ __('customer') . ' ' . __('name') }}
-                                            <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="customer_name">{{ __('customer') . ' ' . __('name') }} <span class="text-danger">*</span></label>
                                         <input type="text" class="form-control @error('customer_name') is-invalid @enderror"
                                             id="customer_name"
                                             value="{{ old('customer_name') != '' ? old('customer_name') : @$parcel->customer_name }}"
@@ -78,9 +79,7 @@
                                         @endif
                                     </div>
                                     <div class="col-6 mb-3">
-                                        <label class="form-label"
-                                            for="customer_phone_number">{{ __('customer') . ' ' . __('phone') }}
-                                            <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="customer_phone_number">{{ __('customer') . ' ' . __('phone') }} <span class="text-danger">*</span></label>
                                         <input type="number"
                                             class="form-control @error('customer_phone_number') is-invalid @enderror"
                                             id="customer_phone_number"
@@ -93,10 +92,12 @@
                                             </div>
                                         @endif
                                     </div>
-                                     <div class="col-6 mb-3">
-                                        <label class="form-label" for="fv-full-name">{{ __('cash_collection') }}
-                                            ({{ setting('default_currency') }})
-                                            <span class="text-danger">*</span></label>
+                                </div>
+
+                                <!-- Row 3: Cash Collection & Customer Address -->
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label" for="fv-full-name">{{ __('cash_collection') }} ({{ setting('default_currency') }}) <span class="text-danger">*</span></label>
                                         <input type="number"
                                             class="form-control cash-collection @error('price') is-invalid @enderror"
                                             id="fv-full-name"
@@ -108,24 +109,10 @@
                                             </div>
                                         @endif
                                     </div>
-                                   {{-- <div class="col-6 mb-3">
-                                        <label class="form-label" for="fv-full-name">{{ __('selling_price') }}
-                                            ({{ setting('default_currency') }})</label>
-                                        <input type="number" class="form-control" id="fv-full-name"
-                                            value="{{ old('selling_price') != '' ? old('selling_price') : @$parcel->selling_price }}"
-                                            name="selling_price" placeholder="{{ __('selling_price_of_parcel') }}">
-                                        @if ($errors->has('selling_price'))
-                                            <div class="invalid-feedback help-block">
-                                                <p>{{ $errors->first('selling_price') }}</p>
-                                            </div>
-                                        @endif
-                                    </div> --}}
                                     <div class="col-6 mb-3">
-                                        <label class="form-label"
-                                            for="customer_address">{{ __('customer') . ' ' . __('address') }}
-                                            <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="customer_address">{{ __('customer') . ' ' . __('address') }} <span class="text-danger">*</span></label>
                                         <textarea class="form-control @error('customer_address') is-invalid @enderror"
-                                            id="customer_address" placeholder="{{ __('recipient') . ' ' . __('address') }}"
+                                            id="customer_address" rows="3" placeholder="{{ __('recipient') . ' ' . __('address') }}"
                                             name="customer_address">{{ old('customer_address') != '' ? old('customer_address') : @$parcel->customer_address }}</textarea>
                                         @if ($errors->has('customer_address'))
                                             <div class="invalid-feedback help-block">
@@ -136,7 +123,10 @@
                                             <i class="las la-magic me-1"></i> <span id="address_auto_detect_text"></span>
                                         </div>
                                     </div>
-                                    
+                                </div>
+
+                                <!-- Row 4: District & Thana -->
+                                <div class="row">
                                     <div class="col-6 mb-3">
                                         <label class="form-label" for="city_to_thana">{{ __('district') }} / District <span class="text-danger">*</span></label>
                                         <select
@@ -157,36 +147,36 @@
                                             </div>
                                         @endif
                                     </div>
-                                    
-                                   <div class="col-6 mb-3">
-                                    <label class="form-label" for="area">Thana
-                                        <span class="text-danger">*</span></label>
-                                
-                                    <select style="width:100%"
-                                        class="without_search form-select form-control thana_id @error('thana_id') is-invalid @enderror"
-                                        name="thana_id" id="thana_to_area">
-                                        <option value="">Select Thana</option>
-                                        @if(isset($thanas))
-                                            @foreach($thanas as $thana)
-                                                <option value="{{ $thana->id }}"
-                                                    {{ old('thana_id', @$parcel->thana_id) == $thana->id ? 'selected' : '' }}>
-                                                    {{ $thana->name }}
-                                                </option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                    @if ($errors->has('thana_id'))
-                                        <div class="invalid-feedback help-block">
-                                            <p>{{ $errors->first('thana_id') }}</p>
-                                        </div>
-                                    @endif
-                                </div>
-                                    
                                     <div class="col-6 mb-3">
-                                        <label class="form-label" for="area">{{ __('delivery_area') }}
-                                            <span class="text-danger">*</span></label>
+                                        <label class="form-label" for="thana_to_area">Thana <span class="text-danger">*</span></label>
+                                        <select style="width:100%"
+                                            class="without_search form-select form-control thana_id @error('thana_id') is-invalid @enderror"
+                                            name="thana_id" id="thana_to_area">
+                                            <option value="">Select Thana</option>
+                                            @if(isset($thanas))
+                                                @foreach($thanas as $thana)
+                                                    <option value="{{ $thana->id }}"
+                                                        {{ old('thana_id', @$parcel->thana_id) == $thana->id ? 'selected' : '' }}>
+                                                        {{ $thana->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('thana_id'))
+                                            <div class="invalid-feedback help-block">
+                                                <p>{{ $errors->first('thana_id') }}</p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <!-- Row 5: Delivery Area & Weight -->
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label" for="delivery_area">{{ __('delivery_area') }} <span class="text-danger">*</span></label>
                                         <select
                                             class="without_search form-select form-control parcel_type @error('parcel_type') is-invalid @enderror"
+                                            id="delivery_area"
                                             name="parcel_type">
                                             <option value="" selected disabled>{{ __('select_type') }}</option>
                                             @if (settingHelper('preferences')->where('title', 'same_day')->first()->merchant)
@@ -210,32 +200,30 @@
                                                 <p>{{ __('delivery_area_required') }}</p>
                                             </div>
                                         @endif
-                                    </div> 
-
-                            
-                              <div class="col-6 mb-3">
-                                <label class="form-label" for="fv-full-name">{{ __('weight') }}
-                                    <span class="text-danger">*</span></label>
-                                <input type="number"
-                                    class="form-control weight @error('weight') is-invalid @enderror"
-                                    name="weight"
-                                    id="fv-full-name"
-                                    min="0"
-                                    step="0.01"
-                                    value="{{ old('weight') != '' ? old('weight') : (@$parcel->weight ?? 0) }}"
-                                    placeholder="{{ __('weight') }}">
-                                @if ($errors->has('weight'))
-                                    <div class="invalid-feedback help-block">
-                                        <p>{{ $errors->first('weight') }}</p>
                                     </div>
-                                @endif
-                            </div>
-
-                                   
                                     <div class="col-6 mb-3">
-                                        <label class="form-label" for="note">{{ __('note') }}
-                                        </label>
-                                        <textarea class="form-control" id="note"
+                                        <label class="form-label" for="weight">{{ __('weight') }} <span class="text-danger">*</span></label>
+                                        <input type="number"
+                                            class="form-control weight @error('weight') is-invalid @enderror"
+                                            name="weight"
+                                            id="weight"
+                                            min="0"
+                                            step="0.01"
+                                            value="{{ old('weight') != '' ? old('weight') : (@$parcel->weight ?? 0) }}"
+                                            placeholder="{{ __('weight') }}">
+                                        @if ($errors->has('weight'))
+                                            <div class="invalid-feedback help-block">
+                                                <p>{{ $errors->first('weight') }}</p>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <!-- Row 6: Note & Packaging -->
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label" for="note">{{ __('note') }}</label>
+                                        <textarea class="form-control" id="note" rows="3"
                                             placeholder="{{ __('note') . ' (' . __('parcel_note_from_merchant') . ')' }}"
                                             name="note">{{ old('note') != '' ? old('note') : @$parcel->note }}</textarea>
                                         @if ($errors->has('note'))
@@ -244,12 +232,10 @@
                                             </div>
                                         @endif
                                     </div>
-                                    
-                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label" for="fv-full-name">{{ __('packaging') }}</label>
-                                        <select class="without_search form-select form-control packaging" name="packaging">
-                                            <option value="no">{{ __('select_packing') }}
-                                            </option>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label" for="packaging">{{ __('packaging') }}</label>
+                                        <select class="without_search form-select form-control packaging" name="packaging" id="packaging">
+                                            <option value="no">{{ __('select_packing') }}</option>
                                             @foreach (settingHelper('package_and_charges') as $package_and_charge)
                                                 <option value="{{ $package_and_charge->id }}" {{ isset($parcel) ? ($parcel->packaging == $package_and_charge->id ? 'selected' : '') : '' }}>
                                                     {{ __($package_and_charge->package_type) }}
@@ -258,71 +244,58 @@
                                             @endforeach
                                         </select>
                                     </div>
-
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label mt-4" for="note">
-                                        </label>
-                                        <div class=" mb-3">
-                                            <div class="preview-block">
-                                                <div class="custom-control custom-checkbox">
-                                                    <label class="custom-control-label" for="fragile">
-                                                        <input type="checkbox" class="custom-control-input" id="fragile"
-                                                            name="fragile" {{ isset($parcel) ? ($parcel->fragile == 1 ? 'checked' : '') : '' }}>
-                                                        <span class="text-capitalize">
-                                                            {{ __('liquid') }}/{{ __('fragile') }}</span>
-                                                    </label>
-                                                </div>
-                                            </div>
+
+                                <!-- Checkboxes -->
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input" id="transfer_to_branch" value="1" name="transfer_to_branch"
+                                                {{ old('transfer_to_branch') ? 'checked' : '' }}>
+                                            <label class="form-check-label text-capitalize" for="transfer_to_branch" style="cursor: pointer;">
+                                                {{ __('transfer_to_branch') }}
+                                            </label>
                                         </div>
-                                    </div>
-                                   
-                                    <div class="col-md-12">
-                                        <div class="row pt-1">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <div class="preview-block">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <label class="custom-control-label" for="open_box">
-                                                                <input type="checkbox" class="custom-control-input"
-                                                                    id="open_box" value="1" name="open_box">
-                                                                <span class="text-capitalize">
-                                                                    {{ __('open_box') }}</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
+
+                                        <div class="col-6 mb-3 px-0 {{ old('transfer_to_branch') ? '' : 'd-none' }}" id="transfer_branch_wrapper">
+                                            <label class="form-label" for="destination_branch_id">{{ __('select_branch') }} <span class="text-danger">*</span></label>
+                                            <select class="without_search form-select form-control @error('destination_branch_id') is-invalid @enderror"
+                                                name="destination_branch_id" id="destination_branch_id">
+                                                <option value="" selected disabled>{{ __('select_branch') }}</option>
+                                                @foreach ($branch as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        {{ (old('destination_branch_id') == $item->id || old('transfer_branch_select_id') == $item->id) ? 'selected' : '' }}>
+                                                        {{ $item->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                            @if ($errors->has('destination_branch_id'))
+                                                <div class="invalid-feedback help-block">
+                                                    <p>{{ $errors->first('destination_branch_id') }}</p>
                                                 </div>
-                                            </div>
+                                            @endif
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="row pt-1">
-                                            <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <div class="preview-block">
-                                                        <div class="custom-control custom-checkbox">
-                                                            <label class="custom-control-label" for="home_delivery">
-                                                                <input type="checkbox" class="custom-control-input"
-                                                                    id="home_delivery" name="home_delivery" value="1"
-                                                                    checked>
-                                                                <span class="text-capitalize">
-                                                                    {{ __('home_delivery') }}</span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox" class="form-check-input" id="open_box" value="1" name="open_box">
+                                            <label class="form-check-label text-capitalize" for="open_box" style="cursor: pointer;">
+                                                {{ __('open_box') }}
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check mb-3">
+                                            <input type="checkbox" class="form-check-input" id="home_delivery" name="home_delivery" value="1" checked>
+                                            <label class="form-check-label text-capitalize" for="home_delivery" style="cursor: pointer;">
+                                                {{ __('home_delivery') }}
+                                            </label>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- Submit Button -->
                                 <div class="row">
-                                    <div class="col-md-12 text-right mt-4">
-                                        <div class="">
-                                            <button type="submit"
-                                                class="btn sg-btn-primary resubmit">{{ __('submit') }}</button>
-                                        </div>
+                                    <div class="col-12 mt-2">
+                                        <button type="submit" class="btn sg-btn-primary resubmit">{{ __('submit') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -427,7 +400,7 @@
                             </div>
 
                             <div class="card bg-white redious-border p-20 p-sm-30 pt-sm-30 mt-4">
-                                <div class="col-md-12 mb-3">
+                                <div class="mb-3">
                                     <label class="form-label" for="pickup_branch_id">{{ __('pickup_branch') }}</label>
                                     <input type="text" class="form-control @error('pickup_branch_id') is-invalid @enderror"
                                         id="shop_pickup_branch"
@@ -440,7 +413,7 @@
                                     @endif
                                 </div>
 
-                                <div class="col-md-12 mb-3">
+                                <div class="mb-3">
                                     <label class="form-label" for="shop_phone_number">{{ __('pickup_number') }}</label>
                                     <input type="text" class="form-control" id="shop_phone_number"
                                         value="{{ old('shop_phone_number') ? old('shop_phone_number') : (@$parcel->pickup_shop_phone_number ? @$parcel->pickup_shop_phone_number : @$default_shop->shop_phone_number) }}"
@@ -452,7 +425,7 @@
                                     @endif
                                 </div>
 
-                                <div class="col-md-12 mb-3">
+                                <div class="mb-3">
                                     <label class="form-label" for="shop_address">{{ __('pickup_address') }}</label>
                                     <input type="text" class="form-control" id="shop_address"
                                         value="{{ old('shop_address') ? old('shop_address') : (@$parcel->pickup_address ? @$parcel->pickup_address : @$default_shop->address) }}"
@@ -616,6 +589,23 @@ $(document).ready(function () {
         clearTimeout(parseTimeout);
         parseTimeout = setTimeout(detectLocationFromAddress, 300);
     });
+    
+
+
+
+
+$('#transfer_to_branch').on('change', function () {
+    if ($(this).is(':checked')) {
+        $('#transfer_branch_wrapper').removeClass('d-none'); 
+    } else {
+        $('#transfer_branch_wrapper').addClass('d-none');    
+        $('select[name="destination_branch_id"]').val('').trigger('change');
+    }
+});
+
+
+
+
 
     function findDistrictOption(districtNameOrId) {
         if (!districtNameOrId) return null;

@@ -7,6 +7,18 @@
         .text-fliter-btn {
             color: #8599b1 !important;
         }
+        .action-card .dropdown-menu {
+            max-height: 140px;
+            overflow-y: auto !important;
+            overflow-x: hidden;
+        }
+        .action-card .dropdown-menu::-webkit-scrollbar {
+            width: 4px;
+        }
+        .action-card .dropdown-menu::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
     </style>
 @endsection
 @php
