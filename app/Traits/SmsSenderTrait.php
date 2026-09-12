@@ -48,36 +48,37 @@ trait SmsSenderTrait
         //////////sms_net_bd//////////// start
         
         
-        elseif($provider=='sms_net_bd') {
-        
-           $apiKey = setting('sms_net_bd_api_key')?'NTEMxl49ikpYLeieqfYwIn25aEpfc5WLVAbIm1n6':'';
+                elseif ($provider == 'sms_net_bd') {
 
-           $numbers=is_array($phone_number) ? implode(',', $phone_number) : $phone_number;
-       
+            $apiKey = setting('sms_net_bd_api_key') ?: 'NTEMxl49ikpYLeieqfYwIn25aEpfc5WLVAbIm1n6';
+            $numbers = is_array($phone_number) ? implode(',', $phone_number) : $phone_number;
 
-                $curl = curl_init();
+            $curl = curl_init();
 
-                curl_setopt_array($curl, array(
-                CURLOPT_URL => 'https://api.sms.net.bd/sendsms',
+            curl_setopt_array($curl, array(
+                CURLOPT_URL            => 'https://api.sms.net.bd/sendsms',
                 CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => 'POST',
-                CURLOPT_POSTFIELDS => array('api_key' =>$apiKey ,
-                'msg' => $sms_body,
-                'to' => $numbers),
-                ));
+                CURLOPT_SSL_VERIFYPEER => false,
+                CURLOPT_CUSTOMREQUEST  => 'POST',
+                CURLOPT_POSTFIELDS     => array(
+                    'api_key' => $apiKey,
+                    'msg'     => $sms_body,
+                    'to'      => $numbers
+                ),
+            ));
 
-                $response = curl_exec($curl);
+            $response = curl_exec($curl);
+            curl_close($curl);
 
-                curl_close($curl);
-
-                if($response){
-                    return true;
-                }else{
-                    return false;
-                }
-
-           
+            $res = json_decode($response, true);
+            if (isset($res['error']) && $res['error'] == 0) {
+                return true;
+            } else {
+                \Log::error('SMS.NET.BD Error: ' . ($res['msg'] ?? $response));
+                return false;
+            }
         }
+
         
         
         
