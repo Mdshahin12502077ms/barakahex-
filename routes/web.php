@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\ApiDocumentationController;
 use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\AuditLogController;
 use App\Http\Controllers\Admin\BagController;
@@ -70,6 +71,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -871,6 +873,12 @@ Route::group(['middleware' => 'XSS'], function () {
                 Route::get('logout-staff-all-devices/{id}', [UserController::class, 'logoutUserDevices']);
                 Route::get('download-sample', [ImportExportController::class, 'export'])->name('merchant.export');
                 Route::get('download', [MerchantParcelController::class, 'download'])->name('merchant.closing.report');
+                 
+               Route::controller(ApiDocumentationController::class)->group(function(){
+                    Route::get('api-documentation', 'apiDocumentation')->name('merchant.api-documentation');
+                    
+               });
+
 
                 // Merchant Customer CRM History
                 Route::controller(CrmHistoryController::class)->prefix('crm-history')->name('merchant.crm-history.')->group(function () {

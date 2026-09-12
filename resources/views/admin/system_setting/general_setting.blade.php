@@ -186,6 +186,34 @@
                                     </div>
                                 @endif
                             </div>
+
+
+                           <div class="col-sm-6 col-md-4 col-lg-4 mb-4">
+                                <label for="api_documentation" class="form-label">{{ __('api_documentation') }} (PDF)</label>
+                                <input type="file" name="api_documentation"
+                                       class="form-control rounded-2 @error('api_documentation') is-invalid @enderror"
+                                       id="api_documentation"
+                                       accept=".pdf">
+                                @if(setting('api_documentation'))
+                                    <div class="mt-2">
+                                        <a href="{{ asset(setting('api_documentation')) }}" target="_blank" class="text-primary font-13 text-decoration-underline d-inline-flex align-items-center">
+                                            <i class="las la-file-pdf font-18 me-1 text-danger"></i> 
+                                            <span>{{ __('view_current_file') ?? 'View Current Document' }}</span>
+                                        </a>
+                                    </div>
+                                @endif
+                                @if ($errors->has('api_documentation'))
+                                    <div class="invalid-feedback help-block">
+                                        <p>{{ $errors->first('api_documentation') }}</p>
+                                    </div>
+                                @endif
+                            </div>
+
+
+
+
+
+
                             <div class="col-sm-6 col-md-4 col-lg-4 mb-4">
                                 <label for="instagram" class="form-label">{{ __('instagram') }}</label>
                                 <input type="text" name="instagram"

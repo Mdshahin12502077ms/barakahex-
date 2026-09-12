@@ -46,7 +46,7 @@ class SettingRepository
             }
         }
 
-        foreach ($request->except('_token', '_method', 'site_lang', 'mobile_app', 'chat_messenger', 'countries', 'r','social_media','social_media_url') as $key => $value) {
+        foreach ($request->except('_token', '_method', 'site_lang', 'mobile_app', 'chat_messenger', 'countries', 'r','social_media','social_media_url', 'api_documentation') as $key => $value) {
 
             if ($key !== 'social_media' && $key !== 'social_media_url') {
 

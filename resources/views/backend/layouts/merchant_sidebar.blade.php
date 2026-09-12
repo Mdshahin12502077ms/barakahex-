@@ -117,6 +117,19 @@
                             </a>
                         </li>
                     @endif
+
+
+                        <li class="{{ menuActivation(['merchant/api-documentation'], 'active') }}">
+                            <a href="{{ route('merchant.api-documentation') }}">
+                                <i class="icon las la-file-code"></i>
+                                <span>{{ __('API Documentation') }}</span>
+                            </a>
+                        </li>
+
+
+
+
+
                     <li class="{{ menuActivation(['merchant/company', 'merchant/account/*'], 'active') }}">
                         <a href="{{ route('merchant.company') }}">
                             <i class="icon las la-user-alt"></i>

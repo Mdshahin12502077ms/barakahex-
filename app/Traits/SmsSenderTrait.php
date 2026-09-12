@@ -48,7 +48,7 @@ trait SmsSenderTrait
         //////////sms_net_bd//////////// start
         
         
-                elseif ($provider == 'sms_net_bd') {
+    elseif ($provider == 'sms_net_bd') {
 
             $apiKey = setting('sms_net_bd_api_key') ?: 'NTEMxl49ikpYLeieqfYwIn25aEpfc5WLVAbIm1n6';
             $numbers = is_array($phone_number) ? implode(',', $phone_number) : $phone_number;
@@ -69,7 +69,7 @@ trait SmsSenderTrait
 
             $response = curl_exec($curl);
             curl_close($curl);
-
+          
             $res = json_decode($response, true);
             if (isset($res['error']) && $res['error'] == 0) {
                 return true;

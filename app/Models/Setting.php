@@ -10,7 +10,7 @@ class Setting extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'value', 'lang', 'status'];
+    protected $fillable = ['title', 'value', 'lang', 'status','api_documentation'];
 
     protected $casts = [
       'array_value' => 'array',

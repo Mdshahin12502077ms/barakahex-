@@ -76,12 +76,29 @@ class SystemSettingController extends Controller
             'email_address'      => 'required|email',
             'time_zone'          => 'required',
             'default_weight'     => 'required',
+            'api_documentation'  => 'nullable|file|mimes:pdf|max:10240',
         ]);
 
 
         DB::beginTransaction();
         try {
+            if ($request->hasFile('api_documentation')) {
+                $file = $request->file('api_documentation');
+                $fileName = 'api_doc_' . time() . '.' . $file->getClientOriginalExtension();
+                $destinationPath = public_path('uploads/documentation');
+                if (!file_exists($destinationPath)) {
+                    mkdir($destinationPath, 0777, true);
+                }
+                $file->move($destinationPath, $fileName);
+                $filePath = 'uploads/documentation/' . $fileName;
 
+                \App\Models\Setting::updateOrCreate(
+                    ['title' => 'api_documentation'],
+                    ['value' => $filePath, 'lang' => $request->site_lang ?? 'en']
+                );
+            }
+
+            $request->offsetUnset('api_documentation');
             $this->setting->update($request);
             $time_zone = Timezone::where('id', $request->time_zone)->first();
 
