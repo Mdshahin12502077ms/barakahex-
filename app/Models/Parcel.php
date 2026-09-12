@@ -38,6 +38,8 @@ class Parcel extends Model
         'customer_invoice_no',
         'customer_phone_number',
         'customer_address',
+        'district_id',
+        'thana_id',
         'pickup_date',
         'pickup_time',
         'delivery_date',
@@ -171,9 +173,19 @@ class Parcel extends Model
         return $this->belongsTo(User::class);
     }
 
-   public function otpLogs()
+    public function otpLogs()
     {
         return $this->hasMany(PercelOtpLog::class, 'parcel_id')->latest();
+    }
+
+    public function district()
+    {
+        return $this->belongsTo(District::class, 'district_id');
+    }
+
+    public function thana()
+    {
+        return $this->belongsTo(Thana::class, 'thana_id');
     }
 
 

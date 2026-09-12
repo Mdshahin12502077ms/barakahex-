@@ -111,7 +111,7 @@
                                             @foreach($districts as $district)
                                                 <option value="{{ $district->id }}"
                                                     data-name="{{ strtolower($district->name) }}"
-                                                    {{ old('city_id', @$parcel->city_id) == $district->id ? 'selected' : '' }}>
+                                                    {{ old('city_id', @$parcel->district_id ?? @$parcel->city_id) == $district->id ? 'selected' : '' }}>
                                                     {{ $district->name }}
                                                 </option>
                                             @endforeach

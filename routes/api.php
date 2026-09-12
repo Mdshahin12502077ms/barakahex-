@@ -4,6 +4,7 @@
     use App\Http\Controllers\Api\DeliveryMan\Beta\ParcelController;
     use App\Http\Controllers\Api\DeliveryMan\V10\AuthController as V10AuthController;
     use App\Http\Controllers\Api\DeliveryMan\V10\ParcelController as V10ParcelController;
+    use App\Http\Controllers\Api\CourierApiController;
     use Illuminate\Http\Request;
     use Illuminate\Support\Facades\Route;
 
@@ -58,8 +59,21 @@
         });
     });
 
+    /*
+    |--------------------------------------------------------------------------
+    | External Merchant Courier APIs (eCommerce / Steadfast-style integration)
+    |--------------------------------------------------------------------------
+    */
+    Route::post('create_order', [CourierApiController::class, 'createOrder']);
+    Route::match(['get', 'post'], 'order_status/{id?}', [CourierApiController::class, 'orderStatus']);
+    Route::post('cancel_order', [CourierApiController::class, 'cancelOrder']);
+    Route::get('districts', [CourierApiController::class, 'getDistricts']);
+    Route::get('thanas', [CourierApiController::class, 'getThanas']);
 
-
-
-
-
+    Route::prefix('v1')->group(function () {
+        Route::post('create_order', [CourierApiController::class, 'createOrder']);
+        Route::match(['get', 'post'], 'order_status/{id?}', [CourierApiController::class, 'orderStatus']);
+        Route::post('cancel_order', [CourierApiController::class, 'cancelOrder']);
+        Route::get('districts', [CourierApiController::class, 'getDistricts']);
+        Route::get('thanas', [CourierApiController::class, 'getThanas']);
+    });

@@ -193,9 +193,12 @@ try {
         $fragile_charge = (float) settingHelper('fragile_charge');
     }
 
-    if ($request->packaging != 'no') {
-        $packaging = $request->packaging;
-        $packaging_charge = (float) settingHelper('package_and_charges')->where('id', $request->packaging)->first()->charge;
+    if (!empty($request->packaging) && $request->packaging != 'no') {
+        $packageSetting = settingHelper('package_and_charges')->where('id', $request->packaging)->first();
+        if ($packageSetting) {
+            $packaging = $request->packaging;
+            $packaging_charge = (float) $packageSetting->charge;
+        }
     }
     $parcelType = $request->parcel_type == "outside_city" ? "sub_urban_area" : $request->parcel_type;
 
@@ -281,6 +284,8 @@ try {
     })();
     $parcel->customer_phone_number = ltrim($request->customer_phone_number, implode('', $unsafeChars));
     $parcel->customer_address = ltrim($request->customer_address, implode('', $unsafeChars));
+    $parcel->district_id = $request->district_id ?? $request->city_id ?? null;
+    $parcel->thana_id = $request->thana_id ?? null;
     $parcel->note = ltrim($request->note, implode('', $unsafeChars));
 
     // Charge
@@ -316,7 +321,7 @@ try {
     }
 
     $parcel->shop_id = $request->shop != '' ? $request->shop : ($merchant->shops->where('default', true)->first() ? $merchant->shops->where('default', true)->first()->id : null);
-    $parcel->user_id = $request->created_by != "" ? $request->created_by : Sentinel::getUser()->id;
+    $parcel->user_id = $request->created_by != "" ? $request->created_by : (Sentinel::getUser() ? Sentinel::getUser()->id : ($merchant->user_id ?? 1));
 
     $destBranchId = $request->destination_branch_id ?? $request->transfer_branch_select_id;
     if ($request->has('transfer_to_branch') && !empty($destBranchId)) {
@@ -373,14 +378,12 @@ try {
     if (isset($delivery_time)):
         $parcel->delivery_time = $delivery_time ?? '';
     endif;
-    // $parcel->district_id = $request->district_id;
-    // $parcel->thana_id = $request->thana_id;
     $parcel->save();
 
     $this->parcelEvent($parcel->id, 'parcel_create_event');
 
     DB::commit();
-    return true;
+    return $parcel;
 } catch (\Exception $e) {
     Log::error('Parcel Store Repo Error : ' . $e->getMessage());
     DB::rollback();
@@ -539,11 +542,12 @@ try {
 
             $parcel->user_id = $request->created_by != "" ? $request->created_by : Sentinel::getUser()->id;
             $parcel->parcel_type = $parcelType;
-            if($request->district_id){
-             $parcel->district_id = $request->district_id   ;
+            $districtId = $request->district_id ?? $request->city_id ?? null;
+            if ($districtId) {
+                $parcel->district_id = $districtId;
             }
-            if($request->thana_id){
-             $parcel->thana_id = $request->thana_id;
+            if ($request->thana_id) {
+                $parcel->thana_id = $request->thana_id;
             }
             $parcel->save();
 
