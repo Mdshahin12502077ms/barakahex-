@@ -65,6 +65,8 @@
     |--------------------------------------------------------------------------
     */
     Route::post('create_order', [CourierApiController::class, 'createOrder']);
+    Route::post('create_parcel', [CourierApiController::class, 'createOrder']);
+    Route::post('create-parcel', [CourierApiController::class, 'createOrder']);
     Route::match(['get', 'post'], 'order_status/{id?}', [CourierApiController::class, 'orderStatus']);
     Route::post('cancel_order', [CourierApiController::class, 'cancelOrder']);
     Route::get('districts', [CourierApiController::class, 'getDistricts']);
@@ -72,6 +74,8 @@
 
     Route::prefix('v1')->group(function () {
         Route::post('create_order', [CourierApiController::class, 'createOrder']);
+        Route::post('create_parcel', [CourierApiController::class, 'createOrder']);
+        Route::post('create-parcel', [CourierApiController::class, 'createOrder']);
         Route::match(['get', 'post'], 'order_status/{id?}', [CourierApiController::class, 'orderStatus']);
         Route::post('cancel_order', [CourierApiController::class, 'cancelOrder']);
         Route::get('districts', [CourierApiController::class, 'getDistricts']);

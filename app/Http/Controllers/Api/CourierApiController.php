@@ -154,22 +154,36 @@ class CourierApiController extends Controller
             }
         }
 
-        // Determine or validate parcel_type
-        $parcelType = $request->parcel_type;
-        if (empty($parcelType)) {
-            $districtNameLower = isset($districtModel) ? strtolower($districtModel->name) : '';
-            $thanaNameLower = isset($thanaModel) ? strtolower($thanaModel->name) : '';
+        // Determine or normalize parcel_type (inside Dhaka vs outside Dhaka vs sub city)
+        $rawType = strtolower(trim($request->parcel_type ?? ($request->delivery_type ?? '')));
+        
+        if (in_array($rawType, ['inside_dhaka', 'inside_city', 'dhaka', 'next_day', 'same_day'])) {
+            $parcelType = ($rawType === 'same_day') ? 'same_day' : 'next_day';
+        } elseif (in_array($rawType, ['outside_dhaka', 'outside_city', 'sub_urban_area'])) {
+            $parcelType = 'outside_city';
+        } elseif ($rawType === 'sub_city') {
+            $parcelType = 'sub_city';
+        } else {
+            // Auto-detect from District and Thana
+            $districtStr = strtolower(trim($districtModel->name ?? ($request->district ?? ($request->city ?? ''))));
+            $thanaStr    = strtolower(trim($thanaModel->name ?? ($request->thana ?? '')));
 
-            $subCities = ['savar', 'keraniganj', 'dhamrai', 'tongi', 'gazipur', 'narayanganj'];
-            if (in_array($districtNameLower, ['gazipur', 'narayanganj']) || in_array($thanaNameLower, $subCities)) {
+            $subCities = ['savar', 'keraniganj', 'dhamrai', 'tongi', 'gazipur', 'narayanganj', 'সাভার', 'কেরানীগঞ্জ', 'টঙ্গী', 'গাজীপুর', 'নারায়ণগঞ্জ'];
+            
+            if (in_array($districtStr, ['gazipur', 'narayanganj', 'গাজীপুর', 'নারায়ণগঞ্জ']) || in_array($thanaStr, $subCities)) {
                 $parcelType = 'sub_city';
-            } elseif ($districtNameLower === 'dhaka') {
+            } elseif ($districtStr === 'dhaka' || $districtStr === 'ঢাকা' || str_contains($districtStr, 'dhaka') || str_contains($districtStr, 'ঢাকা')) {
                 $parcelType = 'next_day';
-            } elseif (!empty($districtNameLower)) {
+            } elseif (!empty($districtStr)) {
                 $parcelType = 'outside_city';
             } else {
-                // Fallback default
-                $parcelType = 'next_day';
+                // Fallback: check if address mentions Dhaka
+                $addressLower = strtolower($customerAddress);
+                if (str_contains($addressLower, 'dhaka') || str_contains($addressLower, 'ঢাকা')) {
+                    $parcelType = 'next_day';
+                } else {
+                    $parcelType = 'outside_city';
+                }
             }
         }
 

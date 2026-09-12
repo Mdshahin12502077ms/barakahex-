@@ -22,6 +22,7 @@
                                 @include('admin.system_setting.payment_gateways.mimo')
                                 @include('admin.system_setting.payment_gateways.nexmo')
                                 @include('admin.system_setting.payment_gateways.ssl_wireless')
+                                @include('admin.system_setting.payment_gateways.sms_net_bd')
                             </div>
                         </div>
                     </div>

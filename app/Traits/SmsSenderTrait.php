@@ -43,7 +43,47 @@ trait SmsSenderTrait
                 return $e->getMessage();
             }
 
-        } elseif ($provider == 'nexmo') {
+        } 
+        
+        //////////sms_net_bd//////////// start
+        
+        
+        elseif($provider=='sms_net_bd') {
+        
+           $apiKey = setting('sms_net_bd_api_key')?'NTEMxl49ikpYLeieqfYwIn25aEpfc5WLVAbIm1n6':'';
+
+           $numbers=is_array($phone_number) ? implode(',', $phone_number) : $phone_number;
+       
+
+                $curl = curl_init();
+
+                curl_setopt_array($curl, array(
+                CURLOPT_URL => 'https://api.sms.net.bd/sendsms',
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_CUSTOMREQUEST => 'POST',
+                CURLOPT_POSTFIELDS => array('api_key' =>$apiKey ,
+                'msg' => $sms_body,
+                'to' => $numbers),
+                ));
+
+                $response = curl_exec($curl);
+
+                curl_close($curl);
+
+                if($response){
+                    return true;
+                }else{
+                    return false;
+                }
+
+           
+        }
+        
+        
+        
+        
+        
+        elseif ($provider == 'nexmo') {
 
             try {
                 $basic    = new \Vonage\Client\Credentials\Basic(setting('nexmo_sms_key'), setting('nexmo_sms_secret_key'));
