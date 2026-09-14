@@ -193,6 +193,10 @@
                                     <span class="badge bg-primary text-white">
                                         <i class="las la-check"></i> {{ __('delivered') }}
                                     </span>
+                                @elseif($parcel->status == 'partially-delivered')
+                                    <span class="badge bg-info text-white">
+                                        <i class="las la-boxes"></i> {{ __('partially-delivered') }}
+                                    </span>
                                 @elseif(in_array($parcel->status, ['re-schedule-delivery', 'delivery_re_schedule']))
                                     <span class="badge bg-warning text-dark">
                                         <i class="las la-clock"></i> {{ __('rescheduled') }}
@@ -209,7 +213,7 @@
                             </td>
                             <td class="text-end">
                                 <div class="d-inline-flex gap-1">
-                                    @if(!in_array($parcel->status, ['delivered', 'delivered-and-verified', 'cancel', 'cancelled']))
+                                    @if(!in_array($parcel->status, ['delivered', 'delivered-and-verified', 'cancel', 'cancelled', 'partially-delivered']))
                                         {{-- Mark Delivered Form --}}
                                         <form action="{{ route('deliveryman.delivered', $parcel->id) }}" method="POST" class="d-inline confirm-form"
                                               data-title="{{ __('are_you_sure') }}"
@@ -221,6 +225,14 @@
                                                 <i class="las la-check"></i> {{ __('delivered') }}
                                             </button>
                                         </form>
+
+                                        {{-- Partial Delivery Modal Button --}}
+                                        <button type="button" class="btn btn-sm btn-info text-white" 
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#partialDeliveryModal{{ $parcel->id }}"
+                                                title="{{ __('partially-delivered') }}">
+                                            <i class="las la-boxes"></i> {{ __('partially-delivered') }}
+                                        </button>
 
                                         {{-- Reschedule Modal Button --}}
                                         <button type="button" class="btn btn-sm btn-outline-warning" 
@@ -237,7 +249,7 @@
                                                 title="{{ __('cancel') }}">
                                             <i class="las la-times"></i>
                                         </button>
-                                    @elseif($parcel->status == 'delivered')
+                                    @elseif(in_array($parcel->status, ['delivered', 'partially-delivered']) && !empty($parcel->otp))
                                         {{-- OTP Verify Button --}}
                                         <button type="button" class="btn btn-sm btn-warning text-dark"
                                                 data-bs-toggle="modal"
@@ -389,6 +401,63 @@
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('close') }}</button>
                                                     <button type="submit" class="btn btn-danger">{{ __('confirm_cancellation') }}</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {{-- Partial Delivery Modal --}}
+                                <div class="modal fade" id="partialDeliveryModal{{ $parcel->id }}" tabindex="-1" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content text-start">
+                                            <form action="{{ route('deliveryman.partial.delivered', $parcel->id) }}" method="POST">
+                                                @csrf
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-info"><i class="las la-boxes"></i> {{ __('partially-delivered') }} - #{{ $parcel->parcel_no }}</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="alert alert-info py-2 small mb-3">
+                                                        <strong>{{ __('total_order_amount') }}:</strong> {{ setting('default_currency') }} {{ number_format($parcel->price, 2) }} |
+                                                        <strong>{{ __('total_quantity') }}:</strong> {{ $parcel->total_quantity ?? 1 }}
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-6 mb-3">
+                                                            <label class="form-label">{{ __('delivered_quantity') }} <span class="text-danger">*</span></label>
+                                                            <input type="number" min="1" step="any" name="delivered_quantity" class="form-control" value="1" required placeholder="{{ __('delivered_quantity') }}">
+                                                        </div>
+                                                        <div class="col-6 mb-3">
+                                                            <label class="form-label">{{ __('return_quantity') }}</label>
+                                                            <input type="number" min="0" step="any" name="return_quantity" class="form-control" value="0" placeholder="{{ __('return_quantity') }}">
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
+                                                        <div class="col-6 mb-3">
+                                                            <label class="form-label">{{ __('collected_cod_amount') }} <span class="text-danger">*</span></label>
+                                                            <input type="number" step="any" min="0" name="cod" class="form-control" value="{{ $parcel->price }}" required placeholder="{{ __('cod') }}">
+                                                        </div>
+                                                        <div class="col-6 mb-3">
+                                                            <label class="form-label">{{ __('payment_method') }}</label>
+                                                            <select name="payment_method" class="form-select">
+                                                                <option value="cash">{{ __('cash') }}</option>
+                                                                <option value="bkash">bKash</option>
+                                                                <option value="nagad">Nagad</option>
+                                                                <option value="card">{{ __('card') }}</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-3">
+                                                        <label class="form-label">{{ __('note') }}</label>
+                                                        <textarea name="note" class="form-control" rows="2" placeholder="{{ __('remarks_or_reason') }}"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">{{ __('close') }}</button>
+                                                    <button type="submit" class="btn btn-info text-white">{{ __('confirm_partial_delivery') }}</button>
                                                 </div>
                                             </form>
                                         </div>

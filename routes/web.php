@@ -65,12 +65,14 @@ use App\Http\Controllers\Merchant\ParcelController as MerchantParcelController;
 use App\Http\Controllers\Merchant\ProductController;
 use App\Http\Controllers\Merchant\ProfileController;
 use App\Http\Controllers\Merchant\StockController;
+use App\Http\Controllers\Merchant\SupportController;
 use App\Http\Controllers\Merchant\WarehouseController;
 use App\Http\Controllers\Merchant\WithdrawController as MerchantWithdrawController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -162,11 +164,14 @@ Route::group(['middleware' => 'XSS'], function () {
 
                 Route::get('change-role', [UserController::class, 'changeRole']);
                 Route::POST('user-status', [UserController::class, 'statusChange'])->name('admin.user.update-status');
+
+
+                Route::post('/parcel/return-item-status', [ParcelController::class, 'returnItemStatus'])->name('admin.parcel.return-item-status');
                 // staff detail
                 Route::get('staff-personal-info/{id}', [UserController::class, 'personalInfo'])->name('detail.staff.personal.info');
                 Route::get('staff-account-activity/{id}', [UserController::class, 'accountActivity'])->name('detail.staff.account-activity');
                 Route::get('staff-transaction-log/{id}', [UserController::class, 'paymentLogs'])->name('detail.staff.payment.logs');
-
+ 
                 Route::get('staff/profile', [CommonController::class, 'profile'])->name('staff.profile');
                 Route::get('staff/transaction-log', [CommonController::class, 'paymentLogs'])->name('staff.payment.logs');
                 Route::get('staff/notifications', [CommonController::class, 'notification'])->name('staff.notifications');
@@ -791,7 +796,13 @@ Route::group(['middleware' => 'XSS'], function () {
                 Route::POST('warehouse/status', [WarehouseController::class, 'statusChange'])->name('merchant.warehouse.status');
                 Route::get('warehouse/edit/{id}', [WarehouseController::class, 'edit'])->name('merchant.warehouse.edit');
                 Route::post('warehouse/update/{id}', [WarehouseController::class, 'update'])->name('merchant.warehouse.update');
-
+                /////////////support controller///////////////////
+                Route::controller(SupportController::class)->group(function(){
+                Route::get('support', [SupportController::class, 'index'])->name('merchant.support-tickets.index'); 
+                Route::get('support/ticket/create','create')->name('merchant.support-tickets.create');
+                Route::post('store/support/ticket','store')->name('merchant.support-tickets.store');
+                Route::get('support/ticket/show/{id}','show')->name('merchant.support-tickets.show');
+                });
                 //merchant profile routes
                 Route::get('profile', [ProfileController::class, 'profile'])->name('merchant.profile');
                 Route::get('company', [ProfileController::class, 'company'])->name('merchant.company');

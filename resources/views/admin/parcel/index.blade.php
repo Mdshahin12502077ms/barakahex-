@@ -370,5 +370,36 @@
     <script>
         const download_url = "{{ route('admin.parcel.download') }}";
     </script>
+
+
+     <script>
+    $(document).on('change', '.return_item_status', function () {
+        var parcel_id = $(this).data('id');
+        var return_item_status = $(this).val();
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            url: "{{ route('admin.parcel.return-item-status') }}",
+            type: "POST",
+            data: {
+                parcel_id: parcel_id,
+                return_item_status: return_item_status
+            },
+            success: function (response) {
+                if (response.status == 'success') {
+                    toastr.success(response.message);
+                } else {
+                    toastr.error(response.message);
+                }
+            }
+        });
+    });
+</script>
+
+
+
     <script src="{{ static_asset('admin/js/parcel/index.js') }}"></script>
 @endpush

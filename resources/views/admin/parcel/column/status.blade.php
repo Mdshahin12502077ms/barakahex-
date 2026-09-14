@@ -44,6 +44,9 @@
     @elseif($parcel->status == 'partially-delivered')
         <span
             class="badge {{ config('parcel_status.' . $parcel->status . '.color') }}">{{ __('partially_delivered') }}</span><br>
+        @if($parcel->payment_status == 'partial_paid')
+            <span class="badge bg-warning text-dark font-11 mt-1">{{ __('partial_paid') }}</span><br>
+        @endif
     @elseif($parcel->status == 'delivered')
         <span class="badge {{ config('parcel_status.' . $parcel->status . '.color') }}">{{ __('delivered') }}</span><br>
     @elseif($parcel->status == 'delivered-and-verified')

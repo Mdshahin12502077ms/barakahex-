@@ -24,7 +24,11 @@ class PartialDeliveryRequest extends FormRequest
     public function rules()
     {
         return [
-            'cod' => 'required',
-        ];
+        'cod' => 'required',
+        'delivered_quantity' => 'required|numeric|min:1',
+        'return_quantity'    => 'nullable|numeric|min:0',
+        'payment_method'     => 'nullable|string',
+        'note'               => 'nullable|string',
+    ];
     }
 }

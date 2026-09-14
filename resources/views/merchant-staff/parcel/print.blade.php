@@ -65,8 +65,10 @@
                                     <div class="cod-invoice d-flex">
                                         <div class="font-weight-bold p-2">{{ __('invno') }}:
                                             #{{$parcel->customer_invoice_no}}</div>
-                                        <div class="font-weight-bold p-2">{{ __('COD') }}
-                                            : {{format_price($parcel->price)}}</div>
+                                        <div class="font-weight-bold p-2">{{ __('quantity') }}:
+                                            {{$parcel->total_quantity ?? 1}} pcs</div>
+                                        <div class="font-weight-bold p-2">{{ __('COD') }}:
+                                            {{format_price($parcel->price_before_delivery > 0 ? $parcel->price_before_delivery : $parcel->price)}}</div>
                                     </div>
                                     <div class="border">
                                         <div class="d-inline-flex print-table">
@@ -114,6 +116,14 @@
                                                 <tr>
                                                     <td>{{__('weight').': '. $parcel->weight.' '.__('kg')}}</td>
                                                 </tr>
+                                                <tr>
+                                                    <td>{{__('quantity').': '. ($parcel->total_quantity ?? 1)}} pcs</td>
+                                                </tr>
+                                                @if($parcel->status == 'partially-delivered' || $parcel->payment_status == 'partial_paid')
+                                                    <tr>
+                                                        <td><span style="color: #dc3545; font-weight: bold;">{{__('partially_delivered')}}: {{ $parcel->delivered_quantity }} pcs ({{ __('return') }}: {{ $parcel->return_quantity }} pcs)</span></td>
+                                                    </tr>
+                                                @endif
                                                 <tr>
                                                     <td>{{ __('details') }}: {{ @$parcel->note }}</td>
                                                 </tr>

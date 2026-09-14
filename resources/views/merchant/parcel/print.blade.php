@@ -179,14 +179,17 @@
                                             </h4>
                                         </div>
                                     </div>
-                                    <div class="printCard__header grid-2">
-
+                                    <div class="printCard__header grid-3">
                                         <div class="printCard__box">
                                             <strong><b>{{__('weight')}}:
                                                 </b><br>{{ $parcel->weight . ' ' . __(setting('default_weight'))}}</strong>
                                         </div>
                                         <div class="printCard__box">
-                                            <strong><b>{{__('value')}}: </b>{{format_price($parcel->price) }}</strong>
+                                            <strong><b>{{__('qty') ?? __('quantity')}}:
+                                                </b><br>{{ $parcel->total_quantity ?? 1 }} pcs</strong>
+                                        </div>
+                                        <div class="printCard__box">
+                                            <strong><b>{{__('value')}}: </b><br>{{format_price($parcel->price_before_delivery > 0 ? $parcel->price_before_delivery : $parcel->price) }}</strong>
                                         </div>
                                     </div>
                                     <div class="printCard__address">
@@ -216,6 +219,9 @@
                                                     src="data:image/svg;base64,{{ DNS1D::getBarcodePNG($parcel->parcel_no, 'C93', 1, 18) }}"
                                                     alt="barcode" style="padding: 0px 25px;" />
                                                 <p class="text"> {{__('parcel_id')}} : <b>{{ $parcel->parcel_no }}</b>
+                                                    @if($parcel->status == 'partially-delivered' || $parcel->payment_status == 'partial_paid')
+                                                        <br><span style="color: #dc3545; font-weight: bold; font-size: 12px;">[{{ __('partially_delivered') }}: {{ $parcel->delivered_quantity }}/{{ $parcel->total_quantity ?? 1 }} pcs | COD: {{ format_price($parcel->price) }}]</span>
+                                                    @endif
                                                 </p>
                                             </div>
                                         </div>

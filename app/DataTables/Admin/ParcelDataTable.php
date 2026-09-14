@@ -63,6 +63,9 @@ class ParcelDataTable extends DataTable
             ';
                 return $html;
             })
+
+
+
             ->addColumn('customer_info', function ($parcel) {
                 return '
                 <span>' . @$parcel->customer_name . '</span><br>
@@ -74,7 +77,15 @@ class ParcelDataTable extends DataTable
             ->addColumn('status', function ($parcel) {
                 return view('admin.parcel.column.status', compact('parcel'));
             })
-            ->rawColumns(['select_box', 'action', 'no_date', 'charges', 'customer_info', 'status']) // 👈 add this line
+            //////////return item status/////////
+            ->addColumn('return_item_status', function ($parcel) {
+                if($parcel->return_item_status){
+                    return view('admin.parcel.column.return_item_status', compact('parcel'));
+                }else{
+                    return '';
+                }
+            })
+            ->rawColumns(['select_box', 'action', 'no_date', 'charges', 'customer_info', 'status','return_item_status']) // 👈 add this line
             ->setRowId('id');
     }
 
@@ -216,6 +227,7 @@ class ParcelDataTable extends DataTable
             Column::computed('charges')->title(__('charges')),
             Column::computed('customer_info')->title(__('customer_info')),
             Column::computed('status')->addClass('text-center')->title(__('status')),
+            Column::computed('return_item_status')->title(__('return_item_status')),
         ];
     }
 

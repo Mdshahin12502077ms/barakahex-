@@ -700,9 +700,16 @@ try {
         try {
 
             $parcel = Parcel::find($id);
-            if ($status == 'cancel') {
-                $parcel->status_before_cancel = $parcel->status;
+            if (!$parcel) {
+                DB::rollback();
+                return false;
             }
+            ///////////////using for partial delivery//////////////////
+            if ($parcel->status == 'partially-delivered' && $status != 'partially-delivered') {
+                DB::rollback();
+                return false;
+            }
+            ///////////////end partial delivery//////////////////
             if ($status == 'received') {
                 $parcel->branch_id = $branch;
             }
@@ -763,6 +770,7 @@ try {
             } elseif ($status == 'returned-to-warehouse') {
                 $this->parcelEvent($parcel->id, 'parcel_return_to_warehouse_event', '', '', '', $note);
             } elseif ($status == 'delivered') {
+                $parcel->payment_status = 'paid';
                 $parcel->otp = rand(1000, 9999);
                 $parcel->otp_expired_at = Carbon::now()->addMinutes(5);
                 $parcel->otp_attempts = 0;
@@ -1698,6 +1706,17 @@ try {
             $parcel = $this->get($request->id);
             $parcel->price_before_delivery = $parcel->price;
 
+            $delivered_qty = $request->delivered_quantity ?? 0;
+            $return_qty = $request->return_quantity ?? max(0, ($parcel->total_quantity ?? 1) - $delivered_qty);
+            $payment_method = $request->payment_method ?? 'cash';
+
+            $parcel->delivered_quantity = $delivered_qty;
+            $parcel->return_quantity = $return_qty;
+            $parcel->payment_method = $payment_method;
+            // using for return purpose of remaining items
+            $parcel->return_item_status='pending_at_rider';
+            $parcel->payment_status = 'partial_paid';
+
             if (number_format($parcel->price, 2, '.', '') != number_format($request->cod, 2, '.', '')):
                 $location = $parcel->location;
 
@@ -1722,11 +1741,45 @@ try {
             endif;
             $parcel->status = 'partially-delivered';
             $parcel->is_partially_delivered = true;
-
             $parcel->date = date('Y-m-d');
-            $this->parcelEvent($parcel->id, 'parcel_partial_delivered_event', '', '', '', $request->note);
+            $parcel->otp = rand(1000, 9999);
+            $parcel->otp_expired_at = Carbon::now()->addMinutes(5);
+            $parcel->otp_attempts = 0;
+
+            $note = "Delivered: {$parcel->delivered_quantity} pcs, Returned: {$parcel->return_quantity} pcs. Collected: {$request->cod} via " . strtoupper($parcel->payment_method);
+            if (!empty($request->note)) {
+                $note .= " - " . $request->note;
+            }
+            $this->parcelEvent($parcel->id, 'parcel_partial_delivered_event', $parcel->delivery_man_id, '', '', $note);
             $parcel->save();
             $this->accounts->incomeExpenseManage($parcel->id, $parcel->status);
+
+            // Log OTP Generation
+            try {
+                PercelOtpLog::create([
+                    'parcel_id'       => $parcel->id,
+                    'delivery_man_id' => $parcel->delivery_man_id,
+                    'action'          => 'generated',
+                    'otp_code'        => $parcel->otp,
+                    'attempt_number'  => 0,
+                    'source'          => 'rider_web',
+                    'status_message'  => 'Partial delivery OTP generated and sent to customer',
+                ]);
+            } catch (\Exception $logEx) {
+            }
+
+            // Send SMS with OTP to Customer if template is active
+            try {
+                $sms_template = CustomerParcelSmsTemplates::where('subject', 'delivery_confirm_otp')->first();
+                if ($sms_template && $sms_template->sms_to_customer) {
+                    $sms_body = str_replace('{merchant_name}', @$parcel->merchant->company, $sms_template->content);
+                    $sms_body = str_replace('{parcel_id}', $parcel->parcel_no, $sms_body);
+                    $sms_body = str_replace('{otp}', $parcel->otp, $sms_body);
+                    $sms_body = str_replace('{our_company_name}', setting('company_name') ?: __('app_name'), $sms_body);
+                    $this->smsSender('delivery_confirm_otp', $parcel->customer_phone_number, $sms_body, $sms_template->sms_to_customer);
+                }
+            } catch (\Exception $smsEx) {
+            }
             DB::commit();
             return true;
         } catch (\Exception $e) {

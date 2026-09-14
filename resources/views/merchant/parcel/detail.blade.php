@@ -144,6 +144,50 @@
                     </div>
                 </div>
 
+                @if($parcel->is_partially_delivered || $parcel->status == 'partially-delivered')
+                    <div class="card mt-4 border-info">
+                        <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0 text-white font-weight-bold"><i class="las la-boxes"></i> {{ __('partial_delivery_details') }}</h6>
+                            <span class="badge bg-light text-dark font-weight-bold">{{ __('partial_paid') }}</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-2">
+                                    <span class="text-muted">{{ __('total_quantity') }}:</span>
+                                    <div class="fw-bold fs-6">{{ $parcel->total_quantity ?? 1 }} pcs</div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <span class="text-muted">{{ __('delivered_quantity') }}:</span>
+                                    <div class="fw-bold fs-6 text-success"><i class="las la-check-circle"></i> {{ $parcel->delivered_quantity }} pcs</div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <span class="text-muted">{{ __('return_quantity') }}:</span>
+                                    <div class="fw-bold fs-6 text-danger"><i class="las la-undo"></i> {{ $parcel->return_quantity }} pcs</div>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <span class="text-muted">{{ __('payment_method') }}:</span>
+                                    <div class="fw-bold fs-6 text-uppercase">{{ $parcel->payment_method ?? 'CASH' }}</div>
+                                </div>
+                            </div>
+                            <hr class="my-2">
+                            <div class="row">
+                                <div class="col-md-4 mb-2">
+                                    <span class="text-muted">{{ __('original_order_amount') }}:</span>
+                                    <div class="fw-bold fs-6 text-muted text-decoration-line-through">{{ format_price($parcel->price_before_delivery) }}</div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <span class="text-muted">{{ __('collected_cod_amount') }}:</span>
+                                    <div class="fw-bold fs-6 text-success">{{ format_price($parcel->price) }}</div>
+                                </div>
+                                <div class="col-md-4 mb-2">
+                                    <span class="text-muted">{{ __('merchant_payable') }}:</span>
+                                    <div class="fw-bold fs-6 text-primary">{{ format_price($parcel->payable) }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                @endif
+
                 @if(!empty($parcel->movements) && $parcel->movements->count() > 0)
                     <div class="card mt-4 border-0 shadow-sm">
                         <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">

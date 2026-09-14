@@ -2311,5 +2311,13 @@
     "dispatched_at": "Dispatched At",
     "bag_per_page": "bags per page",
     "audit_log": "Audit Log",
-    "audit_logs": "Audit Logs"
+    "audit_logs": "Audit Logs",
+    "total_quantity": "Total Quantity",
+    "delivered_quantity": "Delivered Quantity",
+    "return_quantity": "Return Quantity",
+    "collected_cod_amount": "Collected COD Amount",
+    "partial_paid": "Partial Paid",
+    "partial_delivery_details": "Partial Delivery Details",
+    "confirm_partial_delivery": "Confirm Partial Delivery",
+    "parcel_partially_delivered_successfully": "Parcel partially delivered successfully"
 }

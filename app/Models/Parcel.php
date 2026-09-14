@@ -53,7 +53,14 @@ class Parcel extends Model
         'short_url',
         'otp_expired_at',
         'otp_attempts',
-        'adjustment'
+        'adjustment',
+        'total_quantity',
+        'delivered_quantity',
+        'return_quantity',
+        'payment_status',
+        'payment_method',
+        'price_before_delivery',
+        'return_item_status',
     ];
 
     public function scopeWithPermission($query)

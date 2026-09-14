@@ -2337,5 +2337,13 @@
     "no_parcels_found": "কোনো পার্সেল পাওয়া যায়নি",
     "dispatched_by": "ডিসপ্যাচ করেছেন",
     "audit_log": "অডিট লগ",
-    "audit_logs": "অডিট লগসমূহ"
+    "audit_logs": "অডিট লগসমূহ",
+    "total_quantity": "মোট পরিমাণ (পিস)",
+    "delivered_quantity": "ডেলিভারি পরিমাণ",
+    "return_quantity": "রিটার্ন পরিমাণ",
+    "collected_cod_amount": "সংগৃহীত সিওডি টাকা",
+    "partial_paid": "আংশিক পরিশোধিত",
+    "partial_delivery_details": "আংশিক ডেলিভারির বিবরণ",
+    "confirm_partial_delivery": "আংশিক ডেলিভারি নিশ্চিত করুন",
+    "parcel_partially_delivered_successfully": "পার্সেল সফলভাবে আংশিক ডেলিভারি করা হয়েছে"
 }

@@ -54,17 +54,17 @@
                                 <div class="card-header">{{ __('Merchant Details') }}</div>
                                 <div class="card-body">
                                     <span>{{ __('merchant_name') }}:&nbsp;</span> <span class="text">
-                                        {{ @$parcel->merchant_id == 1802 && $parcel->user->user_type == 'merchant_staff' ? @$parcel->user->first_name . ' ' . @$parcel->user->last_name : $parcel->merchant->user->first_name . ' ' . $parcel->merchant->user->last_name }}
+                                        {{ @$parcel->merchant_id == 1802 && @$parcel->user->user_type == 'merchant_staff' ? @$parcel->user->first_name . ' ' . @$parcel->user->last_name : @$parcel->merchant->user->first_name . ' ' . @$parcel->merchant->user->last_name }}
                                     </span><br>
                                     <span>{{ __('company_name') }}:&nbsp;</span> <span
-                                        class="text">{{ $parcel->merchant->company }}</span><br>
+                                        class="text">{{ @$parcel->merchant->company }}</span><br>
                                     <span>{{ __('pickup_number') }}:&nbsp;</span> <span
                                         class="text">{{ $parcel->pickup_shop_phone_number }}</span><br>
 
                                     <span>{{ __('pickup_address') }}:&nbsp;</span> <span
                                         class="text">{{ $parcel->pickup_address }}</span><br>
                                     <span>{{ __('email') }}:&nbsp;&nbsp;</span> <span
-                                        class="text">{{ $parcel->merchant->user->email }}</span><br>
+                                        class="text">{{ @$parcel->merchant->user->email }}</span><br>
 
                                     @if (
                                         $parcel->status != 'pending' &&
@@ -83,13 +83,13 @@
                                         @endif
                                         @if (!blank($parcel->transferDeliveryMan))
                                             <span>{{ __('transferring_by') }}:&nbsp;&nbsp;</span> <span
-                                                class="text">{{ $parcel->transferDeliveryMan->user->first_name . ' ' . $parcel->transferDeliveryMan->user->last_name }}</span><br>
+                                                class="text">{{ @$parcel->transferDeliveryMan->user->first_name . ' ' . @$parcel->transferDeliveryMan->user->last_name }}</span><br>
                                         @endif
                                     @endif
                                     @if ($parcel->status == 'transferred-received-by-branch')
                                         @if (!blank($parcel->transferDeliveryMan))
                                             <span>{{ __('transferred_by') }}:&nbsp;&nbsp;</span> <span
-                                                class="text">{{ $parcel->transferDeliveryMan->user->first_name . ' ' . $parcel->transferDeliveryMan->user->last_name }}</span><br>
+                                                class="text">{{ @$parcel->transferDeliveryMan->user->first_name . ' ' . @$parcel->transferDeliveryMan->user->last_name }}</span><br>
                                         @endif
                                     @endif
                                     <span>{{ __('created_at') }}:&nbsp;</span> <span
@@ -111,23 +111,23 @@
                                         <span>{{ __('delivered_at') }}: </span> <span
                                             class="text">{{ $parcel->event != '' ? date('M d, Y g:i A', strtotime($parcel->event->created_at)) : '' }}</span><br>
                                         <span>{{ __('delivered_by') }}: </span> <span
-                                            class="text">{{ $parcel->deliveryMan->user->first_name . ' ' . $parcel->deliveryMan->user->last_name }}</span><br>
+                                            class="text">{{ @$parcel->deliveryMan->user->first_name . ' ' . @$parcel->deliveryMan->user->last_name }}</span><br>
                                     @endif
                                     @if ($parcel->status == 'received-by-pickup-man')
                                         <span>{{ __('pickup_by') }}: </span> <span
-                                            class="text">{{ $parcel->pickupMan->user->first_name . ' ' . $parcel->pickupMan->user->last_name }}</span><br>
+                                            class="text">{{ @$parcel->pickupMan->user->first_name . ' ' . @$parcel->pickupMan->user->last_name }}</span><br>
                                     @endif
                                     @if ($parcel->status == 'received')
                                         <span>{{ __('pickup_by') }}: </span> <span
-                                            class="text">{{ $parcel->pickupMan->user->first_name . ' ' . $parcel->pickupMan->user->last_name }}</span><br>
+                                            class="text">{{ @$parcel->pickupMan->user->first_name . ' ' . @$parcel->pickupMan->user->last_name }}</span><br>
                                     @endif
                                     @if ($parcel->status == 'pickup-assigned' || $parcel->status == 're-schedule-pickup')
                                         <span>{{ __('pickup_man') }}: </span> <span
-                                            class="text">{{ $parcel->pickupMan != '' ? $parcel->pickupMan->user->first_name . ' ' . $parcel->pickupMan->user->last_name : '' }}</span><br>
+                                            class="text">{{ @$parcel->pickupMan ? @$parcel->pickupMan->user->first_name . ' ' . @$parcel->pickupMan->user->last_name : '' }}</span><br>
                                     @endif
                                     @if ($parcel->status == 'delivery-assigned' || $parcel->status == 're-schedule-delivery')
                                         <span>{{ __('delivery_man') }}: </span> <span
-                                            class="text">{{ $parcel->deliveryMan != '' ? $parcel->deliveryMan->user->first_name . ' ' . $parcel->deliveryMan->user->last_name : '' }}</span><br>
+                                            class="text">{{ @$parcel->deliveryMan ? @$parcel->deliveryMan->user->first_name . ' ' . @$parcel->deliveryMan->user->last_name : '' }}</span><br>
                                     @endif
                                     <div class="action__btn mt-4 ">
                                         <span class="btn border ">{{ __('parcel_type') }}:&nbsp;&nbsp;<p
@@ -180,6 +180,92 @@
                             </div>
                         </div>
                     </div>
+
+
+
+                    @if($parcel->is_partially_delivered || $parcel->status == 'partially-delivered')
+                    <div class="row mt-4">
+                        <div class="col-xl-12">
+                            <div class="card parcel__details wave flex-column h-100 d-flex border-info">
+                                <div class="card-header bg-info text-white d-flex justify-content-between align-items-center">
+                                    <span><i class="las la-boxes"></i> {{ __('partial_delivery_details') }}</span>
+                                    <span class="badge bg-light text-dark font-weight-bold">{{ __('partial_paid') }}</span>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('total_quantity') }}:</span>
+                                            <div class="fw-bold fs-6">{{ $parcel->total_quantity ?? 1 }} pcs</div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('delivered_quantity') }}:</span>
+                                            <div class="fw-bold fs-6 text-success"><i class="las la-check-circle"></i> {{ $parcel->delivered_quantity }} pcs</div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('return_quantity') }}:</span>
+                                            <div class="fw-bold fs-6 text-danger"><i class="las la-undo"></i> {{ $parcel->return_quantity }} pcs</div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('payment_method') }}:</span>
+                                            <div class="fw-bold fs-6 text-uppercase">{{ $parcel->payment_method ?? 'CASH' }}</div>
+                                        </div>
+                                    </div>
+                                    <hr class="my-2">
+
+                                    <div class="row">
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('original_order_amount') }}:</span>
+                                            <div class="fw-bold fs-6 text-muted text-decoration-line-through">{{ format_price($parcel->price_before_delivery) }}</div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('collected_cod_amount') }}:</span>
+                                            <div class="fw-bold fs-6 text-success">{{ format_price($parcel->price) }}</div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('payment_status') }}:</span>
+                                            <div><span class="badge bg-warning text-dark fs-7 px-2 py-1"><i class="las la-coins"></i> {{ __('partial_paid') }}</span></div>
+                                        </div>
+                                        <div class="col-md-3 mb-2">
+                                            <span class="text-muted">{{ __('return_item_status') }}:</span>
+                                            <div class="mt-1">
+                                                @php
+                                                    $rStatus = $parcel->return_item_status ?? 'pending_at_rider';
+                                                @endphp
+
+                                                @if($rStatus == 'pending_at_rider')
+                                                    <span class="badge rounded-pill px-3 py-1" style="background-color: #fff8dd; color: #b58105; border: 1px solid #ffd875; font-size: 13px;">
+                                                        <i class="las la-motorcycle me-1" style="font-size: 15px;"></i> Pending at Rider
+                                                    </span>
+                                                @elseif($rStatus == 'received_at_hub')
+                                                    <span class="badge rounded-pill px-3 py-1" style="background-color: #f1faff; color: #009ef7; border: 1px solid #bfe7ff; font-size: 13px;">
+                                                        <i class="las la-warehouse me-1" style="font-size: 15px;"></i> Received at Hub
+                                                    </span>
+                                                @elseif($rStatus == 'returned_to_merchant')
+                                                    <span class="badge rounded-pill px-3 py-1" style="background-color: #f8f5ff; color: #7239ea; border: 1px solid #d8baff; font-size: 13px;">
+                                                        <i class="las la-truck-moving me-1" style="font-size: 15px;"></i> Returned to Merchant
+                                                    </span>
+                                                @elseif($rStatus == 'received_by_merchant')
+                                                    <span class="badge rounded-pill px-3 py-1" style="background-color: #e8fff3; color: #50cd89; border: 1px solid #a3f3c6; font-size: 13px;">
+                                                        <i class="las la-check-double me-1" style="font-size: 15px;"></i> Received by Merchant
+                                                    </span>
+                                                @else
+                                                    <span class="badge bg-secondary">{{ ucwords(str_replace('_', ' ', $rStatus)) }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+
+
+
                     <div class="row mt-4">
                         <div class="col-xl-12">
                             <div class="card parcel__details wave flex-column h-100 d-flex">
@@ -323,8 +409,8 @@
                                                             <p>{{ __($event->title) }}</p>
                                                             <p>{{ $event->cancel_note != '' ? __('reason') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
+                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                @if(@$event->user) ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }}) @endif
                                                             </p>
                                                         </div>
                                                     @elseif($event->title == 'assign_pickup_man_event')
@@ -333,10 +419,10 @@
                                                         <div class="cbp_tmlabel">
 
                                                             @if (@$event->pickupPerson)
-                                                                <p> <strong>{{ $event->pickupPerson->user->first_name . ' ' . $event->pickupPerson->user->last_name }}</strong>
+                                                                <p> <strong>{{ @$event->pickupPerson->user->first_name . ' ' . @$event->pickupPerson->user->last_name }}</strong>
                                                                     {{ __('is Assigned for Pickup') }}</p>
                                                                 <p>{{ __('pickup_man') }}: <strong><span
-                                                                            class="text">{{ $event->pickupPerson->user->first_name . ' ' . $event->pickupPerson->user->last_name }}</span></strong>
+                                                                            class="text">{{ @$event->pickupPerson->user->first_name . ' ' . @$event->pickupPerson->user->last_name }}</span></strong>
                                                                 </p>
                                                                 <p>{{ __('phone_number') }}: <strong><span
                                                                             class="text">{{ $event->pickupPerson->phone_number }}</span></strong>
@@ -344,9 +430,11 @@
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_re_schedule_pickup_event')
                                                         <div class="cbp_tmicon bg-orange"><i
@@ -354,11 +442,11 @@
                                                         <div class="cbp_tmlabel">
                                                             @if (@$event->pickupPerson)
                                                                 <p> Reassigned::
-                                                                    <strong>{{ $event->pickupPerson->user->first_name . ' ' . $event->pickupPerson->user->last_name }}</strong>
+                                                                    <strong>{{ @$event->pickupPerson->user->first_name . ' ' . @$event->pickupPerson->user->last_name }}</strong>
                                                                     {{ __('is Assigned for Pickup') }}
                                                                 </p>
                                                                 <p>{{ __('pickup_man') }}:
-                                                                    <strong>{{ $event->pickupPerson->user->first_name . ' ' . $event->pickupPerson->user->last_name }}</strong>
+                                                                    <strong>{{ @$event->pickupPerson->user->first_name . ' ' . @$event->pickupPerson->user->last_name }}</strong>
                                                                 </p>
                                                                 <p>{{ __('phone_number') }}: <strong><span
                                                                             class="text">{{ $event->pickupPerson->phone_number }}</strong>
@@ -366,21 +454,23 @@
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'assign_delivery_man_event')
                                                         <div class="cbp_tmicon bg-info"><i class="zmdi zmdi-label"></i>
                                                         </div>
                                                         <div class="cbp_tmlabel">
-                                                            <p><strong>"{{ $event->deliveryPerson->user->first_name . ' ' . $event->deliveryPerson->user->last_name }}"</strong>
+                                                            <p><strong>"{{ @$event->deliveryPerson->user->first_name . ' ' . @$event->deliveryPerson->user->last_name }}"</strong>
                                                                 Out for Delivery</p>
                                                             <p>{{ __('delivery_man') }}:
-                                                                <strong>{{ $event->deliveryPerson->user->first_name . ' ' . $event->deliveryPerson->user->last_name }}</strong>
+                                                                <strong>{{ @$event->deliveryPerson->user->first_name . ' ' . @$event->deliveryPerson->user->last_name }}</strong>
                                                             </p>
                                                             <p>{{ __('phone_number') }}:
-                                                                <strong>{{ $event->deliveryPerson->phone_number }}</strong>
+                                                                <strong>{{ @$event->deliveryPerson->phone_number }}</strong>
                                                             </p>
                                                             @if ($event->thirdParty)
                                                                 <p>{{ __('third_party') }}: <strong>
@@ -389,9 +479,11 @@
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_re_schedule_delivery_event')
                                                         <div class="cbp_tmicon bg-orange"><i
@@ -399,10 +491,10 @@
                                                         <div class="cbp_tmlabel">
                                                             <p>{{ __($event->title) }}</p>
                                                             <p>{{ __('delivery_man') }}:
-                                                                <strong>{{ $event->deliveryPerson->user->first_name . ' ' . $event->deliveryPerson->user->last_name }}</strong>
+                                                                <strong>{{ @$event->deliveryPerson->user->first_name . ' ' . @$event->deliveryPerson->user->last_name }}</strong>
                                                             </p>
                                                             <p>{{ __('phone_number') }}:
-                                                                <strong>{{ $event->deliveryPerson->phone_number }}</strong>
+                                                                <strong>{{ @$event->deliveryPerson->phone_number }}</strong>
                                                             </p>
                                                             @if ($event->thirdParty)
                                                                 <p>{{ __('third_party') }}: <strong>
@@ -411,9 +503,11 @@
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_return_to_wirehouse')
                                                         <div class="cbp_tmicon bg-orange"><i class="icon las la-undo"></i>
@@ -422,9 +516,11 @@
                                                             <p>{{ __($event->title) }}</p>
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_return_assign_to_merchant_event')
                                                         <div class="cbp_tmicon bg-info"><i class="zmdi zmdi-label"></i>
@@ -434,17 +530,19 @@
 
                                                             @if (@$event->returnPerson)
                                                                 <p>{{ __('delivery_man') }}:
-                                                                    <strong>{{ $event->returnPerson->user->first_name . ' ' . $event->returnPerson->user->last_name }}</strong>
+                                                                    <strong>{{ @$event->returnPerson->user->first_name . ' ' . @$event->returnPerson->user->last_name }}</strong>
                                                                 </p>
                                                                 <p>{{ __('phone_number') }}:
-                                                                    <strong>{{ $event->returnPerson->phone_number }}</strong>
+                                                                    <strong>{{ @$event->returnPerson->phone_number }}</strong>
                                                                 </p>
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_partial_delivered_event')
                                                         <div class="cbp_tmicon bg-green"><i class="zmdi zmdi-check"></i>
@@ -453,39 +551,43 @@
                                                             <p>{{ __($event->title) }} </p>
                                                             @if (@$event->deliveryPerson)
                                                                 <p>{{ __('delivery_man') }}:
-                                                                    <strong>{{ $event->deliveryPerson->user->first_name . ' ' . $event->deliveryPerson->user->last_name }}</strong>
+                                                                    <strong>{{ @$event->deliveryPerson->user->first_name . ' ' . @$event->deliveryPerson->user->last_name }}</strong>
                                                                 </p>
                                                                 <p>{{ __('phone_number') }}:
-                                                                    <strong>{{ $event->deliveryPerson->phone_number }}</strong>
+                                                                    <strong>{{ @$event->deliveryPerson->phone_number }}</strong>
                                                                 </p>
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_delivered_event')
                                                         <div class="cbp_tmicon bg-green"><i class="zmdi zmdi-check"></i>
                                                         </div>
                                                         <div class="cbp_tmlabel">
                                                             <p>{{ 'Yes!! ' }}
-                                                                <strong>{{ $event->deliveryPerson->user->first_name . ' ' . $event->deliveryPerson->user->last_name }}</strong>
+                                                                <strong>{{ @$event->deliveryPerson->user->first_name . ' ' . @$event->deliveryPerson->user->last_name }}</strong>
                                                                 {{ __($event->title) }}
                                                             </p>
                                                             @if (@$event->deliveryPerson)
                                                                 <p>{{ __('delivery_man') }}:
-                                                                    <strong>{{ $event->deliveryPerson->user->first_name . ' ' . $event->deliveryPerson->user->last_name }}</strong>
+                                                                    <strong>{{ @$event->deliveryPerson->user->first_name . ' ' . @$event->deliveryPerson->user->last_name }}</strong>
                                                                 </p>
                                                                 <p>{{ __('phone_number') }}:
-                                                                    <strong>{{ $event->deliveryPerson->phone_number }}</strong>
+                                                                    <strong>{{ @$event->deliveryPerson->phone_number }}</strong>
                                                                 </p>
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_received_event')
                                                         <div class="cbp_tmicon bg-green"><i class="zmdi zmdi-store"></i>
@@ -498,9 +600,11 @@
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_received_by_pickup_man_event')
                                                         <div class="cbp_tmicon bg-green"><i class="zmdi zmdi-check"></i>
@@ -509,18 +613,22 @@
                                                             <p>{{ __($event->title) }}</p>
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_update_event')
                                                         <div class="cbp_tmicon bg-orange"><i class="zmdi zmdi-edit"></i>
                                                         </div>
                                                         <div class="cbp_tmlabel">
                                                             <p> {{ __($event->title) }}</p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_re_request_event')
                                                         <div class="cbp_tmicon bg-orange"><i class="zmdi zmdi-edit"></i>
@@ -529,9 +637,11 @@
                                                             <p> {{ __($event->title) }}</p>
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_returned_to_merchant_event')
                                                         <div class="cbp_tmicon bg-green"><i class="zmdi zmdi-check"></i>
@@ -540,9 +650,11 @@
                                                             <p> {{ __($event->title) }}
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_transferred_to_branch_assigned_event')
                                                         <div class="cbp_tmicon bg-green"><i
@@ -556,14 +668,16 @@
                                                                 </p>
                                                             @endif
                                                             @if (!blank($event->transferPerson))
-                                                                <p>{{ __('transferring_by') . ': ' . $event->transferPerson->user->first_name . ' ' . $event->transferPerson->user->last_name }}
+                                                                <p>{{ __('transferring_by') . ': ' . @$event->transferPerson->user->first_name . ' ' . @$event->transferPerson->user->last_name }}
                                                                 </p>
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @elseif($event->title == 'parcel_transferred_to_branch_event')
                                                         <div class="cbp_tmicon bg-green"><i
@@ -576,24 +690,31 @@
                                                                 </p>
                                                             @endif
                                                             @if (!blank($event->transferPerson))
-                                                                <p>{{ __('transferred_by') . ': ' . $event->transferPerson->user->first_name . ' ' . $event->transferPerson->user->last_name }}
+                                                                <p>{{ __('transferred_by') . ': ' . @$event->transferPerson->user->first_name . ' ' . @$event->transferPerson->user->last_name }}
                                                                 </p>
                                                             @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @else
                                                         <div class="cbp_tmicon"><i class="zmdi zmdi-check"></i></div>
                                                         <div class="cbp_tmlabel">
                                                             <p>{{ __($event->title) }}</p>
+                                                            @if(!empty($event->action))
+                                                                <p class="text-muted"><small>{{ $event->action }}</small></p>
+                                                            @endif
                                                             <p>{{ $event->cancel_note != '' ? __('note') . ': ' . $event->cancel_note : '' }}
                                                             </p>
-                                                            <p>{{ ' ' . __('processed_by') . ': ' }}{{ $event->user->first_name . ' ' . $event->user->last_name . ' ' }}
-                                                                ({{ $event->user->user_type == 'delivery' ? __('delivery_man') : __($event->user->user_type) }})
-                                                            </p>
+                                                            @if(!empty($event->user))
+                                                                <p>{{ ' ' . __('processed_by') . ': ' }}{{ @$event->user->first_name . ' ' . @$event->user->last_name . ' ' }}
+                                                                    ({{ @$event->user->user_type == 'delivery' ? __('delivery_man') : __(@$event->user->user_type) }})
+                                                                </p>
+                                                            @endif
                                                         </div>
                                                     @endif
                                                 </li>

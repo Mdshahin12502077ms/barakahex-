@@ -78,6 +78,7 @@ return [
         'parcel_delivered',
         'parcel_backward',
         'parcel_returned_to_merchant',
+        'return_item_status_update',
         'parcel_cancel',
         'parcel_delete',
         'send_to_paperfly',

@@ -22,6 +22,7 @@ Route::prefix('delivery-man')->middleware(['LoginCheckDeliveryMan'])->name('deli
     Route::get('/deliveries', [ParcelController::class, 'deliveries'])->name('deliveries');
     Route::get('/parcel-detail/{id}', [ParcelController::class, 'parcelDetail'])->name('parcel.detail');
     Route::post('/delivered/{id}', [ParcelController::class, 'delivered'])->name('delivered');
+    Route::post('/partial-delivered/{id}', [ParcelController::class, 'partialDelivery'])->name('partial.delivered');
     Route::post('/verify-otp/{id}', [ParcelController::class, 'verifyOtp'])->name('verify.otp');
     Route::post('/resend-otp/{id}', [ParcelController::class, 'resendOtp'])->name('resend.otp');
     Route::post('/reschedule/{id}', [ParcelController::class, 'reschedule'])->name('reschedule');

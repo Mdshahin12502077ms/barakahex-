@@ -461,6 +461,9 @@
                                                         class="badge text-indigo">{{ __('return-assigned-to-merchant') }}</span><br>
                                                 @elseif($parcel->status == 'partially-delivered')
                                                     <span class="badge text-mint">{{ __('partially-delivered') }}</span><br>
+                                                    @if($parcel->payment_status == 'partial_paid')
+                                                        <span class="badge bg-warning text-dark font-11">{{ __('partial_paid') }}</span><br>
+                                                    @endif
                                                 @elseif($parcel->status == 'delivered')
                                                     <span class="badge text-success">{{ __('delivered') }}</span><br>
                                                 @elseif($parcel->status == 'delivered-and-verified')

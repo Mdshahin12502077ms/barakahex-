@@ -113,6 +113,32 @@ class ParcelController extends Controller
         }
     }
 
+    public function partialDelivery(Request $request, $id)
+    {
+        $request->validate([
+            'cod'                => 'required|numeric|min:0',
+            'delivered_quantity' => 'required|numeric|min:1',
+            'return_quantity'    => 'nullable|numeric|min:0',
+            'payment_method'     => 'nullable|string',
+            'note'               => 'nullable|string',
+        ]);
+
+        try {
+            $request->merge(['id' => $id]);
+            $parcelRepo = app(\App\Repositories\Interfaces\ParcelInterface::class);
+            if ($parcelRepo->partialDelivery($request)) {
+                Toastr::success(__('parcel_partially_delivered_successfully'));
+            } else {
+                Toastr::error(__('something_went_wrong_please_try_again'));
+            }
+            return back();
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('DeliveryMan Partial Delivered Error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
+            Toastr::error(__('something_went_wrong_please_try_again'));
+            return back();
+        }
+    }
+
     public function verifyOtp(Request $request, $id)
     {
         try {

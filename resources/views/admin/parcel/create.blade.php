@@ -177,6 +177,11 @@
                                         @endif
                                     </div>
 
+                                    <div class="col-md-6 mb-3">
+                                            <label class="form-label" for="total_quantity">{{ __('total_quantity') }}</label>
+                                            <input type="number" min="1" name="total_quantity" id="total_quantity" class="form-control" value="{{ old('total_quantity', 1) }}" placeholder="{{ __('total_quantity') }}">
+                                        </div>
+
                                     <!-- Row 6: Selling Price & Packaging -->
                                     <div class="col-6 mb-3">
                                         <label class="form-label" for="selling_price">{{ __('selling_price') }} ({{ setting('default_currency') }})</label>

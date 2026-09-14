@@ -298,7 +298,12 @@
                                                 @endphp
                                                 <tr>
                                                     <th scope="row">{{ $key+1 }}</th>
-                                                    <td>{{ $parcel->parcel_no }}</td>
+                                                    <td>
+                                                        {{ $parcel->parcel_no }}
+                                                        @if($parcel->status == 'partially-delivered' || $parcel->payment_status == 'partial_paid')
+                                                            <br><span class="badge badge-warning text-dark font-weight-bold" style="font-size: 10px; padding: 2px 5px; border-radius: 3px; background-color: #ffeeba; border: 1px solid #ffc107;">{{ __('partially_delivered') }} ({{ $parcel->delivered_quantity }}/{{ $parcel->total_quantity ?? 1 }} pcs)</span>
+                                                        @endif
+                                                    </td>
                                                     <td>{{ $parcel->customer_invoice_no }}</td>
                                                     <td>{{ $parcel->customer_name }}</td>
                                                     <td>{{ format_price($parcel->price) }}</td>

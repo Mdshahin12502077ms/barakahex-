@@ -25,7 +25,7 @@
                                 <li><a href="{{route('parcel.edit', $parcel->id)}}"><i class="icon las la-edit"></i> <span> {{__('edit')}}</span></a></li>
                             @endif
                         @endif
-                        @if(($parcel->status != "pending" && $parcel->status != 'delivered-and-verified') && hasPermission('parcel_backward'))
+                        @if(($parcel->status != "pending" && $parcel->status != 'delivered-and-verified' && $parcel->status != 'partially-delivered') && hasPermission('parcel_backward'))
                             @if($parcel->status == 'cancel' || $parcel->status == 'deleted')
                                 <li><a href="javascript:void(0);" class="reverse-from-cancel" id="reverse-from-cancel" data-bs-toggle="modal" data-bs-target="#parcel-reverse-from-cancel"><i class="icon las la-arrow-left"></i> <span> {{__('backward').' ('.__($parcel->status_before_cancel)}}) </span></a></li>
                             @else
@@ -117,9 +117,7 @@
                                 <li><a href="javascript:void(0);" class="cancel-parcel" id="cancel-parcel" data-bs-toggle="modal" data-bs-target="#parcel-cancel"><i class="las la-times"></i> <span> {{__('cancel')}} </span></a></li>
                             @endif
                         @elseif($parcel->status == 'partially-delivered')
-                            @if(hasPermission('parcel_returned_to_warehouse'))
-                                <li><a href="javascript:void(0);" class="delivery-return" id="delivery-return" data-bs-toggle="modal" data-bs-target="#return-delivery"><i class="icon la la-plus"></i> <span> {{__('returned_to_warehouse')}} </span></a></li>
-                            @endif
+                            {{-- Handled via return_item_status dropdown --}}
                         @elseif($parcel->status == "returned-to-warehouse")
                             @if(hasPermission('parcel_return_assigned_to_merchant'))
                                 <li><a href="javascript:void(0);" class="return-assign-to-merchant" id="return-assign-to-merchant" data-bs-toggle="modal" data-bs-target="#return-assign-tomerchant"><i class="icon la la-plus"></i> <span> {{__('return_assign_to_merchant')}} </span></a></li>

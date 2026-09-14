@@ -2,39 +2,41 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Product;
-use App\Models\Shop;
-use App\Models\Stock;
-use App\Models\User;
-use App\Models\Branch;
-use App\Models\Charge;
-use App\Models\Parcel;
-use App\Models\Merchant;
-use App\Models\CodCharge;
-use App\Models\ThirdParty;
-use App\Models\Warehouse;
-use App\Models\District;
-use App\Models\Thana;
-use Illuminate\Http\Request;
+use App\DataTables\Admin\ParcelDataTable;
 use App\Exports\ClosingReport;
-use App\Traits\SmsSenderTrait;
-use Illuminate\Support\Carbon;
 use App\Exports\FilteredParcel;
 use App\Http\Controllers\Controller;
-use Maatwebsite\Excel\Facades\Excel;
-use App\DataTables\Admin\ParcelDataTable;
-use Cartalyst\Sentinel\Native\Facades\Sentinel;
-use App\Repositories\Interfaces\ParcelInterface;
-use App\Repositories\Interfaces\DeliveryManInterface;
 use App\Http\Requests\Admin\Parcel\ParcelStoreRequest;
 use App\Http\Requests\Admin\Parcel\ParcelUpdateRequest;
 use App\Http\Requests\Admin\Parcel\PartialDeliveryRequest;
 use App\Http\Requests\Admin\Parcel\TransferToBranchRequest;
+use App\Models\Branch;
+use App\Models\Charge;
+use App\Models\CodCharge;
+use App\Models\District;
+use App\Models\Merchant;
+use App\Models\Parcel;
+use App\Models\ParcelEvent;
+use App\Models\PercelMovement;
+use App\Models\Product;
+use App\Models\Shop;
+use App\Models\Stock;
+use App\Models\Thana;
+use App\Models\ThirdParty;
+use App\Models\User;
+use App\Models\Warehouse;
+use App\Repositories\Interfaces\DeliveryManInterface;
+use App\Repositories\Interfaces\ParcelInterface;
+use App\Traits\SmsSenderTrait;
 use Brian2694\Toastr\Facades\Toastr;
+use Cartalyst\Sentinel\Native\Facades\Sentinel;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Image;
+use Maatwebsite\Excel\Facades\Excel;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 class ParcelController extends Controller
@@ -1359,6 +1361,71 @@ class ParcelController extends Controller
             'invalid_count' => $notReceived,
         ]);
     }
+////////////////////return item status//////////////
+   public function returnItemStatus(Request $request)
+{
+    $status = $request->return_item_status;
+    $id = $request->parcel_id;
+    $parcel = Parcel::find($id);
+
+    if (!$parcel) {
+        return response()->json([
+            'message' => 'Parcel not found',
+            'status' => 'error'
+        ]);
+    }
+
+    $oldStatus = $parcel->return_item_status;
+    $user = Sentinel::getUser();
+    $defaultBranch = Branch::first()->id ?? 1;
+    $targetBranchId = $user->branch_id ?? $parcel->branch_id ?? $parcel->pickup_branch_id ?? $defaultBranch;
+    $fromBranchId = $parcel->branch_id ?? $parcel->pickup_branch_id ?? $targetBranchId;
+
+    // start hub location update for parcel
+    $parcel->return_item_status = $status;
+    if ($status == 'received_at_hub') {
+        $parcel->branch_id = $targetBranchId;
+    }
+    $parcel->save();
+
+    try {
+        if ($status == 'received_at_hub') {
+            PercelMovement::create([
+                'parcel_id'        => $parcel->id,
+                'tracking_number'  => $parcel->parcel_no,
+                'from_branch_id'   => $fromBranchId,
+                'to_branch_id'     => $targetBranchId,
+                'sent_by'          => $parcel->delivery_man_id ? (@$parcel->deliveryMan->user_id ?? ($user ? $user->id : 1)) : ($user ? $user->id : 1),
+                'received_by'      => $user ? $user->id : 1,
+                'delivery_man_id'  => $parcel->delivery_man_id,
+                'sent_at'          => now(),
+                'received_at'      => now(),
+                'status'           => 'received',
+                'note'             => 'Partial Return Goods (' . ($parcel->return_quantity ?? 0) . ' pcs) received at hub',
+            ]);
+        }
+
+        // parcel event generate
+        ParcelEvent::create([
+            'parcel_id'   => $parcel->id,
+            'user_id'     => $user ? $user->id : 1,
+            'branch_id'   => $targetBranchId,
+            'title'       => 'return_item_status_updated_event',
+            'old_status'  => $oldStatus,
+            'new_status'  => $status,
+            'action'      => 'Return items (' . ($parcel->return_quantity ?? 0) . ' pcs) marked as ' . ucwords(str_replace('_', ' ', $status)),
+        ]);
+    } catch (\Throwable $e) {
+        Log::error('PercelMovement / Event log error in returnItemStatus: ' . $e->getMessage());
+    }
+
+    return response()->json([
+        'message' => 'Return item status and Hub movement logged successfully',
+        'status'  => 'success'
+    ]);
+}
+
+
     public function export_parcel(Request $request)
     {
         $parcelIdsArray = explode(',', $request->parcel_ids);

@@ -126,8 +126,16 @@
                             </a>
                         </li>
 
+                       <!-- support creation -->
 
+                      <li class="{{ request()->routeIs('merchant.support-tickets.*') ? 'active' : '' }}">
+                                    <a href="{{ route('merchant.support-tickets.index') }}">
+                                        <i class="las la-headset"></i>
+                                        <span>{{ __('Support Tickets') }}</span>
+                                    </a>
+                            </li>
 
+    
 
 
                     <li class="{{ menuActivation(['merchant/company', 'merchant/account/*'], 'active') }}">

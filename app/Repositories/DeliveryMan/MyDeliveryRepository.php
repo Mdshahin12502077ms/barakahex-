@@ -105,6 +105,7 @@ class MyDeliveryRepository
 
             $parcel->date = date('Y-m-d');
             $parcel->status = 'delivered';
+            $parcel->payment_status = 'paid';
             $parcel->otp = rand(1000, 9999);
             $parcel->otp_expired_at = Carbon::now()->addMinutes(5);
             $parcel->otp_attempts = 0;
@@ -209,7 +210,13 @@ class MyDeliveryRepository
 
             // 3. Check OTP match
             if ($parcel->otp == $otp) {
-                $parcel->status = 'delivered-and-verified';
+                if ($parcel->status == 'partially-delivered' || $parcel->is_partially_delivered) {
+                    $parcel->status = 'partially-delivered';
+                    $parcel->is_partially_delivered = true;
+                    $parcel->otp = null;
+                } else {
+                    $parcel->status = 'delivered-and-verified';
+                }
                 $parcel->date = date('Y-m-d');
                 $parcel->otp_attempts = 0;
                 $parcel->save();
@@ -281,7 +288,7 @@ class MyDeliveryRepository
                 })
                 ->firstOrFail();
 
-            if ($parcel->status != 'delivered') {
+            if ($parcel->status != 'delivered' && $parcel->status != 'partially-delivered') {
                 return false;
             }
 
