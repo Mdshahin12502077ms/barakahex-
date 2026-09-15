@@ -52,7 +52,20 @@
             min-width: 130px;
         }
         .row-invalid {
-            background-color: #fff5f5 !important;
+            background-color: #fff1f0 !important;
+            box-shadow: inset 3px 0 0 #ff4d4f;
+        }
+        .row-invalid input.customer-address {
+            border-color: #ff4d4f !important;
+            background-color: #fff2f0 !important;
+        }
+        .flash-highlight {
+            animation: pulse-danger 1.5s ease-in-out 2;
+        }
+        @keyframes pulse-danger {
+            0% { background-color: #ffccc7 !important; }
+            50% { background-color: #fff1f0 !important; }
+            100% { background-color: #ffccc7 !important; }
         }
     </style>
 
@@ -87,8 +100,9 @@
                                                         id="selectMerchant" name="merchant" required>
                                                         <option value="">{{ __('select_merchant') }} </option>
                                                         @foreach ($merchants as $item)
-                                                            <option
-                                                                value="{{$item->merchant->id}}"> {{$item->first_name.' '.$item->last_name}} </option>
+                                                            <option value="{{ $item->id }}">
+                                                                {{ @$item->user ? ($item->user->first_name . ' ' . $item->user->last_name) : 'Merchant #' . $item->id }} {{ $item->company ? '(' . $item->company . ')' : '' }}
+                                                            </option>
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -101,12 +115,20 @@
                                                     id="shop" name="shop" required>
                                                     <option value="">{{ __('select_shop') }} </option>
                                                     @if (Sentinel::getUser()->user_type == 'merchant')
-                                                        @foreach (App\Models\Shop::where('merchant_id', Sentinel::getUser()->merchant->id)->get() as $item)
+                                                        @php
+                                                            $loggedMerchantId = Sentinel::getUser()->merchant?->id ?? Sentinel::getUser()->merchant_id ?? 0;
+                                                            $shops = $loggedMerchantId ? App\Models\Shop::where('merchant_id', $loggedMerchantId)->get() : collect();
+                                                        @endphp
+                                                        @foreach ($shops as $item)
                                                             <option value="{{$item->id}}" {{ $item->default == 1 ? 'selected' : '' }}> {{$item->shop_name}}</option>
                                                         @endforeach
                                                     @endif
                                                     @if (Sentinel::getUser()->user_type == 'merchant_staff')
-                                                        @foreach (App\Models\Shop::where('merchant_id', Sentinel::getUser()->merchant_id)->get() as $item)
+                                                        @php
+                                                            $staffMerchantId = Sentinel::getUser()->merchant_id ?? Sentinel::getUser()->staffMerchant?->id ?? 0;
+                                                            $shops = $staffMerchantId ? App\Models\Shop::where('merchant_id', $staffMerchantId)->get() : collect();
+                                                        @endphp
+                                                        @foreach ($shops as $item)
                                                             <option value="{{$item->id}}" {{ $item->default == 1 ? 'selected' : '' }}> {{$item->shop_name}}</option>
                                                         @endforeach
                                                     @endif
@@ -133,14 +155,14 @@
                                             <p>{{ __('please_check_this_before_importing_your_file') }}</p>
                                             <ul class="list list-sm list-success">
                                                 <li>{{ __('uploaded_file_must_be_xlsx_or_csv') }}</li>
-                                                <li>{{ __('the_file_must_contain_price_selling_price_customer_name_customer_invoice_no_customer_phone_number_customer_address') }}</li>
-                                                <li>{{ __('price_and_selling_price_must_be_numeric_example') }}</li>
-                                                <li>{{ __('fragile_parcel_type_note_weight_pickup_shop_phone_number_pickup_address_pickup_branch') }}</li>
-                                                <li>{{ __('if_parcel_type_not_provided_by_default_it_will_be_set_for_next_day') }}</li>
-                                                <li>{{ __('if_weight_not_provided_by_default_weight_will_be_1') }}</li>
+                                                <li><strong>{{ __('Customer Address') }}:</strong> {{ __('Must contain a valid District and Thana that exists in the database.') }}</li>
+                                                <li><strong>{{ __('Columns Supported') }}:</strong> customer_name, customer_phone_number, customer_address, district, thana, total_quantity, price, selling_price, weight, delivery_area, customer_invoice_no, packaging, open_box, home_delivery, transfer_to_branch, destination_branch, note.</li>
+                                                <li><strong>{{ __('Price & Selling Price') }}:</strong> {{ __('price_and_selling_price_must_be_numeric_example') }}</li>
+                                                <li><strong>{{ __('Total Quantity') }}:</strong> {{ __('Default is 1 if empty or not provided.') }}</li>
+                                                <li><strong>{{ __('Weight') }}:</strong> {{ __('if_weight_not_provided_by_default_weight_will_be_1') }}</li>
                                                 @if (hasPermission('parcel_create') || hasPermission('manage_parcel') || Sentinel::getUser()->user_type == 'merchant')
                                                     <a class="import-sample-btn mt-2 d-inline-block"
-                                                       href="{{ Sentinel::getUser()->user_type == 'merchant' ? route('merchant.export') : (Sentinel::getUser()->user_type == 'merchant_staff' ? route('merchant.staff.export') : route('export')) }}">
+                                                       href="{{ (Sentinel::getUser()->user_type == 'merchant' ? route('merchant.export') : (Sentinel::getUser()->user_type == 'merchant_staff' ? route('merchant.staff.export') : route('export'))) . '?v=' . time() }}">
                                                         <span><i class="icon las la-file-download"></i></span>
                                                         <span>{{ __('parcel_import_sample') . ' ' . __('download') }}</span>
                                                     </a>
@@ -184,16 +206,19 @@
                         <table class="table table-bordered table-hover align-middle mb-0" id="previewTable">
                             <thead>
                                 <tr>
-                                    <th class="text-center" style="width: 45px;">#</th>
+                                    <th class="text-center" style="width: 40px;">#</th>
                                     <th>{{ __('Customer Name') }} <span class="text-danger">*</span></th>
                                     <th>{{ __('Phone') }} <span class="text-danger">*</span></th>
                                     <th>{{ __('Address') }} <span class="text-danger">*</span></th>
-                                    <th>{{ __('Invoice No') }}</th>
-                                    <th>{{ __('COD (Price)') }} <span class="text-danger">*</span></th>
-                                    <th>{{ __('Weight (KG)') }}</th>
-                                    <th>{{ __('Parcel Type') }}</th>
+                                    <th style="min-width: 170px;">{{ __('District & Thana') }} <span class="text-danger">*</span></th>
+                                    <th style="width: 75px;">{{ __('Qty') }}</th>
+                                    <th style="width: 100px;">{{ __('COD') }} <span class="text-danger">*</span></th>
+                                    <th style="width: 100px;">{{ __('Selling') }}</th>
+                                    <th style="width: 80px;">{{ __('Weight') }}</th>
+                                    <th>{{ __('delivery_area') }}</th>
+                                    <th>{{ __('Invoice') }}</th>
                                     <th>{{ __('Note') }}</th>
-                                    <th class="text-center" style="width: 60px;">{{ __('Action') }}</th>
+                                    <th class="text-center" style="width: 50px;">{{ __('Action') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -314,6 +339,20 @@
                 parcels.forEach((item, i) => {
                     const hasError = !item.is_valid;
                     const errorBadge = hasError ? `<div class="text-danger small mt-1 font-11"><i class="las la-exclamation-triangle"></i> ${item.errors.join(', ')}</div>` : '';
+                    
+                    const locationBadge = (item.district_name && item.thana_name)
+                        ? `<div class="badge bg-soft-success text-success border border-success p-1 px-2 mb-1" style="font-size: 11px; white-space: normal; text-align: left; line-height: 1.3;">
+                            <i class="las la-map-marker-alt"></i> <strong>${escapeHtml(item.district_name)}</strong> &gt; ${escapeHtml(item.thana_name)}
+                           </div>`
+                        : `<div class="badge bg-soft-danger text-danger border border-danger p-1 px-2 mb-1" style="font-size: 11px; white-space: normal; text-align: left; line-height: 1.3;">
+                            <i class="las la-exclamation-circle"></i> Invalid Address
+                           </div>`;
+
+                    const branchBadge = (item.destination_branch_name)
+                        ? `<div class="badge bg-soft-info text-info border border-info p-1 px-2 mt-1" style="font-size: 10px;">
+                            <i class="las la-code-branch"></i> ${escapeHtml(item.destination_branch_name)}
+                           </div>`
+                        : '';
 
                     const rowHtml = `
                         <tr class="${hasError ? 'row-invalid' : ''}" data-row="${i}">
@@ -323,28 +362,43 @@
                             </td>
                             <td>
                                 <input type="text" class="form-control form-control-sm customer-phone ${item.errors.some(e => e.includes('Phone')) ? 'is-invalid border-danger' : ''}" value="${escapeHtml(item.customer_phone_number)}" required>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm customer-address ${item.errors.some(e => e.includes('address') || e.includes('Address')) ? 'is-invalid border-danger' : ''}" value="${escapeHtml(item.customer_address)}" required>
                                 ${errorBadge}
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm customer-address" value="${escapeHtml(item.customer_address)}" required>
+                                ${locationBadge}
+                                ${branchBadge}
+                                <input type="hidden" class="district-id" value="${item.district_id || ''}">
+                                <input type="hidden" class="thana-id" value="${item.thana_id || ''}">
+                                <input type="hidden" class="destination-branch-id" value="${item.destination_branch_id || ''}">
+                                <input type="hidden" class="open-box" value="${item.open_box || 0}">
+                                <input type="hidden" class="home-delivery" value="${item.home_delivery !== undefined ? item.home_delivery : 1}">
                             </td>
                             <td>
-                                <input type="text" class="form-control form-control-sm customer-invoice" value="${escapeHtml(item.customer_invoice_no)}">
+                                <input type="number" min="1" step="1" class="form-control form-control-sm total-quantity text-end" value="${item.total_quantity || 1}" required>
                             </td>
                             <td>
                                 <input type="number" step="any" class="form-control form-control-sm price text-end" value="${item.price}" required>
+                            </td>
+                            <td>
+                                <input type="number" step="any" class="form-control form-control-sm selling-price text-end" value="${item.selling_price || 0}">
                             </td>
                             <td>
                                 <input type="number" step="any" class="form-control form-control-sm weight text-end" value="${item.weight}">
                             </td>
                             <td>
                                 <select class="form-select form-select-sm parcel-type">
-                                    <option value="same_day" ${item.parcel_type === 'same_day' || item.parcel_type === 'inside_city' ? 'selected' : ''}>{{ __('same_day') }} ({{ __('inside_city') }})</option>
-                                    <option value="next_day" ${item.parcel_type === 'next_day' ? 'selected' : ''}>{{ __('next_day') }}</option>
+                                    <option value="same_day" ${item.parcel_type === 'same_day' || item.parcel_type === 'inside_city' ? 'selected' : ''}>{{ __('same_day') }}</option>
                                     <option value="sub_city" ${item.parcel_type === 'sub_city' ? 'selected' : ''}>{{ __('sub_city') }}</option>
-                                    <option value="sub_urban_area" ${item.parcel_type === 'sub_urban_area' || item.parcel_type === 'outside_city' ? 'selected' : ''}>{{ __('outside_city') }}</option>
+                                    <option value="outside_city" ${item.parcel_type === 'outside_city' || item.parcel_type === 'sub_urban_area' ? 'selected' : ''}>{{ __('sub_urban_area') }}</option>
+                                    <option value="next_day" ${item.parcel_type === 'next_day' ? 'selected' : ''}>{{ __('next_day') }}</option>
                                     <option value="frozen" ${item.parcel_type === 'frozen' ? 'selected' : ''}>{{ __('frozen') }}</option>
                                 </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control form-control-sm customer-invoice" value="${escapeHtml(item.customer_invoice_no)}">
                             </td>
                             <td>
                                 <input type="text" class="form-control form-control-sm note" value="${escapeHtml(item.note)}">
@@ -369,11 +423,13 @@
 
                 $('#previewTable tbody tr').each(function (idx) {
                     $(this).find('.row-index').text(idx + 1);
-                    const phone = $(this).find('.customer-phone').val().trim();
-                    const name = $(this).find('.customer-name').val().trim();
-                    const address = $(this).find('.customer-address').val().trim();
+                    const phone = $(this).find('.customer-phone').val() ? $(this).find('.customer-phone').val().trim() : '';
+                    const name = $(this).find('.customer-name').val() ? $(this).find('.customer-name').val().trim() : '';
+                    const address = $(this).find('.customer-address').val() ? $(this).find('.customer-address').val().trim() : '';
+                    const distId = $(this).find('.district-id').val();
+                    const thanaId = $(this).find('.thana-id').val();
 
-                    if (!phone || phone.length !== 11 || !name || !address) {
+                    if (!phone || phone.length !== 11 || !name || !address || !distId || !thanaId) {
                         invalidCount++;
                         $(this).addClass('row-invalid');
                     } else {
@@ -388,7 +444,7 @@
                 $('.btn-save-count-bottom').text(totalRows);
 
                 if (totalRows === 0) {
-                    $('#previewTable tbody').html('<tr><td colspan="10" class="text-center text-muted py-4">{{ __('No rows available. Click Reset to re-upload.') }}</td></tr>');
+                    $('#previewTable tbody').html('<tr><td colspan="13" class="text-center text-muted py-4">{{ __('No rows available. Click Reset to re-upload.') }}</td></tr>');
                     $('#btnSaveParcels, #btnSaveParcelsBottom').prop('disabled', true);
                 } else {
                     $('#btnSaveParcels, #btnSaveParcelsBottom').prop('disabled', false);
@@ -401,8 +457,74 @@
                 updateStats();
             });
 
-            // Live validation on phone change
-            $(document).on('input', '.customer-phone, .customer-name, .customer-address', function () {
+            // Live validation and address re-detection when editing in table
+            let addressDetectTimeout = null;
+            $(document).on('input change blur', '.customer-address', function () {
+                const inputEl = $(this);
+                const rowEl = inputEl.closest('tr');
+                const addressVal = inputEl.val() ? inputEl.val().trim() : '';
+                const locationCol = rowEl.find('.district-id').parent();
+
+                clearTimeout(addressDetectTimeout);
+                addressDetectTimeout = setTimeout(function () {
+                    if (!addressVal) {
+                        rowEl.find('.district-id').val('');
+                        rowEl.find('.thana-id').val('');
+                        locationCol.find('.badge').first().replaceWith(`
+                            <div class="badge bg-soft-danger text-danger border border-danger p-1 px-2 mb-1" style="font-size: 11px; white-space: normal; text-align: left; line-height: 1.3;">
+                                <i class="las la-exclamation-circle"></i> {{ __('Empty Address') }}
+                            </div>
+                        `);
+                        inputEl.addClass('is-invalid border-danger');
+                        rowEl.addClass('row-invalid');
+                        updateStats();
+                        return;
+                    }
+
+                    // Call backend address detection API
+                    $.ajax({
+                        url: "{{ route('parcel.detect.address') }}",
+                        type: "POST",
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                            address: addressVal
+                        },
+                        success: function (res) {
+                            if (res.is_valid && res.district_id && res.thana_id) {
+                                rowEl.find('.district-id').val(res.district_id);
+                                rowEl.find('.thana-id').val(res.thana_id);
+                                locationCol.find('.badge').first().replaceWith(`
+                                    <div class="badge bg-soft-success text-success border border-success p-1 px-2 mb-1" style="font-size: 11px; white-space: normal; text-align: left; line-height: 1.3;">
+                                        <i class="las la-map-marker-alt"></i> <strong>${escapeHtml(res.district_name)}</strong> &gt; ${escapeHtml(res.thana_name)}
+                                    </div>
+                                `);
+                                inputEl.removeClass('is-invalid border-danger');
+                                rowEl.removeClass('row-invalid');
+                                if (res.suggested_parcel_type) {
+                                    rowEl.find('.parcel-type').val(res.suggested_parcel_type);
+                                }
+                            } else {
+                                rowEl.find('.district-id').val('');
+                                rowEl.find('.thana-id').val('');
+                                locationCol.find('.badge').first().replaceWith(`
+                                    <div class="badge bg-soft-danger text-danger border border-danger p-1 px-2 mb-1" style="font-size: 11px; white-space: normal; text-align: left; line-height: 1.3;">
+                                        <i class="las la-exclamation-circle"></i> {{ __('Invalid Address') }}
+                                    </div>
+                                `);
+                                inputEl.addClass('is-invalid border-danger');
+                                rowEl.addClass('row-invalid');
+                            }
+                            updateStats();
+                        },
+                        error: function () {
+                            updateStats();
+                        }
+                    });
+                }, 350);
+            });
+
+            // Live validation on name, phone, quantity changes
+            $(document).on('input', '.customer-phone, .customer-name, .total-quantity', function () {
                 updateStats();
             });
 
@@ -418,50 +540,178 @@
                 }
             });
 
-            // Save / Confirm All Parcels
+            // Save / Confirm All Parcels with STRICT address and data verification
             $('#btnSaveParcels, #btnSaveParcelsBottom').on('click', function () {
                 const rows = $('#previewTable tbody tr');
                 if (rows.length === 0 || rows.find('.customer-name').length === 0) {
-                    alert('{{ __('No parcel data to save.') }}');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire('{{ __('No Data') }}', '{{ __('No parcel data to save.') }}', 'warning');
+                    } else {
+                        alert('{{ __('No parcel data to save.') }}');
+                    }
+                    return;
+                }
+
+                // Check merchant & shop selection
+                const merchantVal = $('#selectMerchant').length ? $('#selectMerchant').val() : '1';
+                const shopVal = $('#shop').val();
+
+                if ($('#selectMerchant').length && !merchantVal) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire('{{ __('Select Merchant') }}', '{{ __('Please select a merchant first.') }}', 'warning');
+                    } else {
+                        alert('{{ __('Please select a merchant first.') }}');
+                    }
+                    $('#selectMerchant').focus();
+                    return;
+                }
+
+                if (!shopVal) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire('{{ __('Select Shop') }}', '{{ __('Please select a shop first.') }}', 'warning');
+                    } else {
+                        alert('{{ __('Please select a shop first.') }}');
+                    }
+                    $('#shop').focus();
                     return;
                 }
 
                 const parcels = [];
-                let hasValidationError = false;
+                const invalidRows = [];
+                let firstInvalidEl = null;
 
+                // STRICT ADDRESS & DATA CHECK FOR EVERY ROW
                 rows.each(function (index) {
-                    const name = $(this).find('.customer-name').val().trim();
-                    const phone = $(this).find('.customer-phone').val().trim();
-                    const address = $(this).find('.customer-address').val().trim();
-                    const price = $(this).find('.price').val();
-                    const weight = $(this).find('.weight').val();
-                    const invoice = $(this).find('.customer-invoice').val().trim();
-                    const parcelType = $(this).find('.parcel-type').val();
-                    const note = $(this).find('.note').val().trim();
+                    const rowEl = $(this);
+                    const rowNo = index + 1;
+                    const name = rowEl.find('.customer-name').val() ? rowEl.find('.customer-name').val().trim() : '';
+                    const phone = rowEl.find('.customer-phone').val() ? rowEl.find('.customer-phone').val().trim() : '';
+                    const address = rowEl.find('.customer-address').val() ? rowEl.find('.customer-address').val().trim() : '';
+                    const districtId = rowEl.find('.district-id').val();
+                    const thanaId = rowEl.find('.thana-id').val();
+                    const totalQty = rowEl.find('.total-quantity').val() || 1;
+                    const price = rowEl.find('.price').val() || 0;
+                    const sellingPrice = rowEl.find('.selling-price').val() || 0;
+                    const weight = rowEl.find('.weight').val() || 1;
+                    const invoice = rowEl.find('.customer-invoice').val() ? rowEl.find('.customer-invoice').val().trim() : '';
+                    const parcelType = rowEl.find('.parcel-type').val();
+                    const destBranchId = rowEl.find('.destination-branch-id').val();
+                    const openBox = rowEl.find('.open-box').val() || 0;
+                    const homeDelivery = rowEl.find('.home-delivery').val() || 1;
+                    const note = rowEl.find('.note').val() ? rowEl.find('.note').val().trim() : '';
 
-                    if (!name || !phone || !address) {
-                        hasValidationError = true;
-                        $(this).addClass('row-invalid');
+                    const rowIssues = [];
+                    if (!name) {
+                        rowIssues.push('{{ __('Missing Customer Name') }}');
+                    }
+                    const cleanPhone = phone.replace(/[^0-9]/g, '');
+                    if (!phone) {
+                        rowIssues.push('{{ __('Missing Phone Number') }}');
+                    } else if (cleanPhone.length !== 11) {
+                        rowIssues.push('{{ __('Phone must be 11 digits') }} (' + cleanPhone.length + ')');
+                    }
+
+                    if (!address) {
+                        rowIssues.push('{{ __('Missing Address') }}');
+                    } else if (!districtId || !thanaId) {
+                        rowIssues.push('{{ __('Invalid Address: District & Thana not found in database') }}');
+                    }
+
+                    if (rowIssues.length > 0) {
+                        rowEl.addClass('row-invalid flash-highlight');
+                        if (!firstInvalidEl) {
+                            firstInvalidEl = rowEl;
+                        }
+                        invalidRows.push({
+                            row: rowNo,
+                            name: name || '{{ __('Unnamed') }}',
+                            address: address || '{{ __('No Address') }}',
+                            issues: rowIssues
+                        });
+                    } else {
+                        rowEl.removeClass('row-invalid flash-highlight');
                     }
 
                     parcels.push({
                         customer_name: name,
                         customer_phone_number: phone,
                         customer_address: address,
+                        district_id: districtId,
+                        thana_id: thanaId,
+                        total_quantity: totalQty,
                         customer_invoice_no: invoice,
                         price: price,
+                        selling_price: sellingPrice,
                         weight: weight,
                         parcel_type: parcelType,
+                        destination_branch_id: destBranchId,
+                        open_box: openBox,
+                        home_delivery: homeDelivery,
                         note: note
                     });
                 });
 
-                if (hasValidationError) {
-                    if (!confirm('{{ __('Some rows have missing customer name, phone number, or address. Are you sure you want to proceed?') }}')) {
-                        return;
+                // STOP IMMEDIATELY IF ANY ADDRESS OR FIELD IS INVALID
+                if (invalidRows.length > 0) {
+                    let alertHtml = `
+                        <div style="text-align: left; max-height: 280px; overflow-y: auto; font-size: 13px;">
+                            <div class="alert alert-danger py-2 px-3 mb-2" style="background-color: #fff2f0; border-color: #ffccc7; color: #cf1322;">
+                                <i class="las la-exclamation-circle me-1"></i> <strong>{{ __('Cannot Save Parcels!') }}</strong>
+                                {{ __('Found') }} <strong>${invalidRows.length}</strong> {{ __('row(s) with invalid address or missing details. Please fix the addresses or delete invalid rows before saving.') }}
+                            </div>
+                            <div class="list-group list-group-flush border rounded">
+                    `;
+
+                    invalidRows.forEach(function (item) {
+                        alertHtml += `
+                            <div class="list-group-item py-2 px-3" style="background: #fff;">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <span class="badge bg-danger">Row #${item.row}</span>
+                                    <strong class="text-dark">${escapeHtml(item.name)}</strong>
+                                </div>
+                                <div class="small text-muted mb-1">
+                                    <i class="las la-map-marker me-1"></i> Address: <span class="fw-semibold text-dark">"${escapeHtml(item.address)}"</span>
+                                </div>
+                                <div class="text-danger small">
+                                    <i class="las la-times-circle me-1"></i> <strong>${item.issues.join(' | ')}</strong>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    alertHtml += `
+                            </div>
+                            <div class="mt-2 text-muted small">
+                                <i class="las la-lightbulb text-warning me-1"></i> {{ __('Tip: You can edit the address directly in the table (e.g. add District & Thana), or click the red trash button to remove invalid rows.') }}
+                            </div>
+                        </div>
+                    `;
+
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '{{ __('Invalid Address Detected!') }}',
+                            html: alertHtml,
+                            confirmButtonText: '{{ __('OK, I will fix it') }}',
+                            confirmButtonColor: '#dc3545',
+                            width: '650px'
+                        });
+                    } else {
+                        alert('{{ __('Cannot save parcels! Invalid address in rows: ') }}' + invalidRows.map(r => '#' + r.row + ' (' + r.address + ')').join("\n"));
                     }
+
+                    // Smooth scroll to the first invalid row and focus on its address
+                    if (firstInvalidEl) {
+                        $('html, body').animate({
+                            scrollTop: firstInvalidEl.offset().top - 120
+                        }, 400);
+                        firstInvalidEl.find('.customer-address').focus();
+                    }
+
+                    return false; // STRICTLY PREVENT SAVE
                 }
 
+                // All rows are valid -> Submit
                 const saveBtn = $('#btnSaveParcels, #btnSaveParcelsBottom');
                 saveBtn.prop('disabled', true).html('<i class="las la-spinner la-spin me-1"></i> {{ __('Saving...') }}');
 
@@ -476,20 +726,48 @@
                     },
                     success: function (response) {
                         if (response.status) {
-                            alert(response.message || '{{ __('Parcels imported successfully!') }}');
-                            window.location.href = response.redirect;
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '{{ __('Success!') }}',
+                                    text: response.message || '{{ __('Parcels imported successfully!') }}',
+                                    confirmButtonText: '{{ __('OK') }}',
+                                    confirmButtonColor: '#28a745'
+                                }).then(function () {
+                                    window.location.href = response.redirect;
+                                });
+                            } else {
+                                alert(response.message || '{{ __('Parcels imported successfully!') }}');
+                                window.location.href = response.redirect;
+                            }
                         } else {
                             saveBtn.prop('disabled', false).html('<i class="las la-save me-1"></i> {{ __('Save All Parcels') }}');
-                            alert(response.message || '{{ __('Failed to save parcels.') }}');
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire('{{ __('Failed') }}', response.message || '{{ __('Failed to save parcels.') }}', 'error');
+                            } else {
+                                alert(response.message || '{{ __('Failed to save parcels.') }}');
+                            }
                         }
                     },
                     error: function (xhr) {
                         saveBtn.prop('disabled', false).html('<i class="las la-save me-1"></i> {{ __('Save All Parcels') }}');
-                        let err = '{{ __('Something went wrong while saving parcels.') }}';
+                        let errTitle = '{{ __('Save Failed') }}';
+                        let errMsg = '{{ __('Something went wrong while saving parcels.') }}';
                         if (xhr.responseJSON && xhr.responseJSON.message) {
-                            err = xhr.responseJSON.message;
+                            errMsg = xhr.responseJSON.message;
                         }
-                        alert(err);
+
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: errTitle,
+                                html: '<div style="text-align: left; white-space: pre-line; font-size: 13px;">' + escapeHtml(errMsg) + '</div>',
+                                confirmButtonColor: '#dc3545',
+                                width: '600px'
+                            });
+                        } else {
+                            alert(errMsg);
+                        }
                     }
                 });
             });

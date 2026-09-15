@@ -239,7 +239,7 @@
                                     </select>
                                 </div>
                                 <div class="col-3">
-                                    <label class="form-label" for="parcel_type">{{ __('parcel_type') }}</label>
+                                    <label class="form-label" for="parcel_type">{{ __('delivery_area') }}</label>
                                     <select class="without_search form-select form-control form-select-sm filterable"
                                         id="parcel_type" name="parcel_type">
                                         <option value="">{{__('any_type')}}</option>

@@ -73,7 +73,9 @@ class SupportTicket extends Model
     {
         return $this->hasMany(TicketReply::class, 'ticket_id')->orderBy('created_at', 'asc');
     }
-
+      public function chat(){
+        return $this->hasMany(User::class,'');
+      }
     /**
      * Relationship with Ticket Attachments.
      */

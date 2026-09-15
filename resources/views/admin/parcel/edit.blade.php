@@ -201,19 +201,23 @@
                                             id="customer_phone_number"
                                             value="{{ old('customer_phone_number') != '' ? old('customer_phone_number') : (isDemoMode() ? '**************' : ($parcel->customer_phone_number ?? '')) }}"
                                             name="customer_phone_number"
-                                            placeholder="{{ __('recipient') . ' ' . __('phone') }}">
+                                            maxlength="14"
+                                            placeholder="01XXXXXXXXX">
                                         @error('customer_phone_number')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
+                                        <div id="customer_phone_error" class="invalid-feedback d-none">
+                                            {{ __('Please enter a valid 11-digit Bangladeshi mobile number (e.g. 017XXXXXXXX).') }}
+                                        </div>
                                     </div>
                                 </div>
 
 
 
 
-                             <div class="col-md-4">
+                                <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label" for="adjustment">{{ __('adjustment') }}</label>
                                         <div class="input-group">
@@ -233,11 +237,58 @@
                                     </div>
                                 </div>
 
-
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="total_quantity">{{ __('total_quantity') }}</label>
+                                        <input type="number" min="1" name="total_quantity" id="total_quantity" class="form-control"
+                                            value="{{ old('total_quantity', $parcel->total_quantity ?? 1) }}"
+                                            placeholder="{{ __('total_quantity') }}">
+                                    </div>
+                                </div>
 
                             </div>
 
-
+                            <!-- Row: District & Thana -->
+                            <div class="row g-gs">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="city_to_thana">{{ __('district') }} / District <span class="text-danger">*</span></label>
+                                        <select class="without_search form-select form-control city_id district_id @error('city_id') is-invalid @enderror"
+                                            name="city_id" id="city_to_thana">
+                                            <option value="">Select District</option>
+                                            @foreach($districts as $district)
+                                                <option value="{{ $district->id }}"
+                                                    data-name="{{ strtolower($district->name) }}"
+                                                    {{ old('city_id', @$parcel->district_id ?? @$parcel->city_id) == $district->id ? 'selected' : '' }}>
+                                                    {{ $district->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('city_id'))
+                                            <div class="invalid-feedback help-block"><p>{{ $errors->first('city_id') }}</p></div>
+                                        @endif
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label" for="thana_to_area">Thana <span class="text-danger">*</span></label>
+                                        <select style="width:100%" class="without_search form-select form-control thana_id @error('thana_id') is-invalid @enderror"
+                                            name="thana_id" id="thana_to_area">
+                                            <option value="">Select Thana</option>
+                                            @if(isset($thanas))
+                                                @foreach($thanas as $thana)
+                                                    <option value="{{ $thana->id }}" {{ old('thana_id', @$parcel->thana_id) == $thana->id ? 'selected' : '' }}>
+                                                        {{ $thana->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('thana_id'))
+                                            <div class="invalid-feedback help-block"><p>{{ $errors->first('thana_id') }}</p></div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="row g-gs">
                                 <div class="col-md-6">
@@ -252,6 +303,12 @@
                                             {{ $message }}
                                         </div>
                                         @enderror
+                                        <div id="address_auto_detect_badge" class="badge bg-soft-success text-success mt-2 p-1 px-2 d-none" style="font-size: 13px; border: 1px solid #28a745; border-radius: 4px; display: inline-block;">
+                                            <i class="las la-magic me-1"></i> <span id="address_auto_detect_text"></span>
+                                        </div>
+                                        <div id="address_error_msg" class="invalid-feedback d-none">
+                                            Please enter a valid address containing district and thana.
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
@@ -269,7 +326,7 @@
                                 </div>
                             </div>
                             <div class="row g-gs">
-                                <div class="col-md-6">
+                                {{-- <div class="col-md-6">
                                     <div class="row pt-1">
                                         <label class="form-label mt-4"></label>
                                         <div class="col-md-6 w-100">
@@ -287,7 +344,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> --}}
                                 <div
                                     class="col-md-6 packaging-area">
                                     <div class="mb-3">
@@ -304,6 +361,43 @@
                                             </option>
                                             @endforeach
                                         </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mb-2">
+                                    <div class="mb-3">
+                                        <div class="preview-block">
+                                            <div class="custom-control custom-checkbox">
+                                                <label class="custom-control-label" for="transfer_to_branch">
+                                                    <input type="checkbox"
+                                                        class="custom-control-input" id="transfer_to_branch" value="1"
+                                                        name="transfer_to_branch" {{ (old('transfer_to_branch', !empty($parcel->destination_branch_id)) ? 'checked' : '') }}>
+                                                    <span class="text-capitalize">
+                                                        {{ __('transfer_to_branch') }}</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 mb-3 px-0 {{ (old('transfer_to_branch', !empty($parcel->destination_branch_id)) ? '' : 'd-none') }}" id="transfer_branch_wrapper">
+                                        <label class="form-label" for="destination_branch_id">{{ __('select_branch') }}
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="without_search form-select form-control @error('destination_branch_id') is-invalid @enderror"
+                                            name="destination_branch_id" id="destination_branch_id">
+                                            <option value="" selected disabled>{{ __('select_branch') }}</option>
+                                            @if(isset($branchs))
+                                                @foreach ($branchs as $item)
+                                                    <option value="{{ $item->id }}"
+                                                        {{ old('destination_branch_id', $parcel->destination_branch_id) == $item->id ? 'selected' : '' }}>
+                                                        {{ $item->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('destination_branch_id'))
+                                            <div class="invalid-feedback help-block">
+                                                <p>{{ $errors->first('destination_branch_id') }}</p>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                                 <div class="col-md-12">
@@ -402,7 +496,7 @@
                                                         id="vat-charge">{{ floor((floor($parcel->charge + $parcel->fragile_charge + $parcel->packaging_charge + ($parcel->price / 100) * $parcel->cod_charge) / 100) * $parcel->vat) }}</span>
                                                 </td>
                                             </tr>
-                                            <tr
+                                            {{-- <tr
                                                 class="fragile-charge-area {{ $parcel->fragile == 0 ? 'd-none' : '' }}">
 
                                                 <td>
@@ -412,7 +506,7 @@
                                                     <span
                                                         id="fragile-charge">{{ $parcel->fragile_charge }}</span>
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr
                                                 class="packaging-charge-area {{ $parcel->packaging == 'no' ? 'd-none' : '' }} ">
 
@@ -511,5 +605,22 @@
 </div>
 @include('admin.roles.script')
 @include('admin.parcel.charge-script')
+@include('admin.parcel.address-detect-script')
+
+@push('script')
+<script>
+$(document).ready(function () {
+    $('#transfer_to_branch').on('change', function () {
+        if ($(this).is(':checked')) {
+            $('#transfer_branch_wrapper').removeClass('d-none');
+        } else {
+            $('#transfer_branch_wrapper').addClass('d-none');
+            $('select[name="destination_branch_id"]').val('').trigger('change');
+        }
+    });
+});
+</script>
+@endpush
+
 @endsection
 @include('live_search.merchants')

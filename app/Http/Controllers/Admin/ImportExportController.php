@@ -23,7 +23,7 @@ class ImportExportController extends Controller
 {
     public function importExportView()
     {
-        $merchants = User::where('user_type', 'merchant')->get();
+        $merchants = Merchant::with('user')->get();
         return view('admin.bulk.import', compact('merchants'));
     }
     public function getShopsByMerchant(Request $request)
@@ -31,6 +31,15 @@ class ImportExportController extends Controller
         $shops = Shop::where('merchant_id', $request->merchant_id)->select('id', 'shop_name')
             ->get();
         return response()->json($shops);
+    }
+
+    public function detectAddress(Request $request)
+    {
+        $address = $request->input('address', '');
+        $district = $request->input('district', null);
+        $thana = $request->input('thana', null);
+        $res = \App\Services\AddressLocationDetector::detectLocation($address, $district, $thana);
+        return response()->json($res);
     }
 
     public function export()
@@ -43,7 +52,11 @@ class ImportExportController extends Controller
             $filename = (Sentinel::getUser()->user_type == 'merchant' || Sentinel::getUser()->user_type == 'merchant_staff') ? 'admin/excel/merchant-parcel-import-sample.xlsx' : 'admin/excel/staff-parcel-import-sample.xlsx';
             if (file_exists(public_path($filename))):
                 $filepath = public_path($filename);
-                return Response::download($filepath);
+                return Response::download($filepath, basename($filepath), [
+                    'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                    'Pragma' => 'no-cache',
+                    'Expires' => '0',
+                ]);
             else:
                 return back()->with('danger', __('file_not_found'));
             endif;
@@ -147,13 +160,21 @@ class ImportExportController extends Controller
 
                 $name = $mapped['customer_name'] ?? $mapped['name'] ?? $mapped['customer'] ?? ($rawRow[0] ?? '');
                 $phone = $mapped['customer_phone_number'] ?? $mapped['customer_phone'] ?? $mapped['phone_number'] ?? $mapped['phone'] ?? ($rawRow[1] ?? '');
-                $address = $mapped['customer_address'] ?? $mapped['address'] ?? ($rawRow[2] ?? '');
-                $invoice = $mapped['customer_invoice_no'] ?? $mapped['invoice_no'] ?? $mapped['invoice'] ?? ($rawRow[3] ?? '');
-                $price = $mapped['price'] ?? $mapped['cash_collection'] ?? $mapped['cod'] ?? ($rawRow[4] ?? 0);
-                $selling_price = $mapped['selling_price'] ?? ($rawRow[5] ?? 0);
-                $weight = $mapped['weight'] ?? ($rawRow[6] ?? 1);
-                $parcel_type = $mapped['parcel_type'] ?? $mapped['type'] ?? ($rawRow[7] ?? 'same_day');
-                $note = $mapped['note'] ?? ($rawRow[8] ?? '');
+                $address = $mapped['customer_address'] ?? $mapped['address'] ?? ($rawRow[2] ?? ($rawRow[6] ?? ($rawRow[5] ?? '')));
+                $district_input = $mapped['district'] ?? $mapped['city'] ?? $mapped['district_name'] ?? ($rawRow[3] ?? ($rawRow[7] ?? ($rawRow[6] ?? null)));
+                $thana_input = $mapped['thana'] ?? $mapped['upazila'] ?? $mapped['thana_name'] ?? ($rawRow[4] ?? ($rawRow[8] ?? ($rawRow[7] ?? null)));
+                $total_quantity = $mapped['total_quantity'] ?? $mapped['quantity'] ?? $mapped['qty'] ?? ($rawRow[5] ?? ($rawRow[4] ?? 1));
+                $price = $mapped['price'] ?? $mapped['cash_collection'] ?? $mapped['cod'] ?? ($rawRow[6] ?? ($rawRow[3] ?? ($rawRow[2] ?? ($rawRow[0] ?? 0))));
+                $selling_price = $mapped['selling_price'] ?? ($rawRow[7] ?? ($rawRow[4] ?? ($rawRow[3] ?? ($rawRow[1] ?? 0))));
+                $weight = $mapped['weight'] ?? ($rawRow[8] ?? ($rawRow[10] ?? ($rawRow[9] ?? 1)));
+                $parcel_type = $mapped['delivery_area'] ?? $mapped['parcel_type'] ?? $mapped['type'] ?? ($rawRow[9] ?? ($rawRow[8] ?? 'same_day'));
+                $invoice = $mapped['customer_invoice_no'] ?? $mapped['invoice_no'] ?? $mapped['invoice'] ?? ($rawRow[10] ?? ($rawRow[2] ?? ($rawRow[3] ?? '')));
+                $packaging = $mapped['packaging'] ?? ($rawRow[11] ?? 'no');
+                $open_box = $mapped['open_box'] ?? ($rawRow[12] ?? ($rawRow[11] ?? 0));
+                $home_delivery = $mapped['home_delivery'] ?? ($rawRow[13] ?? ($rawRow[12] ?? 1));
+                $transfer_to_branch = $mapped['transfer_to_branch'] ?? ($rawRow[14] ?? ($rawRow[13] ?? 0));
+                $destination_branch = $mapped['destination_branch'] ?? $mapped['destination_branch_id'] ?? $mapped['transfer_branch'] ?? ($rawRow[15] ?? ($rawRow[14] ?? ''));
+                $note = $mapped['note'] ?? ($rawRow[16] ?? ($rawRow[15] ?? ($rawRow[8] ?? '')));
 
                 // Phone cleaning and normalization
                 $cleanPhone = preg_replace('/[^0-9]/', '', (string)$phone);
@@ -172,11 +193,33 @@ class ImportExportController extends Controller
                 }
                 if (empty($cleanPhone)) {
                     $errors[] = 'Missing Phone';
-                } elseif (strlen($cleanPhone) != 11) {
-                    $errors[] = 'Phone not 11 digits (' . strlen($cleanPhone) . ')';
+                } elseif (!preg_match('/^01[3-9]\d{8}$/', $cleanPhone)) {
+                    $errors[] = 'Invalid BD mobile number (' . $cleanPhone . ') - must be 11 digits starting with 013-019';
                 }
                 if (empty($address)) {
                     $errors[] = 'Missing Address';
+                }
+
+                // Database Address Verification (District & Thana)
+                $loc = \App\Services\AddressLocationDetector::detectLocation($address, $district_input, $thana_input);
+                if (!$loc['is_valid']) {
+                    $errors[] = $loc['error'] ?? 'Please enter a valid address containing district and thana';
+                }
+
+                // Resolve destination branch if specified
+                $destBranchId = null;
+                $destBranchName = '';
+                if (!empty($destination_branch)) {
+                    if (is_numeric($destination_branch)) {
+                        $b = \App\Models\Branch::find($destination_branch);
+                    } else {
+                        $b = \App\Models\Branch::where('name', 'like', '%' . trim($destination_branch) . '%')->first();
+                    }
+                    if ($b) {
+                        $destBranchId = $b->id;
+                        $destBranchName = $b->name;
+                        $transfer_to_branch = 1;
+                    }
                 }
 
                 $rows[] = [
@@ -185,10 +228,21 @@ class ImportExportController extends Controller
                     'customer_phone_number' => $cleanPhone ?: (string)$phone,
                     'customer_address' => ltrim((string)$address, implode('', $unsafeChars)),
                     'customer_invoice_no' => ltrim((string)$invoice, implode('', $unsafeChars)),
+                    'district_id' => $loc['district_id'],
+                    'district_name' => $loc['district_name'] ?? '',
+                    'thana_id' => $loc['thana_id'],
+                    'thana_name' => $loc['thana_name'] ?? '',
+                    'total_quantity' => (is_numeric($total_quantity) && intval($total_quantity) >= 1) ? intval($total_quantity) : 1,
                     'price' => is_numeric($price) ? floatval($price) : 0,
                     'selling_price' => is_numeric($selling_price) ? floatval($selling_price) : 0,
                     'weight' => (is_numeric($weight) && floatval($weight) > 0) ? floatval($weight) : 1,
-                    'parcel_type' => in_array($parcel_type, ['same_day', 'inside_city', 'outside_city', 'sub_city', 'sub_urban_area', 'frozen', 'third_party_booking', 'next_day']) ? $parcel_type : 'same_day',
+                    'packaging' => $packaging ?: 'no',
+                    'parcel_type' => in_array($parcel_type, ['same_day', 'inside_city', 'outside_city', 'sub_city', 'sub_urban_area', 'frozen', 'third_party_booking', 'next_day']) ? $parcel_type : ($loc['suggested_parcel_type'] ?? 'same_day'),
+                    'open_box' => !empty($open_box) && $open_box != '0' ? 1 : 0,
+                    'home_delivery' => isset($home_delivery) && ($home_delivery === '0' || $home_delivery === 0) ? 0 : 1,
+                    'transfer_to_branch' => !empty($transfer_to_branch) && $transfer_to_branch != '0' ? 1 : 0,
+                    'destination_branch_id' => $destBranchId,
+                    'destination_branch_name' => $destBranchName,
                     'note' => ltrim((string)$note, implode('', $unsafeChars)),
                     'is_valid' => empty($errors),
                     'errors' => $errors,
@@ -239,6 +293,51 @@ class ImportExportController extends Controller
         $pickup_phone = $shop ? $shop->shop_phone_number : ($defaultShop ? $defaultShop->shop_phone_number : '');
         $pickup_address = $shop ? $shop->address : ($defaultShop ? $defaultShop->address : '');
 
+        // 1. Strict pre-validation: Verify address and required fields for EVERY row
+        $invalidRows = [];
+        $verifiedLocations = [];
+
+        foreach ($request->input('parcels') as $index => $row) {
+            $rowNo = $index + 1;
+            $customer_name = trim($row['customer_name'] ?? '');
+            $customer_phone = trim($row['customer_phone_number'] ?? '');
+            $customer_address = trim($row['customer_address'] ?? '');
+
+            $rowIssues = [];
+            if (empty($customer_name)) {
+                $rowIssues[] = 'Missing Customer Name';
+            }
+            $cleanPhone = preg_replace('/[^0-9]/', '', $customer_phone);
+            if (empty($customer_phone)) {
+                $rowIssues[] = 'Missing Phone Number';
+            } elseif (strlen($cleanPhone) != 11) {
+                $rowIssues[] = 'Phone number must be 11 digits (' . strlen($cleanPhone) . ')';
+            }
+
+            if (empty($customer_address)) {
+                $rowIssues[] = 'Missing Address';
+            } else {
+                $loc = \App\Services\AddressLocationDetector::detectLocation($customer_address, $row['district'] ?? null, $row['thana'] ?? null);
+                if (!$loc['is_valid']) {
+                    $rowIssues[] = $loc['error'] ?? 'District & Thana not found in database for address';
+                } else {
+                    $verifiedLocations[$index] = $loc;
+                }
+            }
+
+            if (!empty($rowIssues)) {
+                $invalidRows[] = "Row #{$rowNo} (" . ($customer_name ?: 'Unnamed') . " - '{$customer_address}'): " . implode(', ', $rowIssues);
+            }
+        }
+
+        if (!empty($invalidRows)) {
+            return response()->json([
+                'status' => false,
+                'message' => "Cannot save parcels! The following row(s) have invalid addresses or data:\n• " . implode("\n• ", $invalidRows),
+                'invalid_rows' => $invalidRows
+            ], 422);
+        }
+
         DB::beginTransaction();
         try {
             $excelToCanonical = [
@@ -261,11 +360,25 @@ class ImportExportController extends Controller
                 $weight = floatval($row['weight'] ?? 1);
                 if ($weight <= 0) $weight = 1;
 
-                if (empty($customer_name) || empty($customer_phone) || empty($customer_address)) {
+                $cleanCustomerPhone = preg_replace('/[^0-9]/', '', $customer_phone);
+                if (str_starts_with($cleanCustomerPhone, '880')) {
+                    $cleanCustomerPhone = '0' . substr($cleanCustomerPhone, 3);
+                } elseif (str_starts_with($cleanCustomerPhone, '88')) {
+                    $cleanCustomerPhone = '0' . substr($cleanCustomerPhone, 2);
+                } elseif (!str_starts_with($cleanCustomerPhone, '0') && strlen($cleanCustomerPhone) == 10) {
+                    $cleanCustomerPhone = '0' . $cleanCustomerPhone;
+                }
+
+                if (empty($customer_name) || empty($cleanCustomerPhone) || empty($customer_address)) {
                     throw new \Exception("Row #" . ($index + 1) . ": Customer Name, Phone, and Address are required.");
                 }
 
-                $raw_type = $row['parcel_type'] ?? 'same_day';
+                if (!preg_match('/^01[3-9]\d{8}$/', $cleanCustomerPhone)) {
+                    throw new \Exception("Row #" . ($index + 1) . ": Invalid mobile number ($customer_phone). Must be a valid 11-digit Bangladeshi mobile number (013-019).");
+                }
+                $customer_phone = $cleanCustomerPhone;
+
+                $raw_type = $row['delivery_area'] ?? $row['parcel_type'] ?? 'same_day';
                 $parcel_type = $excelToCanonical[$raw_type] ?? 'same_day';
 
                 if ($parcel_type == "same_day" || $parcel_type == "next_day" || $parcel_type == "frozen") {
@@ -309,6 +422,25 @@ class ImportExportController extends Controller
                     $delivery_date = date('Y-m-d', strtotime('+1 days'));
                 }
 
+                // Resolve District & Thana
+                $loc = $verifiedLocations[$index] ?? \App\Services\AddressLocationDetector::detectLocation($customer_address, $row['district'] ?? null, $row['thana'] ?? null);
+                $districtId = $loc['district_id'] ?: (!empty($row['district_id']) ? $row['district_id'] : null);
+                $thanaId = $loc['thana_id'] ?: (!empty($row['thana_id']) ? $row['thana_id'] : null);
+
+                $total_quantity = isset($row['total_quantity']) && is_numeric($row['total_quantity']) && intval($row['total_quantity']) >= 1 ? intval($row['total_quantity']) : 1;
+                $open_box = !empty($row['open_box']) && $row['open_box'] != '0' ? 1 : 0;
+                $home_delivery = isset($row['home_delivery']) && ($row['home_delivery'] === '0' || $row['home_delivery'] === 0) ? 0 : 1;
+
+                $destBranchId = !empty($row['destination_branch_id']) ? $row['destination_branch_id'] : null;
+                if (!$destBranchId && !empty($row['destination_branch'])) {
+                    if (is_numeric($row['destination_branch'])) {
+                        $destBranchId = $row['destination_branch'];
+                    } else {
+                        $b = \App\Models\Branch::where('name', 'like', '%' . trim($row['destination_branch']) . '%')->first();
+                        $destBranchId = $b ? $b->id : null;
+                    }
+                }
+
                 $parcelNo = make_unique_parcel_id();
                 $invoiceNo = !empty($row['customer_invoice_no']) ? $row['customer_invoice_no'] : ('inv-' . $merchant->id . rand(1000, 9999));
 
@@ -318,11 +450,18 @@ class ImportExportController extends Controller
                     'short_url' => url('/tracking/' . $parcelNo),
                     'price' => $price,
                     'selling_price' => floatval($row['selling_price'] ?? 0),
+                    'total_quantity' => $total_quantity,
+                    'district_id' => $districtId,
+                    'thana_id' => $thanaId,
+                    'open_box' => $open_box,
+                    'home_delivery' => $home_delivery,
+                    'destination_branch_id' => $destBranchId,
                     'customer_name' => $customer_name,
                     'customer_invoice_no' => $invoiceNo,
                     'customer_phone_number' => $customer_phone,
                     'customer_address' => $customer_address,
                     'note' => $row['note'] ?? '',
+                    'packaging' => $row['packaging'] ?? 'no',
                     'weight' => $weight,
                     'parcel_type' => $parcel_type,
                     'charge' => $charge,

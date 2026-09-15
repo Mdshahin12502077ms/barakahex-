@@ -282,10 +282,18 @@ try {
         } while (Parcel::where('customer_invoice_no', $inv)->exists());
         return $inv;
     })();
-    $parcel->customer_phone_number = ltrim($request->customer_phone_number, implode('', $unsafeChars));
+    $rawPhone = ltrim((string)$request->customer_phone_number, implode('', $unsafeChars));
+    $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+    if (str_starts_with($cleanPhone, '880')) {
+        $cleanPhone = '0' . substr($cleanPhone, 3);
+    } elseif (str_starts_with($cleanPhone, '88')) {
+        $cleanPhone = '0' . substr($cleanPhone, 2);
+    }
+    $parcel->customer_phone_number = $cleanPhone ?: $rawPhone;
     $parcel->customer_address = ltrim($request->customer_address, implode('', $unsafeChars));
     $parcel->district_id = $request->district_id ?? $request->city_id ?? null;
     $parcel->thana_id = $request->thana_id ?? null;
+    $parcel->total_quantity = $request->total_quantity ?? 1;
     $parcel->note = ltrim($request->note, implode('', $unsafeChars));
 
     // Charge
@@ -461,7 +469,14 @@ try {
                 } while (Parcel::where('customer_invoice_no', $inv)->exists());
                 return $inv;
             })();
-            $parcel->customer_phone_number = ltrim($request->customer_phone_number, implode('', $unsafeChars));
+            $rawPhone = ltrim((string)$request->customer_phone_number, implode('', $unsafeChars));
+            $cleanPhone = preg_replace('/[^0-9]/', '', $rawPhone);
+            if (str_starts_with($cleanPhone, '880')) {
+                $cleanPhone = '0' . substr($cleanPhone, 3);
+            } elseif (str_starts_with($cleanPhone, '88')) {
+                $cleanPhone = '0' . substr($cleanPhone, 2);
+            }
+            $parcel->customer_phone_number = $cleanPhone ?: $rawPhone;
             $parcel->customer_address = ltrim($request->customer_address, implode('', $unsafeChars));
             $parcel->note = ltrim($request->note, implode('', $unsafeChars));
 
@@ -548,6 +563,9 @@ try {
             }
             if ($request->thana_id) {
                 $parcel->thana_id = $request->thana_id;
+            }
+            if ($request->has('total_quantity') && $request->total_quantity != '') {
+                $parcel->total_quantity = $request->total_quantity;
             }
             $parcel->save();
 

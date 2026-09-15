@@ -216,17 +216,21 @@
                                             <label class="form-label"
                                                 for="customer_phone_number">{{ __('customer') . ' ' . __('phone') }}
                                                 <span class="text-danger">*</span></label>
-                                            <input type="text" class="form-control"
+                                            <input type="text" class="form-control @error('customer_phone_number') is-invalid @enderror"
                                                 id="customer_phone_number"
                                                 value="{{ old('customer_phone_number') != '' ? old('customer_phone_number') : @$parcel->customer_phone_number }}"
                                                 name="customer_phone_number"
-                                                placeholder="{{ __('recipient') . ' ' . __('phone') }}"
+                                                maxlength="14"
+                                                placeholder="01XXXXXXXXX"
                                                 required>
                                             @if ($errors->has('customer_phone_number'))
                                                 <div class="invalid-feedback help-block">
                                                     <p>{{ $errors->first('customer_phone_number') }}</p>
                                                 </div>
                                             @endif
+                                            <div id="customer_phone_error" class="invalid-feedback d-none">
+                                                {{ __('Please enter a valid 11-digit Bangladeshi mobile number (e.g. 017XXXXXXXX).') }}
+                                            </div>
                                         </div>
                                     </div>
 

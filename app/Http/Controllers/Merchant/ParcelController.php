@@ -123,7 +123,12 @@ class ParcelController extends Controller
             $branch = Branch::when($user_branch_id, function ($query) use ($user_branch_id) {
                 $query->where('id', '!=', $user_branch_id);
             })->get();
-            return view('merchant.parcel.edit', compact('parcel', 'charges', 'cod_charges', 'shops', 'default_shop', 'branch'));
+            $districts = District::with(['thanas' => function($q) { $q->where('status', 'active')->orderBy('name'); }])->active()->orderBy('name')->get();
+            $city = $districts;
+            $selectedDistrictId = $parcel->district_id ?? $parcel->city_id;
+            $thanas = $selectedDistrictId ? Thana::where('district_id', $selectedDistrictId)->where('status', 'active')->orderBy('name')->get() : collect();
+
+            return view('merchant.parcel.edit', compact('parcel', 'charges', 'cod_charges', 'shops', 'default_shop', 'branch', 'districts', 'city', 'thanas'));
         else:
             return back()->with('danger', __('you_are_not_allowed_to_update_this_parcel'));
         endif;

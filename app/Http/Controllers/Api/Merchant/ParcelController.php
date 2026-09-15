@@ -134,7 +134,7 @@ class ParcelController extends Controller
             'merchant'              => 'required',
             'customer_name'         => 'required',
             'customer_invoice_no'   => 'required',
-            'customer_phone_number' => 'required|between:8,30',
+            'customer_phone_number' => ['required', 'regex:/^(?:\+?88|88)?01[3-9]\d{8}$/'],
             'customer_address'      => 'required',
             'parcel_type'           => 'required',
             'weight'                => 'required',

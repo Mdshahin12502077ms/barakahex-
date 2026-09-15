@@ -45,6 +45,7 @@ Route::group(['middleware'=>'XSS'], function() {
 
         Route::get('parcels', [ParcelController::class, 'index'])->name('merchant.staff.parcel')->middleware('PermissionCheck:manage_parcel');
         Route::get('request-parcel', [ParcelController::class, 'create'])->name('merchant.staff.parcel.create')->middleware('PermissionCheck:manage_parcel');
+        Route::get('parcelbookthana', [\App\Http\Controllers\Merchant\ParcelController::class, 'thanabook'])->name('merchant.staff.parcel.thanabook');
         Route::post('parcel-store', [ParcelController::class, 'store'])->name('merchant.staff.parcel.store')->middleware('PermissionCheck:manage_parcel');
         Route::get('parcel-duplicate/{id}', [ParcelController::class, 'duplicate'])->name('merchant.staff.parcel.duplicate')->middleware('PermissionCheck:manage_parcel');
         Route::get('parcel-detail/{id}', [ParcelController::class, 'detail'])->name('merchant.staff.parcel.detail')->middleware('PermissionCheck:manage_parcel');

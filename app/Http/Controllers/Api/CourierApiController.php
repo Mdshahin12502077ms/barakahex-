@@ -92,7 +92,6 @@ class CourierApiController extends Controller
             ], 422);
         }
 
-        // Normalize fields
         $customerPhone = $request->customer_phone ?? $request->customer_phone_number ?? $request->phone;
         if (empty($customerPhone)) {
             return response()->json([
@@ -100,6 +99,20 @@ class CourierApiController extends Controller
                 'message' => 'Customer phone number is required (customer_phone, customer_phone_number, or phone).',
             ], 422);
         }
+
+        $cleanPhone = preg_replace('/[^0-9]/', '', (string)$customerPhone);
+        if (str_starts_with($cleanPhone, '880')) {
+            $cleanPhone = '0' . substr($cleanPhone, 3);
+        } elseif (str_starts_with($cleanPhone, '88')) {
+            $cleanPhone = '0' . substr($cleanPhone, 2);
+        }
+        if (!preg_match('/^01[3-9]\d{8}$/', $cleanPhone)) {
+            return response()->json([
+                'status'  => 422,
+                'message' => 'Invalid customer phone number (' . $customerPhone . '). Must be a valid 11-digit Bangladeshi mobile number (013-019).',
+            ], 422);
+        }
+        $customerPhone = $cleanPhone;
 
         $customerAddress = $request->customer_address ?? $request->address;
         if (empty($customerAddress)) {

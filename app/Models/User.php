@@ -122,6 +122,10 @@ class User extends EloquentUser implements JWTSubject,ContractAuthenticatable
         return $this->belongsTo(Branch::class);
     }
 
+    public function chat(){
+        return $this->hasMany(Chat::class, 'receiver_id', 'id')->orWhere('sender_id', 'id');
+    }
+
     public function accounts($id)
     {
         return $this->hasMany(Account::class)->where('user_id', $id)->get();

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AccountController;
+use App\Http\Controllers\Admin\AdminSupportController;
 use App\Http\Controllers\Admin\ApiDocumentationController;
 use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\AuditLogController;
@@ -86,6 +87,7 @@ use Illuminate\Support\Facades\Route;
 
 
 
+
 Route::get('/cc', function() {
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
@@ -96,6 +98,7 @@ Route::get('/cc', function() {
 Route::get('cron-run', [CronController::class, 'cron'])->name('cron.run.manually');
 
 Route::get('/get-shops-by-merchant', [ImportExportController::class, 'getShopsByMerchant'])->name('get.shops.by.merchant');
+Route::post('/detect-address', [ImportExportController::class, 'detectAddress'])->name('parcel.detect.address');
 
 Route::group(['middleware' => 'isInstalled', 'prefix' => localeRoutePrefix()], function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -598,7 +601,15 @@ Route::group(['middleware' => 'XSS'], function () {
                     Route::post('/search','search')->name('crm.search')->middleware('PermissionCheck:crm_history_read');
                    
                   });
+                  //////////////////support ticket /////////////////////
 
+             Route::controller(AdminSupportController::class)->group(function(){
+               Route::get('/support-ticket','index')->name('admin.support-tickets.index')->middleware('PermissionCheck:support_ticket_read');
+               Route::post('/admin/support/status','StatusUpdate')->name('admin.support.status')->middleware('PermissionCheck:support_ticket_update');
+
+               Route::get('/support-ticket/{id}','show')->name('admin.supports.show')->middleware('PermissionCheck:support_ticket_read');
+               Route::get('delete/support-ticket/{id}','Delete')->name('admin.supports.delete')->middleware('PermissionCheck:support_ticket_delete');
+             });
 
 
                 //district

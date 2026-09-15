@@ -96,7 +96,7 @@
                                             class="text">{{ $parcel->deliveryMan != '' ? $parcel->deliveryMan->user->first_name . ' ' . $parcel->deliveryMan->user->last_name : '' }}</span><br>
                                     @endif
                                     <div class="d-flex mt-2">
-                                        <span class="btn shadow-lg">{{ __('parcel_type') }}:&nbsp;&nbsp;<p class="text">
+                                        <span class="btn shadow-lg">{{ __('delivery_area') }}:&nbsp;&nbsp;<p class="text">
                                                 {{ __($parcel->parcel_type) }} </p></span>
                                         <span class="btn shadow-lg">{{ __('total_charge') }}:&nbsp;&nbsp;<p class="text">
                                                 {{ format_price($parcel->total_delivery_charge) }} </p>

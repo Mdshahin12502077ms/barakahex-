@@ -45,6 +45,15 @@
                         </li>
                     @endif
 
+                    @if (hasPermission('support_ticket_read'))
+                        <li class="{{ menuActivation(['admin/support-tickets', 'admin/support-tickets/*'], 'active') }}">
+                            <a href="{{ Route::has('admin.support-tickets.index') ? route('admin.support-tickets.index') : '#' }}">
+                                <i class="las la-headset"></i>
+                                <span>{{ __('support_tickets') }}</span>
+                            </a>
+                        </li>
+                    @endif
+
 
 
 

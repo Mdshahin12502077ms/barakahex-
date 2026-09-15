@@ -72,32 +72,38 @@ class ParcelsImport implements ToCollection, WithHeadingRow, WithChunkReading, S
                     'frozen' => 'frozen',
                     'third_party_booking' => 'third_party_booking',
                     'next_day' => 'next_day',
+                    'same_day' => 'same_day',
+                    'sub_urban_area' => 'sub_urban_area',
                 ];
                 $available_parcel_types = [];
                 if ($user->user_type == 'merchant' || $user->user_type == 'merchant_staff'):
                     if (settingHelper('preferences')->where('title', 'same_day')->first()->merchant):
                         $available_parcel_types[] = 'inside_city';
+                        $available_parcel_types[] = 'same_day';
                     endif;
                     if (settingHelper('preferences')->where('title', 'sub_city')->first()->merchant):
                         $available_parcel_types[] = 'sub_city';
                     endif;
                     if (settingHelper('preferences')->where('title', 'sub_urban_area')->first()->merchant):
                         $available_parcel_types[] = 'outside_city';
+                        $available_parcel_types[] = 'sub_urban_area';
                     endif;
                 else:
                     if (settingHelper('preferences')->where('title', 'same_day')->first()->staff):
                         $available_parcel_types[] = 'inside_city';
+                        $available_parcel_types[] = 'same_day';
                     endif;
                     if (settingHelper('preferences')->where('title', 'sub_city')->first()->staff):
                         $available_parcel_types[] = 'sub_city';
                     endif;
                     if (settingHelper('preferences')->where('title', 'sub_urban_area')->first()->staff):
                         $available_parcel_types[] = 'outside_city';
+                        $available_parcel_types[] = 'sub_urban_area';
                     endif;
                 endif;
-                $parcel_type_raw = $row['parcel_type'] ?? 'inside_city';
+                $parcel_type_raw = $row['delivery_area'] ?? $row['parcel_type'] ?? 'inside_city';
                 if (!in_array($parcel_type_raw, $available_parcel_types)) {
-                    throw new \Exception("Row " . ($index + 2) . ": " . __('parcel_type_not_available'));
+                    throw new \Exception("Row " . ($index + 2) . ": " . __('delivery_area_not_available', ['default' => __('parcel_type_not_available')]));
                 }
                 $parcel_type = $excelToCanonical[$parcel_type_raw] ?? $parcel_type_raw;
 
@@ -238,12 +244,37 @@ class ParcelsImport implements ToCollection, WithHeadingRow, WithChunkReading, S
                 // 'pickup_address' => $row['pickup_address'] ?? $merchant->shops->where('id', $shop_id)->first()->address,
                 // 'pickup_branch_id' => $row['pickup_branch'] ?? ($merchant->shops->where('id', $shop_id)->first()->pickup_branch_id != '' ? $merchant->shops->where('id', $shop_id)->first()->pickup_branch_id : null),
                 // 'shop_id' => $merchant->shops->where('id', $shop_id)->first()->id,
+                // Location Detection & Validation (District & Thana)
+                $loc = \App\Services\AddressLocationDetector::detectLocation($customer_address, $row['district'] ?? null, $row['thana'] ?? null);
+                if (!$loc['is_valid']) {
+                    throw new \Exception("Row " . ($index + 2) . ": " . ($loc['error'] ?? 'Please enter a valid address containing district and thana.'));
+                }
+                $districtId = $loc['district_id'];
+                $thanaId = $loc['thana_id'];
+
+                $total_quantity = isset($row['total_quantity']) && is_numeric($row['total_quantity']) && intval($row['total_quantity']) >= 1 ? intval($row['total_quantity']) : 1;
+
+                $destBranchId = null;
+                if (!empty($row['destination_branch']) || !empty($row['transfer_branch'])) {
+                    $branchVal = $row['destination_branch'] ?? $row['transfer_branch'];
+                    if (is_numeric($branchVal)) {
+                        $destBranchId = $branchVal;
+                    } else {
+                        $b = \App\Models\Branch::where('name', 'like', '%' . trim($branchVal) . '%')->first();
+                        $destBranchId = $b ? $b->id : null;
+                    }
+                }
+
                 $parcel = Parcel::create([
                     'parcel_no' => $parcelNo,
                     'merchant_id' => $merchant->id,
                     'short_url' => url('/tracking/' . $parcelNo),
                     'price' => $row['price'],
                     'selling_price' => $row['selling_price'] ?? 0,
+                    'total_quantity' => $total_quantity,
+                    'district_id' => $districtId,
+                    'thana_id' => $thanaId,
+                    'destination_branch_id' => $destBranchId,
                     'customer_name' => $customer_name,
                     'customer_invoice_no' => $row['customer_invoice_no'] ?? (function () use ($merchant) {
                         do {
@@ -261,7 +292,7 @@ class ParcelsImport implements ToCollection, WithHeadingRow, WithChunkReading, S
                     'fragile' => $fragile,
                     'fragile_charge' => $fragile_charge,
                     'open_box' => $row['open_box'] ?? 0,
-                    'home_delivery' => $row['home_delivery'] ?? 0,
+                    'home_delivery' => isset($row['home_delivery']) && ($row['home_delivery'] === '0' || $row['home_delivery'] === 0) ? 0 : 1,
 
                     'weight' => $weight,
                     'parcel_type' => $parcel_type,
@@ -319,21 +350,22 @@ class ParcelsImport implements ToCollection, WithHeadingRow, WithChunkReading, S
         if ($user->user_type == 'merchant' || $user->user_type == 'merchant_staff'):
             return [
                 '*.price' => 'required|numeric',
-                '*.selling_price' => 'required|numeric',
+                '*.selling_price' => 'nullable|numeric',
+                '*.total_quantity' => 'nullable|numeric',
                 '*.customer_name' => 'required|string|max:100',
+                '*.delivery_area' => 'string|nullable',
                 '*.parcel_type' => 'string|nullable',
-                // '*.customer_invoice_no' => 'required',
                 '*.customer_phone_number' => ['required', 'digits:11', 'regex:/^[0-9]{11}$/'],
                 '*.customer_address' => 'required|string',
-
             ];
         else:
             return [
                 '*.price' => 'required|numeric',
-                '*.selling_price' => 'required|numeric',
+                '*.selling_price' => 'nullable|numeric',
+                '*.total_quantity' => 'nullable|numeric',
                 '*.customer_name' => 'required|string|max:100',
+                '*.delivery_area' => 'string|nullable',
                 '*.parcel_type' => 'string|nullable',
-                // '*.customer_invoice_no' => 'required',
                 '*.customer_phone_number' => ['required', 'digits:11', 'regex:/^[0-9]{11}$/'],
                 '*.customer_address' => 'required|string',
             ];

@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(AuditLogPermission::class);
         $this->call(RiderReportPermission::class);
         $this->call(FinancialPermission::class);
+        $this->call(SupportTicketPermission::class);
     }
 }

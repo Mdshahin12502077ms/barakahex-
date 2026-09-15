@@ -129,7 +129,17 @@ $(document).on('click', '#fragile', function(e) {
                 return;
             }
  
-            var thanaUrl = "{{ (Sentinel::getUser() && Sentinel::getUser()->user_type == 'merchant') ? route('merchant.parcel.thanabook') : route('admin.parcel.thanabook') }}";
+            @php
+                $thanaUrl = route('admin.parcel.thanabook');
+                if (Sentinel::check()) {
+                    if (Sentinel::getUser()->user_type == 'merchant') {
+                        $thanaUrl = route('merchant.parcel.thanabook');
+                    } elseif (Sentinel::getUser()->user_type == 'merchant_staff') {
+                        $thanaUrl = route('merchant.staff.parcel.thanabook');
+                    }
+                }
+            @endphp
+            var thanaUrl = "{{ $thanaUrl }}";
             $.ajax({
                 'url': thanaUrl,
                 'type': 'get',

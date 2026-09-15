@@ -130,7 +130,7 @@
                                             class="text">{{ @$parcel->deliveryMan ? @$parcel->deliveryMan->user->first_name . ' ' . @$parcel->deliveryMan->user->last_name : '' }}</span><br>
                                     @endif
                                     <div class="action__btn mt-4 ">
-                                        <span class="btn border ">{{ __('parcel_type') }}:&nbsp;&nbsp;<p
+                                        <span class="btn border ">{{ __('delivery_area') }}:&nbsp;&nbsp;<p
                                                 class="text">{{ __($parcel->parcel_type) }} </p></span>
                                         <span class="btn border ">{{ __('total_charge') }}:&nbsp;&nbsp;<p
                                                 class="text">{{ format_price($parcel->total_delivery_charge) }}

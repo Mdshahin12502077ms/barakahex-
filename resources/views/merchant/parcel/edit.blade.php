@@ -76,17 +76,21 @@
                                         <label class="form-label"
                                             for="customer_phone_number">{{ __('customer') . ' ' . __('phone') }}
                                             <span class="text-danger">*</span></label>
-                                        <input type="number"
+                                        <input type="text"
                                             class="form-control @error('customer_phone_number') is-invalid @enderror"
                                             id="customer_phone_number"
                                             value="{{ old('customer_phone_number') != '' ? old('customer_phone_number') : (isDemoMode() ? '**************' : ($parcel->customer_phone_number ?? ''))  }}"
                                             name="customer_phone_number"
-                                            placeholder="{{ __('recipient') . ' ' . __('phone') }}">
+                                            maxlength="14"
+                                            placeholder="01XXXXXXXXX">
                                         @if ($errors->has('customer_phone_number'))
                                             <div class="invalid-feedback help-block">
                                                 <p>{{ $errors->first('customer_phone_number') }}</p>
                                             </div>
                                         @endif
+                                        <div id="customer_phone_error" class="invalid-feedback d-none">
+                                            {{ __('Please enter a valid 11-digit Bangladeshi mobile number (e.g. 017XXXXXXXX).') }}
+                                        </div>
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label class="form-label" for="area">{{ __('delivery_area') }}
@@ -127,7 +131,7 @@
                                             </option>
                                             @foreach ($charges as $charge)
                                                 <option value="{{ $charge->weight }}" {{ $charge->weight == $parcel->weight ? 'selected' : '' }}>
-                                                    {{ $charge->weight }}{{ ' ' . __(setting('default_weight')) }}
+                                                     {{ $charge->weight }}{{ ' ' . __(setting('default_weight')) }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -135,6 +139,46 @@
                                             <div class="invalid-feedback help-block">
                                                 <p>{{ $errors->first('weight') }}</p>
                                             </div>
+                                        @endif
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label" for="total_quantity">{{ __('total_quantity') }}</label>
+                                        <input type="number" min="1" name="total_quantity" id="total_quantity" class="form-control"
+                                            value="{{ old('total_quantity', $parcel->total_quantity ?? 1) }}"
+                                            placeholder="{{ __('total_quantity') }}">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label" for="city_to_thana">{{ __('district') }} / District <span class="text-danger">*</span></label>
+                                        <select class="without_search form-select form-control city_id district_id @error('city_id') is-invalid @enderror"
+                                            name="city_id" id="city_to_thana">
+                                            <option value="">Select District</option>
+                                            @foreach($districts as $district)
+                                                <option value="{{ $district->id }}"
+                                                    data-name="{{ strtolower($district->name) }}"
+                                                    {{ old('city_id', @$parcel->district_id ?? @$parcel->city_id) == $district->id ? 'selected' : '' }}>
+                                                    {{ $district->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @if ($errors->has('city_id'))
+                                            <div class="invalid-feedback help-block"><p>{{ $errors->first('city_id') }}</p></div>
+                                        @endif
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label" for="thana_to_area">Thana <span class="text-danger">*</span></label>
+                                        <select style="width:100%" class="without_search form-select form-control thana_id @error('thana_id') is-invalid @enderror"
+                                            name="thana_id" id="thana_to_area">
+                                            <option value="">Select Thana</option>
+                                            @if(isset($thanas))
+                                                @foreach($thanas as $thana)
+                                                    <option value="{{ $thana->id }}" {{ old('thana_id', @$parcel->thana_id) == $thana->id ? 'selected' : '' }}>
+                                                        {{ $thana->name }}
+                                                    </option>
+                                                @endforeach
+                                            @endif
+                                        </select>
+                                        @if ($errors->has('thana_id'))
+                                            <div class="invalid-feedback help-block"><p>{{ $errors->first('thana_id') }}</p></div>
                                         @endif
                                     </div>
                                     <div class="col-6 mb-3">
@@ -178,6 +222,12 @@
                                                 <p>{{ $errors->first('customer_address') }}</p>
                                             </div>
                                         @endif
+                                        <div id="address_auto_detect_badge" class="badge bg-soft-success text-success mt-2 p-1 px-2 d-none" style="font-size: 13px; border: 1px solid #28a745; border-radius: 4px; display: inline-block;">
+                                            <i class="las la-magic me-1"></i> <span id="address_auto_detect_text"></span>
+                                        </div>
+                                        <div id="address_error_msg" class="invalid-feedback d-none">
+                                            Please enter a valid address containing district and thana.
+                                        </div>
                                     </div>
                                     <div class="col-6 mb-3">
                                         <label class="form-label" for="note">{{ __('note') }}
@@ -366,7 +416,7 @@
                                                         id="vat-charge">{{ isset($parcel) ? (($parcel->charge + $parcel->fragile_charge + $parcel->packaging_charge + ($parcel->price / 100) * $parcel->cod_charge) / 100) * $parcel->vat : '0.00' }}</span>
                                                 </td>
                                             </tr>
-                                            <tr
+                                            {{-- <tr
                                                 class="fragile-charge-area {{ isset($parcel) ? ($parcel->fragile == 0 ? 'd-none' : '') : 'd-none' }}">
 
                                                 <td>
@@ -376,7 +426,7 @@
                                                     <span
                                                         id="fragile-charge">{{ isset($parcel) ? ($parcel->fragile == 0 ? '0.00' : $parcel->fragile_charge) : '0.00' }}</span>
                                                 </td>
-                                            </tr>
+                                            </tr> --}}
                                             <tr
                                                 class="packaging-charge-area {{ isset($parcel) ? ($parcel->packaging == 'no' ? 'd-none' : '') : 'd-none' }}">
 
@@ -453,6 +503,7 @@
         </div>
     </div>
     @include('admin.parcel.charge-script')
+    @include('admin.parcel.address-detect-script')
 @push('script')
 <script>
 $(document).ready(function () {

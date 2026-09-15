@@ -137,7 +137,12 @@ class ParcelController extends Controller
                 || ($parcel->status == "return-assigned-to-merchant" && $parcel->is_partially_delivered == false)
             ):
 
-                return view('admin.parcel.edit', compact('parcel', 'charges', 'branchs'));
+                $districts = District::with(['thanas' => function($q) { $q->where('status', 'active')->orderBy('name'); }])->active()->orderBy('name')->get();
+                $city = $districts;
+                $selectedDistrictId = $parcel->district_id ?? $parcel->city_id;
+                $thanas = $selectedDistrictId ? Thana::where('district_id', $selectedDistrictId)->where('status', 'active')->orderBy('name')->get() : collect();
+
+                return view('admin.parcel.edit', compact('parcel', 'charges', 'branchs', 'districts', 'city', 'thanas'));
             else:
                 return back()->with('danger', __('you_are_not_allowed_to_update_this_parcel'));
             endif;
