@@ -12,7 +12,17 @@
             <div class="col-lg-12">
                 <div class="header-top d-flex justify-content-between align-items-center mb-12">
                     <h3 class="section-title">{{ __('ticket_details') }}</h3>
-                    <div class="oftions-content-right">
+                    <div class="oftions-content-right d-flex gap-2">
+                        @php
+                            $phone = $ticket->merchant ? $ticket->merchant->mobile : ($ticket->user ? $ticket->user->mobile : '');
+                            $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+                            $messageText = urlencode("Hello, we are contacting you regarding your Support Ticket #{$ticket->ticket_id}: {$ticket->subject}");
+                            $whatsappUrl = $cleanPhone ? "https://wa.me/{$cleanPhone}?text={$messageText}" : '#';
+                        @endphp
+                        <a href="{{ $whatsappUrl }}" target="_blank" class="d-flex align-items-center btn btn-success gap-2 {{ !$cleanPhone ? 'disabled' : '' }}">
+                            <i class="lab la-whatsapp" style="font-size: 20px;"></i>
+                            <span>{{ __('WhatsApp Chat') }}</span>
+                        </a>
                         <a href="{{ url()->previous() }}" class="d-flex align-items-center btn sg-btn-primary gap-2">
                             <i class="las la-arrow-left"></i>
                             <span>{{ __('back') }}</span>

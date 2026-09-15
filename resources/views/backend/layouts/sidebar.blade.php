@@ -392,7 +392,18 @@
                                         href="{{ route('admin.payment.method') }}">{{ __('payout_method') }}</a>
                                 </li>
                             @endif
+                           <!-- #region delivery time set -->
+                              @if (hasPermission('delivery_time_set_read'))
+                                    <li class="{{ menuActivation(['admin/delivery-time-set', 'admin/delivery-time-set/*'], 'active') }}">
+                                        <a href="{{ Route::has('admin.delivery-time-set.index') ? route('admin.delivery-time-set.index') : '#' }}">
+                                            <i class="las la-clock"></i>
+                                            <span>{{ __('delivery_time_set') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
 
+
+               
                             @if (hasPermission('panel_setting'))
                                 <li><a class="{{ menuActivation('admin/setting/panel-setting', 'active') }}"
                                         href="{{ route('admin.panel-setting') }}">{{ __('admin_panel_setting') }}</a>

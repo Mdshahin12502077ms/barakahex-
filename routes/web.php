@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\CountryController;
 use App\Http\Controllers\Admin\CrmHistoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DeliveryManController;
+use App\Http\Controllers\Admin\DeliveryTimeSetController;
 use App\Http\Controllers\Admin\DeliveryZoneController;
 use App\Http\Controllers\Admin\DistrictController;
 use App\Http\Controllers\Admin\DivisionController;
@@ -73,6 +74,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -622,7 +624,12 @@ Route::group(['middleware' => 'XSS'], function () {
                     Route::post('/status-change', 'statusChange')->name('status-change')->middleware('PermissionCheck:district_update');
                 });
                 Route::post('districts-status', [DistrictController::class, 'statusChange'])->name('admin.districts.districts-status');
-                
+                ///////////////////////delivery time set////////////////
+
+                Route::controller(DeliveryTimeSetController::class)->prefix('setting/delivery-time-set')->name('admin.delivery-time-set.')->group(function(){
+                   Route::get('/', 'index')->name('index')->middleware('PermissionCheck:delivery_time_read');
+                   Route::post('/store', 'store')->name('store')->middleware('PermissionCheck:delivery_time_create');
+                });
                 
                 Route::controller(ThanaUpazilaController::class)->prefix('setting/upazilas')->name('upazilas.')->group(function () {
                     Route::get('/', 'index')->name('index')->middleware('PermissionCheck:upazila_read');

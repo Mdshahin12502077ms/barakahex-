@@ -67,9 +67,14 @@ class AdminSupportDataTables extends DataTable
                 $viewUrl = \Illuminate\Support\Facades\Route::has('admin.supports.show')
                     ? route('admin.supports.show', $ticket->id)
                     : '#';
-                $messageUrl = \Illuminate\Support\Facades\Route::has('admin.supports.chat')
-                    ? route('admin.supports.chat', $ticket->id)
-                    : '#';
+                $phone = $ticket->merchant ? $ticket->merchant->mobile : ($ticket->user ? $ticket->user->mobile : '');
+                // Clean the phone number (remove spaces, +, etc. for wa.me)
+                $cleanPhone = preg_replace('/[^0-9]/', '', $phone);
+                
+                $messageText = urlencode("Hello, we are contacting you regarding your Support Ticket #{$ticket->ticket_id}: {$ticket->subject}");
+                
+                $whatsappUrl = $cleanPhone ? "https://wa.me/{$cleanPhone}?text={$messageText}" : '#';
+
                 $deleteUrl = \Illuminate\Support\Facades\Route::has('admin.supports.delete')
                     ? route('admin.supports.delete', $ticket->id)
                     : '#';
@@ -79,8 +84,8 @@ class AdminSupportDataTables extends DataTable
                         <a href="' . $viewUrl . '" class="btn btn-sm btn-outline-primary" title="View">
                             <i class="las la-eye"></i> ' . __('View') . '
                         </a>
-                        <a href="' . $messageUrl . '" class="btn btn-sm btn-outline-info" title="Message">
-                            <i class="las la-comment-alt"></i> ' . __('Message') . '
+                        <a href="' . $whatsappUrl . '" target="_blank" class="btn btn-sm btn-outline-success ' . (!$cleanPhone ? 'disabled' : '') . '" title="WhatsApp">
+                            <i class="lab la-whatsapp"></i> ' . __('WhatsApp') . '
                         </a>
                         <a href="' . $deleteUrl . '" class="btn btn-sm btn-outline-danger" title="Delete">
                             <i class="las la-trash"></i> ' . __('Delete') . '
