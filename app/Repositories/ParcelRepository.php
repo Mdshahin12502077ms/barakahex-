@@ -17,6 +17,7 @@ use App\Models\User;
 use App\Repositories\Interfaces\AccountInterface;
 use App\Repositories\Interfaces\Merchant\MerchantInterface;
 use App\Repositories\Interfaces\ParcelInterface;
+use App\Services\EtaCalculationService;
 use App\Traits\PaperFlyParcel;
 use App\Traits\SendNotification;
 use App\Traits\ShortenLinkTrait;
@@ -34,11 +35,13 @@ class ParcelRepository implements ParcelInterface
 
     protected $merchants;
     protected $accounts;
+    protected $etaCalculationService;
 
-    public function __construct(MerchantInterface $merchants, AccountInterface $accounts)
+    public function __construct(MerchantInterface $merchants, AccountInterface $accounts,EtaCalculationService $etaCalculationService)
     {
         $this->merchants = $merchants;
         $this->accounts = $accounts;
+        $this->etaCalculationService = $etaCalculationService;
     }
 
     public function all()
@@ -387,6 +390,11 @@ try {
         $parcel->delivery_time = $delivery_time ?? '';
     endif;
     $parcel->save();
+    
+   if($parcel->status=="pending"){
+      $this->etaCalculationService->updateParcelETA($parcel);
+   }
+    
 
     $this->parcelEvent($parcel->id, 'parcel_create_event');
 
@@ -681,6 +689,9 @@ try {
             $parcel->third_party_id = $request->third_party != '' ? $request->third_party : null;
             $parcel->delivery_fee = DeliveryMan::find($request->delivery_man)->delivery_fee;
             $parcel->save();
+            
+            // ETA Calculation Update
+            $this->etaCalculationService->updateParcelETA($parcel);
 
             $this->parcelEvent($parcel->id, 'assign_delivery_man_event', $request->delivery_man, '', '', $request->note);
             DB::commit();
@@ -828,6 +839,10 @@ try {
             }
 
             $parcel->save();
+            
+            // ETA Calculation Update
+            $this->etaCalculationService->updateParcelETA($parcel);
+            
             DB::commit();
             return true;
         } catch (\Exception $e) {

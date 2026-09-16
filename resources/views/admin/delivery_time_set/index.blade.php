@@ -24,13 +24,28 @@
                             <input type="time" class="form-control" name="working_hours_end" id="working_hours_end" value="{{ @$setting->working_hours_end ? \Carbon\Carbon::parse(@$setting->working_hours_end)->format('H:i') : '' }}">
                         </div>
 
+                        <div class="col-md-6">
+                            <label class="form-label" for="inside_city_days">{{ __('inside_city_days') }}</label>
+                            <input type="number" min="0" class="form-control" name="inside_city_days" id="inside_city_days" value="{{ $setting->inside_city_days ?? 1 }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="sub_city_days">{{ __('sub_city_days') }}</label>
+                            <input type="number" min="0" class="form-control" name="sub_city_days" id="sub_city_days" value="{{ $setting->sub_city_days ?? 2 }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label" for="outside_city_days">{{ __('outside_city_days') }}</label>
+                            <input type="number" min="0" class="form-control" name="outside_city_days" id="outside_city_days" value="{{ $setting->outside_city_days ?? 3 }}">
+                        </div>
+
                         @php
                             $selectedDays = @$setting->offday ? explode(',', $setting->offday) : [];
                         @endphp
 
                         <div class="col-md-12">
-                            <label for="offday" class="form-label">{{ __('offday') }}</label>
-                            <select class="form-control select2" name="offday[]" id="offday" multiple="multiple">
+                            <label for="offday" class="form-label" >{{ __('offday') }}</label>
+                            <select class="form-control select2" style="height: 300px" name="offday[]" id="offday" multiple="multiple">
                                 <option value="Friday" {{ in_array('Friday', $selectedDays) ? 'selected' : '' }}>Friday</option>
                                 <option value="Saturday" {{ in_array('Saturday', $selectedDays) ? 'selected' : '' }}>Saturday</option>
                                 <option value="Sunday" {{ in_array('Sunday', $selectedDays) ? 'selected' : '' }}>Sunday</option>

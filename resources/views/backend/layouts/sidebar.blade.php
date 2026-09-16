@@ -136,6 +136,70 @@
                             </ul>
                         </li>
                     @endif
+
+                 {{-- Advance Analytics --}}
+                 @if(hasPermission('analytics_operations_read') || hasPermission('analytics_rider_read') || hasPermission('analytics_merchant_read') || hasPermission('analytics_financial_read'))
+                  <li
+                        class="{{ menuActivation(['admin/analytics', 'admin/analytics/*'], 'active') }}">
+                            <a href="#analytics-menu" class="dropdown-icon" data-bs-toggle="collapse" role="button"
+                                aria-expanded="{{ menuActivation(['admin/analytics', 'admin/analytics/*'], 'true', 'false') }}"
+                                aria-controls="analytics-menu">
+                                <i class="la la-pie-chart"></i>
+                                <span>{{ __('advanced_analytics') }}</span>
+                            </a>
+                            <ul id="analytics-menu"
+                                class="sub-menu collapse {{ menuActivation(['admin/analytics', 'admin/analytics/*'], 'show') }}">
+                                @if (hasPermission('analytics_operations_read'))
+                                    <li>
+                                        <a href="{{ Route::has('admin.analytics.operations') ? route('admin.analytics.operations') : '#' }}"
+                                            class="{{ menuActivation(['admin/analytics/operations'], 'active') }}">
+                                            <span>{{ __('operations_analytics') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (hasPermission('analytics_rider_read'))
+                                    <li>
+                                        <a href="{{ Route::has('admin.analytics.rider') ? route('admin.analytics.rider') : '#' }}"
+                                            class="{{ menuActivation(['admin/analytics/rider'], 'active') }}">
+                                            <span>{{ __('rider_analytics') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (hasPermission('analytics_merchant_read'))
+                                    <li>
+                                        <a href="{{ Route::has('admin.analytics.merchant') ? route('admin.analytics.merchant') : '#' }}"
+                                            class="{{ menuActivation(['admin/analytics/merchant'], 'active') }}">
+                                            <span>{{ __('merchant_analytics') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                                @if (hasPermission('analytics_financial_read'))
+                                    <li>
+                                        <a href="{{ Route::has('admin.analytics.financial') ? route('admin.analytics.financial') : '#' }}"
+                                            class="{{ menuActivation(['admin/analytics/financial'], 'active') }}">
+                                            <span>{{ __('financial_analytics') }}</span>
+                                        </a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </li>
+                   @endif  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                     @if (hasPermission('merchant_read'))
                         <li
                             class="{{ menuActivation(['admin/merchants', 'admin/merchants/*', 'admin/merchant/*', 'admin/merchant-edit/*', 'admin/merchant-staff/*', 'admin/merchant-staff/personal-info/*', 'admin/merchant-staff-account-activity/*'], 'active') }}">

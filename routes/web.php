@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AdminSupportController;
+use App\Http\Controllers\Admin\AdvancedAnalyticsController;
 use App\Http\Controllers\Admin\ApiDocumentationController;
 use App\Http\Controllers\Admin\AreaController;
 use App\Http\Controllers\Admin\AuditLogController;
@@ -74,6 +75,7 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PrivacyPolicyController;
 use App\Http\Controllers\TrackingController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -613,6 +615,13 @@ Route::group(['middleware' => 'XSS'], function () {
                Route::get('delete/support-ticket/{id}','Delete')->name('admin.supports.delete')->middleware('PermissionCheck:support_ticket_delete');
              });
 
+           ////////////////////////AdvancedAnalyticsController////////////
+
+           Route::controller(AdvancedAnalyticsController::class)->group(function(){
+              Route::get('operation/analytics','operationAnalytics')->name('admin.analytics.operations')->middleware('PermissionCheck:analytics_operations_read');
+              Route::get('rider/analytics','riderAnalytics')->name('admin.analytics.rider')->middleware('PermissionCheck:analytics_rider_read');
+              Route::get('merchant/analytics','merchantAnalytics')->name('admin.analytics.merchant')->middleware('PermissionCheck:analytics_merchant_read');
+           });
 
                 //district
                 Route::controller(DistrictController::class)->prefix('setting/districts')->name('districts.')->group(function () {
@@ -627,8 +636,8 @@ Route::group(['middleware' => 'XSS'], function () {
                 ///////////////////////delivery time set////////////////
 
                 Route::controller(DeliveryTimeSetController::class)->prefix('setting/delivery-time-set')->name('admin.delivery-time-set.')->group(function(){
-                   Route::get('/', 'index')->name('index')->middleware('PermissionCheck:delivery_time_read');
-                   Route::post('/store', 'store')->name('store')->middleware('PermissionCheck:delivery_time_create');
+                   Route::get('/', 'index')->name('index')->middleware('PermissionCheck:delivery_time_set_read');
+                   Route::post('/store', 'store')->name('store')->middleware('PermissionCheck:delivery_time_set_create');
                 });
                 
                 Route::controller(ThanaUpazilaController::class)->prefix('setting/upazilas')->name('upazilas.')->group(function () {

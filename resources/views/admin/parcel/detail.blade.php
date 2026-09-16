@@ -25,12 +25,13 @@
                             <div class="card-inner">
                                 <div class="d-flex justify-content-between">
                                     <div>
-                                        <div>
+                                        <div class="d-flex">
                                             <h6 class="title d-flex">
                                                 <div>
                                                     <button type="button" data-text="{{$parcel->parcel_no }}"
                                                     class="copy-to-clipboard btn btn-default text-info mx-0 px-0 border-0" >#{{ $parcel->parcel_no }}</button>
                                                 </div>
+
                                             </h6>
                                         </div>
                                         <div>
@@ -38,6 +39,13 @@
                                                 {{ __($parcel->status) }}{{ $parcel->is_partially_delivered ? '(' . __('partially-delivered') . ')' : '' }}
                                             </h6>
                                         </div>
+                                        
+                                                <div>
+                                                    <p class="text-primary">
+                                                            <strong>{{ __('estimated_delivery') }}:</strong> 
+                                                            {{ \Carbon\Carbon::parse($parcel->delivery_date)->format('d M, Y') }} 
+                                                        </p>
+                                                </div>
                                     </div>
                                     <div>
                                         <a href="{{ route('admin.parcel.print', $parcel->id) }}" target="_blank"

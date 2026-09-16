@@ -22,6 +22,9 @@ class DeliveryTimeSetController extends Controller
             'working_hours_start' => 'nullable',
             'working_hours_end' => 'nullable',
             'offday' => 'nullable|array',
+            'inside_city_days' => 'nullable|integer|min:0',
+            'sub_city_days' => 'nullable|integer|min:0',
+            'outside_city_days' => 'nullable|integer|min:0',
         ]);
 
         $offday = $request->has('offday') ? implode(',', $request->offday) : null;
@@ -31,6 +34,9 @@ class DeliveryTimeSetController extends Controller
             [
                 'working_hours_start' => $request->working_hours_start,
                 'working_hours_end' => $request->working_hours_end,
+                'inside_city_days' => $request->inside_city_days,
+                'sub_city_days' => $request->sub_city_days,
+                'outside_city_days' => $request->outside_city_days,
                 'offday' => $offday,
             ]
         );

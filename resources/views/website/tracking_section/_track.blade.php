@@ -10,6 +10,12 @@
                             });
                         @endphp
 
+                        <p>
+                                <strong>Estimated Delivery:</strong> 
+                                {{ \Carbon\Carbon::parse($parcel->delivery_date)->format('d M, Y') }} 
+                               
+                            </p>
+
                         @foreach ($groupedEvents as $date => $events)
                             <div class="tracking__inner">
                                 <div class="tracking__date">{{ Carbon\Carbon::parse($date)->format('M d, Y') }}</div>

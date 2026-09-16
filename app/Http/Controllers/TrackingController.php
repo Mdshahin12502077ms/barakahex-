@@ -12,6 +12,8 @@ class TrackingController extends Controller
 {
     public function index(Request $request, $id = null)
     {
+  
+       
         $languages          = app('languages');
         $lang               = $request->site_lang ? $request->site_lang : App::getLocale();
         $menu_quick_link    = headerFooterMenu('footer_quick_link_menu', $lang);
@@ -19,7 +21,7 @@ class TrackingController extends Controller
         $noParcelFound      = false;
 
         if ($id !== null) {
-            $parcel             = Parcel::where('parcel_no', $id)->first();
+            $parcel             = Parcel::where('parcel_no', $id)->orWhere('tracking_number', $id)->first();
             if (!$parcel) {
                 $noParcelFound  = true;
             }
@@ -39,7 +41,9 @@ class TrackingController extends Controller
 
     public function tracking(Request $request)
     {
-        $parcel     = Parcel::where('parcel_no', $request->parcelNo)->first();
+
+      
+        $parcel     = Parcel::where('parcel_no', $request->parcelNo)->orWhere('tracking_number', $request->parcelNo)->first();
         if ($parcel && $parcel->events) {
             $view   = view('website.tracking_section._tracking', compact('parcel'))->render();
             return response()->json($view);

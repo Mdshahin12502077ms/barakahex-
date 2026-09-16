@@ -35,6 +35,10 @@
                                 {{ $parcel->status == 'delivery-assigned' && $parcel->location != 'dhaka' ? __('in_transit') : __($parcel->status) }}{{ $parcel->is_partially_delivered ? '(' . __('partially-delivered') . ')' : '' }}
                             </h6>
                         </div>
+                         <p class="text-primary">
+                                                            <strong>{{ __('estimated_delivery') }}:</strong> 
+                                                            {{ \Carbon\Carbon::parse($parcel->delivery_date)->format('d M, Y') }} 
+                                                        </p>
                     </div>
                     <div>
                         <div class="card-title">
