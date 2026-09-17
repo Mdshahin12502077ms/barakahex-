@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\DeliveryMan;
 use App\Models\Parcel;
 use App\Models\ParcelEvent;
+use App\Models\User;
+use App\Traits\SendNotification;
 use Brian2694\Toastr\Facades\Toastr;
 use Carbon\Carbon;
 use Cartalyst\Sentinel\Laravel\Facades\Sentinel;
@@ -15,6 +17,8 @@ use Illuminate\Support\Facades\DB;
 use App\Repositories\DeliveryMan\ReturnTaskRepository;
 class ReturnTaskController extends Controller
 {
+    use SendNotification;
+
 
     protected $returnTaskRepo;
 
@@ -33,6 +37,17 @@ class ReturnTaskController extends Controller
     {
        $data= $this->returnTaskRepo->complete($id);
         if($data['success'] == true){
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+                $title = 'Return Task Completed';
+                $details = 'Your parcel (ID: ' . $parcel->parcel_no . ') has been successfully returned to you by our rider.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'info', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
             Toastr::success($data['message']);
         }else{
             Toastr::error($data['message']);

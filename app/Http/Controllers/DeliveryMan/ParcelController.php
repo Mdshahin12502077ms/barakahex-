@@ -48,6 +48,18 @@ class ParcelController extends Controller
     {
         try {
             $this->pickupRepo->pickupReceived($id, $request);
+            
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+                $title = 'Parcel Picked Up';
+                $details = 'Your parcel (ID: ' . $parcel->parcel_no . ') has been received by our pickup rider.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'info', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
             Toastr::success(__('pickup_received_successfully'));
             return back();
         } catch (\Exception $e) {
@@ -61,6 +73,18 @@ class ParcelController extends Controller
     {
         try {
             $this->pickupRepo->reschedulePickup($id, $request);
+            
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+                $title = 'Pickup Rescheduled';
+                $details = 'Pickup for your parcel (ID: ' . $parcel->parcel_no . ') has been rescheduled.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'warning', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
             Toastr::success(__('rescheduled_successfully'));
             return back();
         } catch (\Exception $e) {
@@ -74,6 +98,18 @@ class ParcelController extends Controller
     {
         try {
             $this->pickupRepo->cancelPickup($id, $request);
+            
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+                $title = 'Pickup Cancelled';
+                $details = 'Pickup for your parcel (ID: ' . $parcel->parcel_no . ') has been cancelled.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'danger', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
             Toastr::success(__('cancelled_successfully'));
             return back();
         } catch (\Exception $e) {
