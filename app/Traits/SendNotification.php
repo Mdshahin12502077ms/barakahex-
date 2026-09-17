@@ -47,6 +47,7 @@ trait SendNotification
             }
 
         } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('SendNotification Error: ' . $e->getMessage() . ' on line ' . $e->getLine());
             return false;
         }
 
