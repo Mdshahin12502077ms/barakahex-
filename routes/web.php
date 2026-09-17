@@ -497,8 +497,8 @@ Route::group(['middleware' => 'XSS'], function () {
                 // branch hub report
 
                 Route::controller(HubReportController::class)->prefix('branch-hub-reports')->group(function(){
-                    Route::get('/', 'index')->name('admin.branch_hub.report')->middleware('PermissionCheck:hub_report_read');
-                    Route::get('/export-csv', 'exportCsv')->name('admin.hub.report.csv')->middleware('PermissionCheck:hub_report_read');
+                    Route::get('/', 'index')->name('admin.branch_hub.report')->middleware('PermissionCheck:branch_hub_report_read');
+                    Route::get('/export-csv', 'exportCsv')->name('admin.hub.report.csv')->middleware('PermissionCheck:branch_hub_report_read');
                 });
                 
               //Financial Report
