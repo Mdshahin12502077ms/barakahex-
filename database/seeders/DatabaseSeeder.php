@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(BranchSeeder::class);
         $this->call(DemoSeeder::class);
         $this->call(BangladeshLocationSeeder::class);
+        
+        // Permissions Seeders
         $this->call(DivisionPermissionSeeder::class);
         $this->call(DistrictPermissionSeeder::class);
         $this->call(ThanaUpazila::class);
@@ -32,5 +34,9 @@ class DatabaseSeeder extends Seeder
         $this->call(RiderReportPermission::class);
         $this->call(FinancialPermission::class);
         $this->call(SupportTicketPermission::class);
+        $this->call(AnalyticsPermission::class);
+        $this->call(CrmPermissionSeeder::class);
+        $this->call(DeliveryTimeSetPermission::class);
+        $this->call(ReturnItemsPermission::class);
     }
 }
