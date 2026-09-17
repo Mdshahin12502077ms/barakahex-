@@ -6,10 +6,11 @@
     <div class="container-fluid">
         <!-- Header & Filter Form -->
         <div class="row mb-4 align-items-center">
-            <div class="col-md-6">
+            <div class="col-md-5">
                 <h3 class="section-title mb-0">{{ __('operations_analytics') }}</h3>
             </div>
-            <div class="col-md-6 text-end">
+            <div class="col-md-7
+             text-end">
                 <form action="{{ route('admin.analytics.operations') }}" method="GET" class="d-flex justify-content-end align-items-center gap-2">
                     <input type="date" name="from_date" class="form-control w-auto" value="{{ request('from_date') }}">
                     <span>{{ __('to') }}</span>
@@ -23,7 +24,7 @@
         <!-- KPI Cards (Native Theme Style) -->
         <div class="row">
             <!-- Total Parcels -->
-            <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-primary redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('total_parcels') }}</h6>
@@ -33,7 +34,7 @@
             </div>
 
             <!-- Delivered Parcels -->
-            <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-success redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('delivered') }}</h6>
@@ -44,7 +45,7 @@
             </div>
 
             <!-- Returned Parcels -->
-            <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-warning redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('returned') }}</h6>
@@ -54,7 +55,7 @@
             </div>
 
             <!-- Failed Parcels -->
-            <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-danger redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('failed') }} / {{ __('cancel') }}</h6>
@@ -64,7 +65,7 @@
             </div>
 
             <!-- Pending Parcels -->
-            <div class="col-xxl-3 col-xl-6 col-lg-6 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-info redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('pending') }}</h6>

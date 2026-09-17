@@ -621,7 +621,10 @@ Route::group(['middleware' => 'XSS'], function () {
               Route::get('operation/analytics','operationAnalytics')->name('admin.analytics.operations')->middleware('PermissionCheck:analytics_operations_read');
               Route::get('rider/analytics','riderAnalytics')->name('admin.analytics.rider')->middleware('PermissionCheck:analytics_rider_read');
               Route::get('merchant/analytics','merchantAnalytics')->name('admin.analytics.merchant')->middleware('PermissionCheck:analytics_merchant_read');
-           });
+              Route::get('financial/analytics','financialAnalytics')->name('admin.analytics.financial')->middleware('PermissionCheck:analytics_financial_read');
+          
+          
+            });
 
                 //district
                 Route::controller(DistrictController::class)->prefix('setting/districts')->name('districts.')->group(function () {

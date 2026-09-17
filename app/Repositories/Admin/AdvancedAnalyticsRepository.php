@@ -5,6 +5,7 @@ namespace App\Repositories\Admin;
 use App\Models\Parcel;
 use App\Models\WebsiteStatistic;
 use App\Models\WebsiteStatisticLanguage;
+use App\Models\Account\CompanyAccount;
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\DB;
 
@@ -123,5 +124,90 @@ public function riderAnalytics($request){
         'rider_commission', 
         'rider_performance'
     );
-}
+    }
+    
+    public function merchantAnalyticsData($request) {
+        $query = Parcel::query();
+        
+        if($request->filled('start_date') && $request->filled('end_date')){
+            $query->whereBetween('created_at', [
+                $request->start_date . ' 00:00:00', 
+                $request->end_date . ' 23:59:59'
+            ]);
+        }
+        
+        $total_orders = (clone $query)->count() ?? 0;
+        $delivered_orders = (clone $query)->whereIn('status', ['delivered', 'delivered-and-verified'])->count() ?? 0;
+        $failed_orders = (clone $query)->whereIn('status', ['cancel', 'cancelled'])->count() ?? 0;
+        $returned_orders = (clone $query)->whereIn('status', ['returned', 'return-to-merchant', 'return-to-merchant-and-verified'])->count() ?? 0;
+        
+        $return_rate = 0;
+        if($total_orders > 0) {
+            $return_rate = round(($returned_orders / $total_orders) * 100, 2);
+        }
+        
+        $cod_amount = (clone $query)->sum('price') ?? 0;
+        $settlement_amount = (clone $query)->sum('payable') ?? 0;
+        $merchant_revenue = (clone $query)->sum('payable') ?? 0; // Using payable as revenue
+        
+        return compact(
+            'total_orders',
+            'delivered_orders',
+            'failed_orders',
+            'returned_orders',
+            'return_rate',
+            'cod_amount',
+            'settlement_amount',
+            'merchant_revenue'
+        );
+    }
+
+    public function financialAnalytics($request){
+        $parcel=Parcel::query();
+        if($request->filled('start_date') && $request->filled('end_date')){
+            $parcel->whereBetween('created_at', [
+                $request->start_date . ' 00:00:00', 
+                $request->end_date . ' 23:59:59'
+            ]);
+        }
+
+     
+       $total_delivery_charge = (clone $parcel)->sum('total_delivery_charge') ?? 0;
+       $cod_charge            = (clone $parcel)->sum('cod_charge') ?? 0;
+       $return_charge         = (clone $parcel)->sum('return_charge') ?? 0;
+       
+       // অন্যান্য সম্ভাব্য আয় (যাতে কোনো কিছুই বাদ না যায়)
+       $packaging_charge      = (clone $parcel)->sum('packaging_charge') ?? 0;
+       $fragile_charge        = (clone $parcel)->sum('fragile_charge') ?? 0;
+       
+       $rider_commission      = ((clone $parcel)->sum('delivery_fee') ?? 0) 
+                              + ((clone $parcel)->sum('pickup_fee') ?? 0) 
+                              + ((clone $parcel)->sum('return_fee') ?? 0);
+                              
+       $merchant_payable      = (clone $parcel)->sum('payable') ?? 0;
+       
+       $company_expense = CompanyAccount::where('type', 'expense');
+       if($request->filled('start_date') && $request->filled('end_date')){
+           $company_expense->whereBetween('created_at', [
+               $request->start_date . ' 00:00:00', 
+               $request->end_date . ' 23:59:59'
+           ]);
+       }
+       $total_company_expense = $company_expense->sum('amount') ?? 0;
+       
+       $operating_expense     = $rider_commission + $total_company_expense;
+       $total_revenue         = $total_delivery_charge + $cod_charge + $return_charge + $packaging_charge + $fragile_charge;
+       $net_profit            = $total_revenue - $operating_expense;
+       
+       return compact(
+           'total_delivery_charge',
+           'cod_charge',
+           'return_charge',
+           'rider_commission',
+           'merchant_payable',
+           'operating_expense',
+           'total_revenue',
+           'net_profit'
+       );
+    }
 }

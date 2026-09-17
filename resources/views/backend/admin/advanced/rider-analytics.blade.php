@@ -23,7 +23,7 @@
         <!-- KPI Cards (8 Metrics - Static Design) -->
         <div class="row">
             <!-- Assigned Parcels -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-primary redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('assigned_parcels') }}</h6>
@@ -33,7 +33,7 @@
             </div>
 
             <!-- Delivered Parcels -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-success redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('delivered_parcels') }}</h6>
@@ -43,7 +43,7 @@
             </div>
 
             <!-- Failed Parcels -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-danger redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('failed_parcels') }}</h6>
@@ -53,7 +53,7 @@
             </div>
 
             <!-- Returned Parcels -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-warning redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('returned_parcels') }}</h6>
@@ -63,7 +63,7 @@
             </div>
 
             <!-- Success Rate -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-success redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('success_rate') }}</h6>
@@ -73,7 +73,7 @@
             </div>
 
             <!-- Avg Delivery Time -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-info redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('avg_delivery_time') }}</h6>
@@ -83,7 +83,7 @@
             </div>
 
             <!-- COD Collection -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-primary redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('cod_collection') }}</h6>
@@ -93,7 +93,7 @@
             </div>
 
             <!-- Rider Commission -->
-            <div class="col-xxl-3 col-xl-4 col-lg-4 col-md-6">
+            <div class="col-xxl-3 col-xl-3 col-lg-3 col-md-6">
                 <div class="statistics-card bg-white color-success redious-border mb-20 p-20 p-md-20">
                     <div class="statistics-info mb-3">
                         <h6>{{ __('rider_commission') }}</h6>
