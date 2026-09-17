@@ -186,7 +186,7 @@ public function riderAnalytics($request){
                               
        $merchant_payable      = (clone $parcel)->sum('payable') ?? 0;
        
-       $company_expense = CompanyAccount::where('type', 'expense');
+       $company_expense = CompanyAccount::where('type', 'expense')->where('create_type', 'user_defined');
        if($request->filled('start_date') && $request->filled('end_date')){
            $company_expense->whereBetween('created_at', [
                $request->start_date . ' 00:00:00', 
