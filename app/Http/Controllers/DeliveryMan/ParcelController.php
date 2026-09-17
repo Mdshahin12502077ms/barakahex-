@@ -5,6 +5,8 @@ namespace App\Http\Controllers\DeliveryMan;
 use App\Http\Controllers\Controller;
 use App\Models\DeliveryMan;
 use App\Models\Parcel;
+use App\Models\User;
+use App\Traits\SendNotification;
 use App\Repositories\DeliveryMan\MyPickupRepository;
 use App\Repositories\DeliveryMan\MyDeliveryRepository;
 use Brian2694\Toastr\Facades\Toastr;
@@ -13,6 +15,8 @@ use Illuminate\Http\Request;
 
 class ParcelController extends Controller
 {
+    use SendNotification;
+
     protected $pickupRepo;
     protected $deliveryRepo;
 
@@ -104,6 +108,19 @@ class ParcelController extends Controller
     {
         try {
             $this->deliveryRepo->delivered($id, $request);
+            
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+
+                $title = 'Parcel Delivered Successfully';
+                $details = 'Your parcel (ID: ' . $parcel->parcel_no . ') has been successfully delivered by our rider.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'success', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
             Toastr::success(__('delivered_successfully'));
             return back();
         } catch (\Exception $e) {
@@ -127,6 +144,18 @@ class ParcelController extends Controller
             $request->merge(['id' => $id]);
             $parcelRepo = app(\App\Repositories\Interfaces\ParcelInterface::class);
             if ($parcelRepo->partialDelivery($request)) {
+                // Notification Logic
+                $parcel = Parcel::with('merchant.user')->find($id);
+                if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                    $staff = User::where('user_type', 'staff')->get();
+                    $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                    $users = $staff->merge($merchant);
+                    
+                    $title = 'Parcel Partially Delivered';
+                    $details = 'Your parcel (ID: ' . $parcel->parcel_no . ') has been partially delivered. Customer kept some items.';
+                    $this->sendNotification($title, $users, $details, ['parcel_read'], 'success', url('merchant/parcel/details/' . $parcel->id), '');
+                }
+                
                 Toastr::success(__('parcel_partially_delivered_successfully'));
             } else {
                 Toastr::error(__('something_went_wrong_please_try_again'));
@@ -185,6 +214,19 @@ class ParcelController extends Controller
     {
         try {
             $this->deliveryRepo->rescheduleDelivery($id, $request);
+            
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+                
+                $title = 'Parcel Delivery Rescheduled';
+                $details = 'Delivery for your parcel (ID: ' . $parcel->parcel_no . ') has been rescheduled.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'warning', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
             Toastr::success(__('rescheduled_successfully'));
             return back();
         } catch (\Exception $e) {
@@ -198,6 +240,19 @@ class ParcelController extends Controller
     {
         try {
             $this->deliveryRepo->cancelDelivery($id, $request);
+            
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+                
+                $title = 'Parcel Delivery Cancelled / Returned';
+                $details = 'Delivery for your parcel (ID: ' . $parcel->parcel_no . ') was cancelled/returned.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'danger', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
             Toastr::success(__('cancelled_successfully'));
             return back();
         } catch (\Exception $e) {
