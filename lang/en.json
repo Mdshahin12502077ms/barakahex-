@@ -2336,5 +2336,5 @@
     "rider_performance_chart": "Rider Performance Chart",
     "rider_leaderboard": "Rider Leaderboard",
     "rider_name": "Rider Name",
-    "unknown": "Unknown"
+    "unknown": "Unknown",`n    "delivery_time_set": "Delivery Time Set"
 }

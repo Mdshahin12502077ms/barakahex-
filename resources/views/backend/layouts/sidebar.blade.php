@@ -457,12 +457,9 @@
                                 </li>
                             @endif
                            <!-- #region delivery time set -->
-                              @if (hasPermission('delivery_time_set_read'))
-                                    <li class="{{ menuActivation(['admin/delivery-time-set', 'admin/delivery-time-set/*'], 'active') }}">
-                                        <a href="{{ Route::has('admin.delivery-time-set.index') ? route('admin.delivery-time-set.index') : '#' }}">
-                                            <i class="las la-clock"></i>
-                                            <span>{{ __('delivery_time_set') }}</span>
-                                        </a>
+                               @if (hasPermission('delivery_time_set_read'))
+                                    <li><a class="{{ menuActivation(['admin/delivery-time-set', 'admin/delivery-time-set/*'], 'active') }}"
+                                        href="{{ Route::has('admin.delivery-time-set.index') ? route('admin.delivery-time-set.index') : '#' }}">{{ __('delivery_time_set') }}</a>
                                     </li>
                                 @endif
 
