@@ -18,6 +18,9 @@ class MerchantDatatable extends DataTable
     {
         return (new EloquentDataTable($query))
             ->addIndexColumn()
+            ->addColumn('select', function ($merchant) {
+                return '<div class="form-check form-checkbox"><input type="checkbox" class="form-check-input merchant-checkbox" name="merchant_ids[]" value="' . $merchant->id . '"></div>';
+            })
             ->addColumn('options', function ($merchant) {
                 return view('admin.merchants.column.actions', compact('merchant'));
             })->addColumn('company_staff', function ($merchant) {
@@ -30,7 +33,8 @@ class MerchantDatatable extends DataTable
                 return view('admin.merchants.column.status', compact('merchant'));
             })->addColumn('website', function ($merchant) {
                 return view('admin.merchants.column.website', compact('merchant'));
-            })->setRowId('id');
+            })->setRowId('id')
+              ->rawColumns(['select', 'options', 'company_staff', 'payment', 'parcels', 'status', 'website']);
     }
 
     public function query(Merchant $model): QueryBuilder
@@ -38,17 +42,18 @@ class MerchantDatatable extends DataTable
 
         $query = $model->with('parcels', 'defaultAccount.paymentAccount')
             ->when(!hasPermission('read_all_merchant'), function ($query) {
-                $query->whereHas('shops', function ($q) {
-                    $q->where('pickup_branch_id', \Sentinel::getUser()->branch_id);
+                $query->whereHas('user', function ($q) {
+                    $q->where('branch_id', \Sentinel::getUser()->branch_id)
+                        ->orWhere('branch_id', null);
                 });
             })
             ->when($this->request->branch, function ($query) {
                 $branch = $this->request->branch;
-                $query->whereHas('shops', function ($q) use ($branch) {
+                $query->whereHas('user', function ($q) use ($branch) {
                     $q->when($branch == 'pending', function ($search) {
                         $search->whereNull('branch_id');
                     })->when($branch != 'pending', function ($search) use ($branch) {
-                        $search->where('pickup_branch_id', $branch);
+                        $search->where('branch_id', $branch);
                     });
                 });
             })
@@ -127,6 +132,11 @@ class MerchantDatatable extends DataTable
     public function getColumns(): array
     {
         return [
+            Column::computed('select')
+                ->title('<div class="form-check form-checkbox"><input type="checkbox" class="form-check-input" id="checkAll"></div>')
+                ->searchable(false)
+                ->orderable(false)
+                ->width(10),
             Column::computed('id')->data('DT_RowIndex')->title('#')->searchable(false)->width(10),
             Column::computed('options')->addClass('text-center')->title(__('options')),
             Column::computed('company_staff')->title(__('merchant')),

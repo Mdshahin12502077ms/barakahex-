@@ -81,6 +81,22 @@
                                         </div>
                                         <div class="col-md-4">
                                             <div class="mb-3">
+                                                <label class="form-label" for="branch_id">{{ __('branch') }}</label>
+                                                <select class="form-control select2" id="branch_id" name="branch_id">
+                                                    <option value="">{{ __('select_branch') }}</option>
+                                                    @foreach ($branchs as $branch)
+                                                        <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                                    @endforeach
+                                                </select>
+                                                @if ($errors->has('branch_id'))
+                                                    <div class="invalid-feedback help-block">
+                                                        <p>{{ $errors->first('branch_id') }}</p>
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="mb-3">
                                                 <label class="form-label" for="phone_number">{{ __('phone_number') }} <span
                                                         class="text-danger">*</span></label>
                                                 <input type="number" class="form-control @error('phone_number') is-invalid @enderror" id="phone_number"

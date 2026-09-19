@@ -44,6 +44,8 @@ class MerchantController extends Controller
 
     public function index(MerchantDatatable $dataTable, Request $request)
     {
+
+        
         $merchants                         = $this->merchants->paginate(\Config::get('parcel.parcel_merchant_paginate'));
         $branchs                           = Branch::all();
         $merchant_limit                    = env('ACTIVE_MERCHANT');
@@ -51,11 +53,30 @@ class MerchantController extends Controller
         $current_merchant_count            = Merchant::where('status', 1)->where('created_at', '>=', now()->startOfMonth())->count();
 
 
+        $pickupMen                         = \App\Models\User::where('user_type', 'delivery')->when(!hasPermission('read_all_merchant'), function($query) {
+            $query->where('branch_id', \Sentinel::getUser()->branch_id);
+        })->get();
+
         return $dataTable
             ->with(['request'   => $request, 'merchants' => $merchants, 'branchs' => $branchs])
-            ->render('admin.merchants.index', compact('merchants', 'branchs', 'merchant_limit', 'current_merchant_count'));
+            ->render('admin.merchants.index', compact('merchants', 'branchs', 'merchant_limit', 'current_merchant_count', 'pickupMen'));
     }
 
+    public function bulkAssignPickupMan(Request $request)
+    {
+        if (empty($request->merchant_ids) || empty($request->pickup_man_id)) {
+            return response()->json(['error' => __('please_select_merchant_and_pickup_man')]);
+        }
+
+        try {
+            Merchant::whereIn('id', $request->merchant_ids)->update([
+                'pickup_man_id' => $request->pickup_man_id
+            ]);
+            return response()->json(['success' => __('pickup_man_assigned_successfully')]);
+        } catch (\Exception $e) {
+            return response()->json(['error' => __('something_went_wrong_please_try_again')]);
+        }
+    }
 
     public function create()
     {

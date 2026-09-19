@@ -17,6 +17,15 @@
                     <a href="#" class="d-flex align-items-center btn sg-btn-primary gap-2" id="filterBTN">
                         <i class="las la-filter"></i>
                     </a>
+                    <div class="d-flex align-items-center gap-2 me-3">
+                        <select class="form-select" id="bulk_pickup_man_id">
+                            <option value="">{{ __('select_pickup_man') }}</option>
+                            @foreach($pickupMen as $man)
+                            <option value="{{ $man->id }}">{{ $man->first_name }} {{ $man->last_name }}</option>
+                            @endforeach
+                        </select>
+                        <button class="btn sg-btn-primary" id="bulkAssignBtn">{{ __('assign') }}</button>
+                    </div>
                     @if(hasPermission('merchant_create'))
                     <a href="{{ route('merchant.create') }}"
                         class="d-flex align-items-center btn sg-btn-primary gap-2">
@@ -177,5 +186,58 @@
     const refreshDataTable = () => {
         $('#dataTableBuilder').DataTable().ajax.reload();
     }
+
+    $(document).on('change', '#checkAll', function() {
+        $('.merchant-checkbox').prop('checked', $(this).prop('checked'));
+    });
+
+    $(document).on('change', '.merchant-checkbox', function() {
+        if ($('.merchant-checkbox:checked').length == $('.merchant-checkbox').length) {
+            $('#checkAll').prop('checked', true);
+        } else {
+            $('#checkAll').prop('checked', false);
+        }
+    });
+    $(document).on('click', '#bulkAssignBtn', function() {
+        let selectedMerchants = [];
+        $('.merchant-checkbox:checked').each(function() {
+            selectedMerchants.push($(this).val());
+        });
+
+        let pickupManId = $('#bulk_pickup_man_id').val();
+
+        if (selectedMerchants.length === 0) {
+            toastr.error('{{ __("please_select_at_least_one_merchant") }}');
+            return;
+        }
+
+        if (!pickupManId) {
+            toastr.error('{{ __("please_select_a_pickup_man") }}');
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route("merchant.bulk-assign-pickup-man") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                merchant_ids: selectedMerchants,
+                pickup_man_id: pickupManId
+            },
+            success: function(response) {
+                if (response.success) {
+                    toastr.success(response.success);
+                    refreshDataTable();
+                    $('#checkAll').prop('checked', false);
+                    $('#bulk_pickup_man_id').val('');
+                } else {
+                    toastr.error(response.error);
+                }
+            },
+            error: function() {
+                toastr.error('{{ __("something_went_wrong_please_try_again") }}');
+            }
+        });
+    });
 </script>
 @endpush

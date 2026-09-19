@@ -45,6 +45,11 @@ class Branch extends Model
         return $this->hasMany(Parcel::class, 'branch_id');
     }
 
+    public function merchants()
+    {
+        return $this->hasMany(Merchant::class);
+    }
+
     public static function boot()
     {
         parent::boot();

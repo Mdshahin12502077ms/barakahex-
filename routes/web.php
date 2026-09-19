@@ -198,6 +198,7 @@ Route::group(['middleware' => 'XSS'], function () {
                 Route::get('merchant/edit/{id}', [MerchantController::class, 'edit'])->name('merchant.edit')->middleware('PermissionCheck:merchant_update');
                 Route::post('merchant/update', [MerchantController::class, 'update'])->name('merchant.update')->middleware('PermissionCheck:merchant_update');
                 Route::delete('merchant/delete/{id}', [MerchantController::class, 'delete'])->middleware('PermissionCheck:merchant_delete');
+                Route::post('merchant/bulk-assign-pickup-man', [MerchantController::class, 'bulkAssignPickupMan'])->name('merchant.bulk-assign-pickup-man')->middleware('PermissionCheck:merchant_update');
                 Route::any('merchant-filter', [MerchantController::class, 'filter'])->name('merchant.filter')->middleware('PermissionCheck:merchant_read');
                 Route::POST('merchant/update-status', [MerchantController::class, 'statusChange'])->name('admin.merchant.status')->middleware('PermissionCheck:merchant_update');
                 Route::get('merchant/personal-info/{id}', [MerchantController::class, 'personalInfo'])->name('detail.merchant.personal.info')->middleware('PermissionCheck:merchant_read');

@@ -66,6 +66,23 @@
                                         </div>
                                     @endif
                                 </div>
+                                <div class="col-md-12 mb-3">
+                                    <div class="form-label-group">
+                                        <label class="form-label" for="branch_id">{{ __('branch') }} <span
+                                                class="text-danger">*</span></label>
+                                    </div>
+                                    <select name="branch_id" id="branch_id" class="form-control @error('branch_id') is-invalid @enderror">
+                                        <option value="">{{ __('select_branch') }}</option>
+                                        @foreach($branches as $branch)
+                                            <option value="{{ $branch->id }}" {{ old('branch_id') == $branch->id ? 'selected' : '' }}>{{ $branch->name }}</option>
+                                        @endforeach
+                                    </select>
+                                    @if ($errors->has('branch_id'))
+                                        <div class="invalid-feedback help-block">
+                                            <p>{{ $errors->first('branch_id') }}</p>
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <div class="form-label-group">

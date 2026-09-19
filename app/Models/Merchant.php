@@ -19,6 +19,9 @@ class Merchant extends Model
         'phone_number',
         'handling_fee',
         'parcel_rate',
+        'branch_id',
+        'pickup_man_id',
+        'delivery_man_id',
     ];
 
     protected $casts = [
@@ -34,6 +37,11 @@ class Merchant extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function branch()
+    {
+        return $this->belongsTo(Branch::class);
     }
 
     public function parcels()

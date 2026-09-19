@@ -87,7 +87,8 @@ class AuthController extends Controller
 
     public function registerForm()
     {
-        return view('auth.register');
+        $branches = \App\Models\Branch::active()->get();
+        return view('auth.register', compact('branches'));
     }
 
     public function register(MerchantStoreRequest $request)

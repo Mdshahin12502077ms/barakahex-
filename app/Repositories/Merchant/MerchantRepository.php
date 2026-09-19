@@ -94,6 +94,7 @@ class MerchantRepository implements MerchantInterface
             $user->permissions = isset($request->permissions) ? $request->permissions : [];
             $user->user_type = 'merchant';
             $user->is_primary = 1;
+            $user->branch_id = $request->branch_id ?? null;
             $user->image_id = $images ?? null;
             $user->save();
 
@@ -145,6 +146,7 @@ class MerchantRepository implements MerchantInterface
                 $user->password = bcrypt($request->password);
             endif;
             $user->permissions = isset($request->permissions) ? $request->permissions : [];
+            $user->branch_id = $request->branch_id ?? $user->branch_id;
             $user->save();
             $this->updateMerchant($request);
             DB::commit();
@@ -204,6 +206,9 @@ class MerchantRepository implements MerchantInterface
             $merchant->billing_street = $request['billing_street'];
             $merchant->billing_city = $request['billing_city'];
             $merchant->billing_zip = $request['billing_zip'];
+            $merchant->branch_id = $request['branch_id'] ?? null;
+            $merchant->pickup_man_id = $request['pickup_man_id'] ?? null;
+            $merchant->delivery_man_id = $request['delivery_man_id'] ?? null;
             $merchant->nid = $nid ?? null;
             $merchant->trade_license = $trade_license ?? null;
             $merchant->api_key = $this->generate_random_string(15);
@@ -496,6 +501,7 @@ class MerchantRepository implements MerchantInterface
             $temp->last_name = $data['last_name'];
             $temp->address = $data['address'];
             $temp->phone_number = $data['phone_number'];
+            $temp->branch_id = $data['branch_id'] ?? null;
             $temp->email = $data['email'];
             $temp->password = bcrypt($data['password']);
             $temp->otp = rand(10000, 99999);
@@ -580,7 +586,7 @@ class MerchantRepository implements MerchantInterface
             $user->permissions = [];
             $user->user_type = 'merchant';
             $user->is_primary = 1;
-            $user->branch_id = 1;
+            $user->branch_id = $temp->branch_id;
 
             $user->save();
             $data = $this->registerMerchant($temp, $user->id);
@@ -653,7 +659,7 @@ class MerchantRepository implements MerchantInterface
             $user->permissions = [];
             $user->user_type = 'merchant';
             $user->is_primary = 1;
-            $user->branch_id = 1;
+            $user->branch_id = $data['branch_id'] ?? null;
             $user->save();
 
             // Create a temporary array to mimic TempStore structure for reusability of registerMerchant
