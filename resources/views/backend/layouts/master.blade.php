@@ -2,13 +2,13 @@
 @push('css')
 <style>
     @media (min-width: 992px) {
-        .header-position {
+        body:not(.sidebar-collapse) .header-position {
             width: 20% !important;
         }
-        .main-wrapper {
+        body:not(.sidebar-collapse) .main-wrapper {
             padding-left: 20% !important;
         }
-        .homepageFixBTN {
+        body:not(.sidebar-collapse) .homepageFixBTN {
             width: 80% !important;
         }
     }
