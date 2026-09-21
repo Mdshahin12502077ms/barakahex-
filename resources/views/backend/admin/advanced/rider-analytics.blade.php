@@ -110,7 +110,7 @@
                     <div class="section-top mb-4">
                         <h4>{{ __('rider_performance_chart') }}</h4>
                     </div>
-                    <div style="height: 350px;">
+                    <div style="position: relative; height: 350px; width: 100%;">
                         <canvas id="riderPerformanceChart"></canvas>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
                     ]
                 },
                 options: {
-                    responsive: false, scrollX: false,
+                    responsive: true,
                     maintainAspectRatio: false,
                     scales: {
                         y: {

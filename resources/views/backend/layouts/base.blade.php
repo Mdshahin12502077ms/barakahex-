@@ -110,19 +110,59 @@
     </style>
     @endif
     <style>
+        /* Light Glassmorphism for Cards */
+        .card {
+            background: rgba(255, 255, 255, 0.8) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.6) !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03) !important;
+            border-radius: 12px !important;
+        }
+
+        .card-header {
+            background-color: transparent !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05) !important;
+        }
+
+        /* Sidebar text size reduction requested by user */
+        .side-nav ul li a {
+            font-size: 13px !important;
+        }
+
+        /* Reduce overall system font size by 2px */
+        html,
+        body {
+            font-size: 14px !important;
+        }
+
+        /* Table font size reduction requested by user */
+        .default-list-table .table td,
+        .default-list-table .table th {
+            font-size: 13px !important;
+        }
+
+        .default-list-table .table thead tr th {
+            font-size: 13px !important;
+        }
+
         /* Ensure all DataTables can scroll horizontally and text doesn't awkwardly squish */
-        table.dataTable td, table.dataTable th {
+        table.dataTable td,
+        table.dataTable th {
             white-space: nowrap !important;
         }
+
         .dataTables_wrapper .table-responsive {
             overflow-x: auto !important;
             margin-bottom: 1rem;
             border-bottom: 1px solid #e5e9f2;
         }
+
         .dataTables_wrapper .table {
             margin-bottom: 0 !important;
             border: none !important;
         }
+
         .dataTables_wrapper .table thead th,
         .dataTables_wrapper .table thead tr {
             border-top: none !important;

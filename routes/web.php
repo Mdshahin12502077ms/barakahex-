@@ -867,6 +867,7 @@ Route::group(['middleware' => 'XSS'], function () {
                 Route::post('parcel/update', [MerchantParcelController::class, 'update'])->name('merchant.parcel.update');
                 Route::any('parcel/filter', [MerchantParcelController::class, 'filter'])->name('merchant.parcel.filter');
                 Route::get('parcel/detail/{id}', [MerchantParcelController::class, 'detail'])->name('merchant.parcel.detail');
+                Route::get('parcel/details/{id}', [MerchantParcelController::class, 'detail']); // Fallback for notifications with typo
                 Route::post('parcel/download', [MerchantParcelController::class, 'getParcelDownload'])->name('merchant.parcel.download');
                 Route::get('parcel/status-update/{id}/{status}', [MerchantParcelController::class, 'parcelStatusUpdate']);
                 Route::get('parcel/print/{id}', [MerchantParcelController::class, 'print'])->name('merchant.parcel.print');

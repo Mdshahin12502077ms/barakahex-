@@ -16,6 +16,7 @@
     function selectAll(event) {
         const checkboxes = document.querySelectorAll('.selected_parcel');
         checkboxes.forEach(cb => cb.checked = event.target.checked);
+        toggleDropdown(); // Toggle the bulk action dropdown visibility
     }
 
     function selectedParcelBatchPrint() {

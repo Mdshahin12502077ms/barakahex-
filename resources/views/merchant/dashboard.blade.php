@@ -264,7 +264,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="statistics-report-chart">
+                    <div class="statistics-report-chart" style="position: relative; width: 100%;">
                         <canvas id="statisticsBarChart"></canvas>
                     </div>
                 </div>
@@ -278,7 +278,7 @@
                         <div class="row">
                         </div>
                     </div>
-                    <div class="statistics-report-chart">
+                    <div class="statistics-report-chart" style="position: relative; width: 100%;">
                         <canvas id="parcel_statistic"></canvas>
                     </div>
                 </div>
@@ -507,7 +507,7 @@
                 };
 
                 var options = {
-                    responsive: false, scrollX: false,
+                    responsive: true,
                     maintainAspectRatio: false,
                     scales: {
                         y: {
@@ -582,7 +582,7 @@
                 };
 
                 var options = {
-                    responsive: false, scrollX: false,
+                    responsive: true,
                     maintainAspectRatio: false,
                     scales: {
                         y: {

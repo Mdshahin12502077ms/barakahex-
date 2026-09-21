@@ -216,7 +216,7 @@ class ParcelDataTable extends DataTable
     public function getColumns(): array
     {
         return [
-            Column::computed('select_box')->title(__('select_box'))->searchable(false)->width(10),
+            Column::computed('select_box')->title('<div class="form-check form-checkbox"><input type="checkbox" class="form-check-input" id="checkAll" onclick="selectAll(event)"></div>')->searchable(false)->width(10),
             Column::computed('id')->data('DT_RowIndex')->title('#')->searchable(false)->width(10),
             Column::computed('action')
                 ->title(__('action'))
