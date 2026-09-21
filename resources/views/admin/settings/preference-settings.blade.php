@@ -8,7 +8,7 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="d-flex justify-content-center align-items-center">
-                    <div class="col-xxl-9 col-lg-8 col-md-8">
+                    <div class="col-xxl-9 col-lg-9 col-md-9">
                         <div class="bg-white redious-border p-20 p-sm-30">
                             <div class="row">
                                 <div class="col-12">

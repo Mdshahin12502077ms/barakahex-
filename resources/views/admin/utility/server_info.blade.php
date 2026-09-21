@@ -3,7 +3,7 @@
 @section('mainContent')
     <div class="container-fluid">
         <div class="row">
-            <div class="col-xxl-3 col-lg-4 col-md-4">
+            <div class="col-xxl-3 col-lg-3 col-md-3">
                 <h3 class="section-title">{{ __('server_information') }}</h3>
                 <div class="bg-white redious-border py-3 py-sm-30 mb-30">
                     <div class="email-tamplate-sidenav">
@@ -55,7 +55,7 @@
                 </div>
             </div>
 
-            <div class="col-xxl-9 col-lg-8 col-md-8">
+            <div class="col-xxl-9 col-lg-9 col-md-9">
                 <div class="row">
                     <div class="col-lg-12">
                         @if(request()->route()->getName() == 'server.info')

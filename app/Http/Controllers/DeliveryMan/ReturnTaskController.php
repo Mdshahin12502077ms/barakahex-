@@ -55,4 +55,42 @@ class ReturnTaskController extends Controller
 
         return redirect()->back();
     }
+    public function resendOtp($id)
+    {
+        $response = $this->returnTaskRepo->resendOtp($id);
+        if ($response['success'] ?? ($response['status'] ?? false)) {
+            Toastr::success($response['message'] ?? __('otp_sent_successfully'));
+        } else {
+            Toastr::error($response['message'] ?? __('something_went_wrong_please_try_again'));
+        }
+        return redirect()->back();
+    }
+
+    public function verifyOtp(Request $request, $id)
+    {
+        $request->validate([
+            'otp' => 'required|numeric'
+        ]);
+
+        $response = $this->returnTaskRepo->verifyOtp($id, $request->otp);
+
+        if ($response['success'] ?? ($response['status'] ?? false)) {
+            // Notification Logic
+            $parcel = Parcel::with('merchant.user')->find($id);
+            if ($parcel && $parcel->merchant && $parcel->merchant->user) {
+                $staff = User::where('user_type', 'staff')->get();
+                $merchant = User::where('id', $parcel->merchant->user->id)->get();
+                $users = $staff->merge($merchant);
+                $title = 'Return Task Completed';
+                $details = 'Your parcel (ID: ' . $parcel->parcel_no . ') has been successfully returned to you by our rider.';
+                $this->sendNotification($title, $users, $details, ['parcel_read'], 'info', url('merchant/parcel/details/' . $parcel->id), '');
+            }
+
+            Toastr::success($response['message']);
+        } else {
+            Toastr::error($response['message']);
+        }
+
+        return redirect()->back();
+    }
 }

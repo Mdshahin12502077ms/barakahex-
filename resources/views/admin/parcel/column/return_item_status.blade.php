@@ -4,6 +4,7 @@
 <select name="return_item_status" class="form-control return_item_status" data-id="{{ $parcel->id }}">
     <option value="pending_at_rider" @if($parcel->return_item_status == 'pending_at_rider') selected @endif>Pending at Rider</option>
     <option value="received_at_hub" @if($parcel->return_item_status == 'received_at_hub') selected @endif>Received at Hub</option>
+    <option value="return_assigned_to_merchant" @if($parcel->return_item_status == 'return_assigned_to_merchant') selected @endif>Assign Return Rider</option>
     <option value="returned_to_merchant" @if($parcel->return_item_status == 'returned_to_merchant') selected @endif>Returned to Merchant</option>
     <option value="received_by_merchant" @if($parcel->return_item_status == 'received_by_merchant') selected @endif>Received by Merchant</option>
 </select>

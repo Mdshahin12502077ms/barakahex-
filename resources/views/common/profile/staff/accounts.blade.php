@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row">
                 @include('common.profile.staff.staff-sidebar')
-                <div class="col-xxl-9 col-lg-8 col-md-8">
+                <div class="col-xxl-9 col-lg-9 col-md-9">
                     <div class="default-tab-list default-tab-list-v2 bg-white redious-border activeItem-bd-none p-20 p-sm-30">
                         <div>
                             <h5>{{ __('accounts') }}</h4>

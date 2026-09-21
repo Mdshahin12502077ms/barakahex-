@@ -73,10 +73,7 @@ class MyDeliveryRepository
         $deliveryMan = $this->getDeliveryMan();
         $deliveryManId = $deliveryMan->id ?? 0;
         return $this->model->with(['merchant.user', 'shop', 'events.user', 'events.pickupPerson.user', 'events.deliveryPerson.user', 'otpLogs'])
-            ->where(function ($q) use ($deliveryManId) {
-                $q->where('delivery_man_id', $deliveryManId)
-                  ->orWhere('pickup_man_id', $deliveryManId);
-            })
+            ->where('delivery_man_id', $deliveryManId)
             ->findOrFail($id);
     }
 
@@ -88,11 +85,12 @@ class MyDeliveryRepository
             $deliveryManId = $deliveryMan->id ?? 0;
 
             $parcel = $this->model->where('id', $id)
-                ->where(function ($q) use ($deliveryManId) {
-                    $q->where('delivery_man_id', $deliveryManId)
-                      ->orWhere('pickup_man_id', $deliveryManId);
-                })
-                ->firstOrFail();
+                ->where('delivery_man_id', $deliveryManId)
+                ->first();
+
+            if (!$parcel) {
+                return ['status' => false, 'message' => 'Parcel not found or you do not have delivery access!'];
+            }
 
             if (in_array($parcel->status, ['delivered', 'delivered-and-verified'])) {
                 return false;
@@ -161,11 +159,12 @@ class MyDeliveryRepository
             $deliveryManId = $deliveryMan->id ?? 0;
 
             $parcel = $this->model->where('id', $id)
-                ->where(function ($q) use ($deliveryManId) {
-                    $q->where('delivery_man_id', $deliveryManId)
-                      ->orWhere('pickup_man_id', $deliveryManId);
-                })
-                ->firstOrFail();
+                ->where('delivery_man_id', $deliveryManId)
+                ->first();
+
+            if (!$parcel) {
+                return ['status' => false, 'message' => 'Parcel not found or you do not have delivery access!'];
+            }
 
             $maxAttempts = 3;
 
@@ -282,11 +281,12 @@ class MyDeliveryRepository
             $deliveryManId = $deliveryMan->id ?? 0;
 
             $parcel = $this->model->where('id', $id)
-                ->where(function ($q) use ($deliveryManId) {
-                    $q->where('delivery_man_id', $deliveryManId)
-                      ->orWhere('pickup_man_id', $deliveryManId);
-                })
-                ->firstOrFail();
+                ->where('delivery_man_id', $deliveryManId)
+                ->first();
+
+            if (!$parcel) {
+                return ['status' => false, 'message' => 'Parcel not found or you do not have delivery access!'];
+            }
 
             if ($parcel->status != 'delivered' && $parcel->status != 'partially-delivered') {
                 return false;
@@ -339,11 +339,12 @@ class MyDeliveryRepository
             $deliveryManId = $deliveryMan->id ?? 0;
 
             $parcel = $this->model->where('id', $id)
-                ->where(function ($q) use ($deliveryManId) {
-                    $q->where('delivery_man_id', $deliveryManId)
-                      ->orWhere('pickup_man_id', $deliveryManId);
-                })
-                ->firstOrFail();
+                ->where('delivery_man_id', $deliveryManId)
+                ->first();
+
+            if (!$parcel) {
+                return ['status' => false, 'message' => 'Parcel not found or you do not have delivery access!'];
+            }
 
             $parcel->status = 're-schedule-delivery';
             if ($request && $request->delivery_date) {
@@ -377,11 +378,12 @@ class MyDeliveryRepository
             $deliveryManId = $deliveryMan->id ?? 0;
 
             $parcel = $this->model->where('id', $id)
-                ->where(function ($q) use ($deliveryManId) {
-                    $q->where('delivery_man_id', $deliveryManId)
-                      ->orWhere('pickup_man_id', $deliveryManId);
-                })
-                ->firstOrFail();
+                ->where('delivery_man_id', $deliveryManId)
+                ->first();
+
+            if (!$parcel) {
+                return ['status' => false, 'message' => 'Parcel not found or you do not have delivery access!'];
+            }
 
             $parcel->status = 'cancel';
             $parcel->save();

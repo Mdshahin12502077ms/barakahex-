@@ -2361,5 +2361,12 @@
     "rider_performance_chart": "রাইডার পারফরম্যান্স চার্ট",
     "rider_leaderboard": "রাইডার লিডারবোর্ড",
     "rider_name": "রাইডারের নাম",
-    "unknown": "অজানা"
+    "unknown": "অজানা",
+    "delivery_time_set": "ডেলিভারি সময় সেট",
+    "return_otp_verification": "রিটার্ন OTP ভেরিফিকেশন",
+    "verify_return_parcel": "রিটার্ন পার্সেল ভেরিফাই করুন",
+    "merchant_must_provide_otp_to_confirm_return": "রিটার্ন কনফার্ম করার জন্য মার্চেন্টকে অবশ্যই OTP প্রদান করতে হবে।",
+    "send_resend_otp": "OTP পাঠান / পুনরায় পাঠান",
+    "enter_otp": "OTP দিন",
+    "verify_and_return": "ভেরিফাই করুন এবং রিটার্ন করুন"
 }

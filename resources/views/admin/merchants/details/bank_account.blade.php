@@ -9,7 +9,7 @@
         <div class="container-fluid">
             <div class="row">
                 @include('admin.merchants.details.menu')
-                <div class="col-xxl-9 col-lg-8 col-md-8">
+                <div class="col-xxl-9 col-lg-9 col-md-9">
                     <div class="default-tab-list default-tab-list-v2 bg-white redious-border activeItem-bd-none p-20 p-sm-30">
                         <div class="default-tab-list default-tab-list-v2">
                             <ul class="nav pb-12 mb-20" id="pills-tab" role="tablist">

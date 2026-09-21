@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row">
                 @include('admin.website.sidebar_component')
-                <div class="col-xxl-9 col-lg-8 col-md-8">
+                <div class="col-xxl-9 col-lg-9 col-md-9">
                     <h3 class="section-title">{{ __('menu_section') }}</h3>
                     <div class="bg-white redious-border p-20 p-sm-30">
                         <form action="{{ route('admin.update-menu') }}" method="POST" class="form">@csrf

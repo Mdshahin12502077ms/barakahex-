@@ -143,8 +143,12 @@ class ParcelController extends Controller
     public function delivered(Request $request, $id)
     {
         try {
-            $this->deliveryRepo->delivered($id, $request);
-            
+            $res = $this->deliveryRepo->delivered($id, $request);
+            if (is_array($res) && !$res['status']) {
+                Toastr::error($res['message']);
+                return back();
+            }
+
             // Notification Logic
             $parcel = Parcel::with('merchant.user')->find($id);
             if ($parcel && $parcel->merchant && $parcel->merchant->user) {
@@ -249,7 +253,11 @@ class ParcelController extends Controller
     public function reschedule(Request $request, $id)
     {
         try {
-            $this->deliveryRepo->rescheduleDelivery($id, $request);
+            $res = $this->deliveryRepo->rescheduleDelivery($id, $request);
+            if (is_array($res) && !$res['status']) {
+                Toastr::error($res['message']);
+                return back();
+            }
             
             // Notification Logic
             $parcel = Parcel::with('merchant.user')->find($id);
@@ -275,7 +283,11 @@ class ParcelController extends Controller
     public function cancel(Request $request, $id)
     {
         try {
-            $this->deliveryRepo->cancelDelivery($id, $request);
+            $res = $this->deliveryRepo->cancelDelivery($id, $request);
+            if (is_array($res) && !$res['status']) {
+                Toastr::error($res['message']);
+                return back();
+            }
             
             // Notification Logic
             $parcel = Parcel::with('merchant.user')->find($id);

@@ -389,14 +389,24 @@ try {
     if (isset($delivery_time)):
         $parcel->delivery_time = $delivery_time ?? '';
     endif;
+
     $parcel->save();
     
-   if($parcel->status=="pending"){
-      $this->etaCalculationService->updateParcelETA($parcel);
-   }
+    if($parcel->status=="pickup-assigned" || $parcel->status=="pending"){
+       $this->etaCalculationService->updateParcelETA($parcel);
+    }
     
-
     $this->parcelEvent($parcel->id, 'parcel_create_event');
+    
+   
+    if ($merchant && $merchant->pickup_man_id) {
+        $request->merge([
+            'id' => $parcel->id,
+            'pickup_man' => $merchant->pickup_man_id,
+            'notify_pickup_man' => 'notify'
+        ]);
+        $this->assignPickupMan($request);
+    }
 
     DB::commit();
     return $parcel;
@@ -439,7 +449,7 @@ try {
                 $location = 'third_party_booking';
             endif;
 
-            // Start Charge calculate
+        
             $merchant = $this->merchants->get($request->merchant);
             $system_charge = Charge::all()->toArray();
             $foundCharge = null;
@@ -1382,7 +1392,11 @@ try {
         DB::beginTransaction();
         try {
             $parcel = Parcel::find($id);
-            $parcel->status = 'return-assigned-to-merchant';
+            if ($parcel->status == 'partially-delivered') {
+                $parcel->return_item_status = 'return_assigned_to_merchant';
+            } else {
+                $parcel->status = 'return-assigned-to-merchant';
+            }
             $parcel->return_delivery_man_id = $request->delivery_man;
             $parcel->return_fee = DeliveryMan::find($request->delivery_man)->return_fee;
             $parcel->save();
@@ -1785,6 +1799,15 @@ try {
             }
             $this->parcelEvent($parcel->id, 'parcel_partial_delivered_event', $parcel->delivery_man_id, '', '', $note);
             $parcel->save();
+
+
+
+
+
+
+
+
+
             $this->accounts->incomeExpenseManage($parcel->id, $parcel->status);
 
             // Log OTP Generation
@@ -1800,6 +1823,16 @@ try {
                 ]);
             } catch (\Exception $logEx) {
             }
+             
+            try{
+                if($parcel->merchant && $parcel->merchant->phone_number){
+                    $merchant_sms_body = "Your parcel (ID: {$parcel->parcel_no}) has been partially delivered. Accepted: {$parcel->delivered_quantity} pcs, Returned: {$parcel->return_quantity} pcs.";
+                    $this->test($merchant_sms_body, $parcel->merchant->phone_number, 'partial_delivery_notification', setting('active_sms_provider'));
+                }
+            } catch (\Exception $logEx) {
+            }
+
+
 
             // Send SMS with OTP to Customer if template is active
             try {

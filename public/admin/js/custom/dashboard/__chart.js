@@ -250,7 +250,7 @@ if (statisticsItem) {
             ]
         },
         options: {
-            responsive: true,
+            responsive: false, scrollX: false,
             maintainAspectRatio: false,
             scales: {
                 x: {

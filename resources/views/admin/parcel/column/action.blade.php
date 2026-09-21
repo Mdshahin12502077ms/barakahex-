@@ -231,7 +231,16 @@
                             </a>
                         </li>
                     @endif
-
+                @elseif($parcel->status == 'partially-delivered')
+                    @if (hasPermission('parcel_return_assigned_to_merchant') && $parcel->return_item_status == 'received_at_hub')
+                        <li>
+                            <a href="javascript:void(0);" class="return-assign-to-merchant dropdown-item"
+                                data-id="{{ $parcel->id }}" id="return-assign-to-merchant" data-bs-toggle="modal"
+                                data-bs-target="#return-assign-tomerchant">
+                                <span> {{ __('return_assign_to_merchant') }} </span>
+                            </a>
+                        </li>
+                    @endif
                 @endif
                 <li>
                     <a class="dropdown-item" data-id="{{ $parcel->id }}"

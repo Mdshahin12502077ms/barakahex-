@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row">
                 @include('admin.website.sidebar_component')
-                <div class="col-xxl-9 col-lg-8 col-md-8">
+                <div class="col-xxl-9 col-lg-9 col-md-9">
                     <h3 class="section-title">{{ __('edit_testimonial') }}</h3>
                     <div class="default-tab-list default-tab-list-v2  bg-white redious-border p-20 p-sm-30">
                         <div class="row">

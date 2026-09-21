@@ -72,9 +72,9 @@ class ReturnTask extends DataTable
                 return $html;
             })
             ->addColumn('status', function ($parcel) {
-                if ($parcel->status == 'returned-to-merchant') {
+                if ($parcel->status == 'returned-to-merchant' || $parcel->return_item_status == 'returned_to_merchant') {
                     return '<span class="badge bg-success"><i class="las la-check-circle"></i> ' . __('returned_to_merchant') . '</span>';
-                } elseif ($parcel->status == 'return-assigned-to-merchant') {
+                } elseif ($parcel->status == 'return-assigned-to-merchant' || $parcel->return_item_status == 'return_assigned_to_merchant') {
                     return '<span class="badge bg-warning text-dark"><i class="las la-shipping-fast"></i> ' . __('return_assigned_to_merchant') . '</span>';
                 }
                 return '<span class="badge bg-secondary">' . strtoupper(str_replace('-', ' ', $parcel->status)) . '</span>';
@@ -82,17 +82,17 @@ class ReturnTask extends DataTable
             ->addColumn('action', function ($parcel) {
                 $html = '<div class="d-inline-flex gap-1">';
                 
-                if ($parcel->status == 'return-assigned-to-merchant') {
-                    $html .= '<form action="' . route('deliveryman.return.task.complete', $parcel->id) . '" method="POST" class="d-inline confirm-form"
-                                data-title="' . __('are_you_sure') . '"
-                                data-text="' . __('confirm_parcel_returned_to_merchant') . '"
-                                data-confirm-btn="' . __('confirm_return') . '"
-                                data-cancel-btn="' . __('cancel') . '">
-                                ' . csrf_field() . '
-                                <button type="submit" class="btn btn-sm btn-success" title="' . __('mark_returned_to_merchant') . '">
-                                    <i class="las la-check-double"></i> ' . __('return_to_merchant') . '
-                                </button>
-                            </form>';
+                if ($parcel->status == 'return-assigned-to-merchant' || $parcel->return_item_status == 'return_assigned_to_merchant') {
+                    $html .= '<button type="button" class="btn btn-sm btn-success return-otp-btn"
+                                data-id="' . $parcel->id . '"
+                                data-parcel-no="' . e($parcel->parcel_no) . '"
+                                data-otp-attempts="' . ($parcel->otp_attempts ?? 0) . '"
+                                data-otp-expired="' . (!empty($parcel->otp_expired_at) && \Carbon\Carbon::now()->gt(\Carbon\Carbon::parse($parcel->otp_expired_at)) ? '1' : '0') . '"
+                                data-otp-expired-at="' . (!empty($parcel->otp_expired_at) ? \Carbon\Carbon::parse($parcel->otp_expired_at)->format('h:i:s A') : '') . '"
+                                data-otp-expired-human="' . (!empty($parcel->otp_expired_at) ? \Carbon\Carbon::parse($parcel->otp_expired_at)->diffForHumans(['parts' => 1]) : '') . '"
+                                title="' . __('mark_returned_to_merchant') . '">
+                                <i class="las la-check-double"></i> ' . __('return_to_merchant') . '
+                            </button>';
                 }
                 
                 $html .= '<a href="' . route('deliveryman.parcel.detail', $parcel->id) . '" class="btn btn-sm sg-btn-outline-primary" title="' . __('view_details') . '">
@@ -116,7 +116,13 @@ class ReturnTask extends DataTable
 
         $query = Parcel::with(['merchant.user', 'shop', 'events'])
             ->where('return_delivery_man_id', $deliveryManId)
-            ->whereIn('status', ['return-assigned-to-merchant', 'returned-to-merchant', 'return-cancel'])
+            ->where(function($q) {
+                $q->whereIn('status', ['return-assigned-to-merchant', 'returned-to-merchant', 'return-cancel'])
+                  ->orWhere(function($subQ) {
+                      $subQ->where('is_partially_delivered', true)
+                           ->whereIn('return_item_status', ['return_assigned_to_merchant', 'returned_to_merchant', 'received_by_merchant']);
+                  });
+            })
             ->latest('id');
 
         $query->when(request('search')['value'] ?? false, function ($query, $search) {

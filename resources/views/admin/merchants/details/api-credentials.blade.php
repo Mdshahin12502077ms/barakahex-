@@ -8,7 +8,7 @@
         <div class="container-fluid">
             <div class="row">
                 @include('admin.merchants.details.menu')
-                <div class="col-xxl-9 col-lg-8 col-md-8">
+                <div class="col-xxl-9 col-lg-9 col-md-9">
                     <div class="card-aside-wrap">
                         <div class="card-inner card-inner-lg">
                             <div class="header-top d-flex justify-content-between align-items-center mb-12">

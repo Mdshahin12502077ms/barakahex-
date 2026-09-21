@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row">
             @include('admin.website.sidebar_component')
-            <div class="col-xxl-9 col-lg-8 col-md-8">
+            <div class="col-xxl-9 col-lg-9 col-md-9">
                 <h3 class="section-title">{{ __('custom_js') }}</h3>
                 <div class="bg-white redious-border pt-30 p-20 p-sm-30">
                     <form action="{{ route('custom.css.js') }}" method="post" class="form">@csrf

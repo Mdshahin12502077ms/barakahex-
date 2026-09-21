@@ -32,6 +32,8 @@ Route::prefix('delivery-man')->middleware(['LoginCheckDeliveryMan'])->name('deli
      Route::controller(ReturnTaskController::class)->group(function(){
         Route::get('/return-tasks', 'index')->name('return.tasks');
         Route::post('/return-task-complete/{id}', 'complete')->name('return.task.complete');
+        Route::post('/return-task-verify-otp/{id}', 'verifyOtp')->name('return.task.verify.otp');
+        Route::post('/return-task-resend-otp/{id}', 'resendOtp')->name('return.task.resend.otp');
      });
 
 

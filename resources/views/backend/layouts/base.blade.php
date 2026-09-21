@@ -8,56 +8,56 @@
     <title>@yield('title') | {{ setting('system_name') != '' ? setting('system_name') : env('APP_NAME') }}</title>
     <!-- Fav Icon  -->
     @php
-        @$icon = setting('admin_favicon');
+    @$icon = setting('admin_favicon');
 
-        @$icon['image_57x57_url'] = $icon['image_80X80'];
-        @$icon['image_60x60_url'] = $icon['image_80X80'];
-        @$icon['image_72x72_url'] = $icon['image_80X80'];
-        @$icon['image_76x76_url'] = $icon['image_80X80'];
-        @$icon['image_114x114_url'] = $icon['image_80X80'];
-        @$icon['image_144x144_url'] = $icon['image_80X80'];
-        @$icon['image_120x120_url'] = $icon['image_80X80'];
-        @$icon['image_144x144_url'] = $icon['image_391x541'];
-        @$icon['image_152x152_url'] = $icon['image_391x541'];
-        @$icon['image_180x180_url'] = $icon['image_391x541'];
-        @$icon['image_192x192_url'] = $icon['image_391x541'];
-        @$icon['image_32x32_url'] = $icon['image_80X80'];
-        @$icon['image_96x96_url'] = $icon['image_80X80'];
-        @$icon['image_16x16_url'] = $icon['image_80X80'];
+    @$icon['image_57x57_url'] = $icon['image_80X80'];
+    @$icon['image_60x60_url'] = $icon['image_80X80'];
+    @$icon['image_72x72_url'] = $icon['image_80X80'];
+    @$icon['image_76x76_url'] = $icon['image_80X80'];
+    @$icon['image_114x114_url'] = $icon['image_80X80'];
+    @$icon['image_144x144_url'] = $icon['image_80X80'];
+    @$icon['image_120x120_url'] = $icon['image_80X80'];
+    @$icon['image_144x144_url'] = $icon['image_391x541'];
+    @$icon['image_152x152_url'] = $icon['image_391x541'];
+    @$icon['image_180x180_url'] = $icon['image_391x541'];
+    @$icon['image_192x192_url'] = $icon['image_391x541'];
+    @$icon['image_32x32_url'] = $icon['image_80X80'];
+    @$icon['image_96x96_url'] = $icon['image_80X80'];
+    @$icon['image_16x16_url'] = $icon['image_80X80'];
     @endphp
     @if ($icon)
-        <link rel="apple-touch-icon" sizes="80X80"
-            href="{{ $icon != [] && @is_file_exists($icon['image_57x57_url']) ? static_asset($icon['image_57x57_url']) : static_asset('images/default/favicon/favicon-80X80.png') }}">
-        <link rel="apple-touch-icon" sizes="40x40"
-            href="{{ $icon != [] && @is_file_exists($icon['image_40x40_url']) ? static_asset($icon['image_40x40_url']) : static_asset('images/default/favicon/favicon-40x40.png') }}">
-        <link rel="apple-touch-icon" sizes="72x72"
-            href="{{ $icon != [] && @is_file_exists($icon['image_72x72_url']) ? static_asset($icon['image_72x72_url']) : static_asset('images/default/favicon/favicon-72x72.png') }}">
-        <link rel="apple-touch-icon" sizes="76x76"
-            href="{{ $icon != [] && @is_file_exists($icon['image_76x76_url']) ? static_asset($icon['image_76x76_url']) : static_asset('images/default/favicon/favicon-76x76.png') }}">
-        <link rel="apple-touch-icon" sizes="114x114"
-            href="{{ $icon != [] && @is_file_exists($icon['image_114x114_url']) ? static_asset($icon['image_114x114_url']) : static_asset('images/default/favicon/favicon-114x114.png') }}">
-        <link rel="apple-touch-icon" sizes="120x120"
-            href="{{ $icon != [] && @is_file_exists($icon['image_120x120_url']) ? static_asset($icon['image_120x120_url']) : static_asset('images/default/favicon/favicon-120x120.png') }}">
-        <link rel="apple-touch-icon" sizes="144x144"
-            href="{{ $icon != [] && @is_file_exists($icon['image_144x144_url']) ? static_asset($icon['image_144x144_url']) : static_asset('images/default/favicon/favicon-144x144.png') }}">
-        <link rel="apple-touch-icon" sizes="152x152"
-            href="{{ $icon != [] && @is_file_exists($icon['image_152x152_url']) ? static_asset($icon['image_152x152_url']) : static_asset('images/default/favicon/favicon-152x152.png') }}">
-        <link rel="apple-touch-icon" sizes="180x180"
-            href="{{ $icon != [] && @is_file_exists($icon['image_180x180_url']) ? static_asset($icon['image_180x180_url']) : static_asset('images/default/favicon/favicon-180x180.png') }}">
-        <link rel="icon" type="image/png" sizes="192x192"
-            href="{{ $icon != [] && @is_file_exists($icon['image_192x192_url']) ? static_asset($icon['image_192x192_url']) : static_asset('images/favicon-192x192.png') }}">
-        <link rel="icon" type="image/png" sizes="32x32"
-            href="{{ $icon != [] && @is_file_exists($icon['image_32x32_url']) ? static_asset($icon['image_32x32_url']) : static_asset('images/default/favicon/favicon-32x32.png') }}">
-        <link rel="icon" type="image/png" sizes="96x96"
-            href="{{ $icon != [] && @is_file_exists($icon['image_96x96_url']) ? static_asset($icon['image_96x96_url']) : static_asset('images/default/favicon/favicon-96x96.png') }}">
-        <link rel="icon" type="image/png" sizes="16x16"
-            href="{{ $icon != [] && @is_file_exists($icon['image_16x16_url']) ? static_asset($icon['image_16x16_url']) : static_asset('images/default/favicon/favicon-16x16.png') }}">
-        <link rel="manifest" href="{{ static_asset('images/default/favicon/manifest.json') }}">
-        <meta name="msapplication-TileColor" content="#ffffff">
-        <meta name="msapplication-TileImage"
-            content="{{ $icon != [] && @is_file_exists($icon['image_144x144_url']) ? static_asset($icon['image_144x144_url']) : static_asset('images/default/favicon/favicon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="80X80"
+        href="{{ $icon != [] && @is_file_exists($icon['image_57x57_url']) ? static_asset($icon['image_57x57_url']) : static_asset('images/default/favicon/favicon-80X80.png') }}">
+    <link rel="apple-touch-icon" sizes="40x40"
+        href="{{ $icon != [] && @is_file_exists($icon['image_40x40_url']) ? static_asset($icon['image_40x40_url']) : static_asset('images/default/favicon/favicon-40x40.png') }}">
+    <link rel="apple-touch-icon" sizes="72x72"
+        href="{{ $icon != [] && @is_file_exists($icon['image_72x72_url']) ? static_asset($icon['image_72x72_url']) : static_asset('images/default/favicon/favicon-72x72.png') }}">
+    <link rel="apple-touch-icon" sizes="76x76"
+        href="{{ $icon != [] && @is_file_exists($icon['image_76x76_url']) ? static_asset($icon['image_76x76_url']) : static_asset('images/default/favicon/favicon-76x76.png') }}">
+    <link rel="apple-touch-icon" sizes="114x114"
+        href="{{ $icon != [] && @is_file_exists($icon['image_114x114_url']) ? static_asset($icon['image_114x114_url']) : static_asset('images/default/favicon/favicon-114x114.png') }}">
+    <link rel="apple-touch-icon" sizes="120x120"
+        href="{{ $icon != [] && @is_file_exists($icon['image_120x120_url']) ? static_asset($icon['image_120x120_url']) : static_asset('images/default/favicon/favicon-120x120.png') }}">
+    <link rel="apple-touch-icon" sizes="144x144"
+        href="{{ $icon != [] && @is_file_exists($icon['image_144x144_url']) ? static_asset($icon['image_144x144_url']) : static_asset('images/default/favicon/favicon-144x144.png') }}">
+    <link rel="apple-touch-icon" sizes="152x152"
+        href="{{ $icon != [] && @is_file_exists($icon['image_152x152_url']) ? static_asset($icon['image_152x152_url']) : static_asset('images/default/favicon/favicon-152x152.png') }}">
+    <link rel="apple-touch-icon" sizes="180x180"
+        href="{{ $icon != [] && @is_file_exists($icon['image_180x180_url']) ? static_asset($icon['image_180x180_url']) : static_asset('images/default/favicon/favicon-180x180.png') }}">
+    <link rel="icon" type="image/png" sizes="192x192"
+        href="{{ $icon != [] && @is_file_exists($icon['image_192x192_url']) ? static_asset($icon['image_192x192_url']) : static_asset('images/favicon-192x192.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32"
+        href="{{ $icon != [] && @is_file_exists($icon['image_32x32_url']) ? static_asset($icon['image_32x32_url']) : static_asset('images/default/favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="96x96"
+        href="{{ $icon != [] && @is_file_exists($icon['image_96x96_url']) ? static_asset($icon['image_96x96_url']) : static_asset('images/default/favicon/favicon-96x96.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16"
+        href="{{ $icon != [] && @is_file_exists($icon['image_16x16_url']) ? static_asset($icon['image_16x16_url']) : static_asset('images/default/favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ static_asset('images/default/favicon/manifest.json') }}">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage"
+        content="{{ $icon != [] && @is_file_exists($icon['image_144x144_url']) ? static_asset($icon['image_144x144_url']) : static_asset('images/default/favicon/favicon-144x144.png') }}">
     @else
-        <link rel="shortcut icon" href="{{ static_asset('images/default/favicon/favicon-96x96.png') }}">
+    <link rel="shortcut icon" href="{{ static_asset('images/default/favicon/favicon-96x96.png') }}">
     @endif
 
     <link rel="manifest" href="{{ static_asset('images/default/favicon/manifest.json')}}">
@@ -86,29 +86,48 @@
 
     @stack('css')
     @if(app()->getLocale() == 'bn')
-        <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
-        <style>
-            :root {
-                --body-fonts: 'SolaimanLipi', Arial, sans-serif !important;
-                --heading-font: 'SolaimanLipi', Arial, sans-serif !important;
-            }
+    <link href="https://fonts.maateen.me/solaiman-lipi/font.css" rel="stylesheet">
+    <style>
+        :root {
+            --body-fonts: 'SolaimanLipi', Arial, sans-serif !important;
+            --heading-font: 'SolaimanLipi', Arial, sans-serif !important;
+        }
 
-            /*html * ,.secondary-font, .heading-font {*/
-            /*    font-family: 'SolaimanLipi', Arial, sans-serif !important;*/
-            /*    !*font-weight: normal !important;*!*/
-            /*}*/
-        </style>
+        /*html * ,.secondary-font, .heading-font {*/
+        /*    font-family: 'SolaimanLipi', Arial, sans-serif !important;*/
+        /*    !*font-weight: normal !important;*!*/
+        /*}*/
+    </style>
     @else
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-            :root {
-                --body-fonts: 'jost', sans-serif !important;
-                --heading-font: 'jost', sans-serif !important;
-            }
-        </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --body-fonts: 'jost', sans-serif !important;
+            --heading-font: 'jost', sans-serif !important;
+        }
+    </style>
     @endif
+    <style>
+        /* Ensure all DataTables can scroll horizontally and text doesn't awkwardly squish */
+        table.dataTable td, table.dataTable th {
+            white-space: nowrap !important;
+        }
+        .dataTables_wrapper .table-responsive {
+            overflow-x: auto !important;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #e5e9f2;
+        }
+        .dataTables_wrapper .table {
+            margin-bottom: 0 !important;
+            border: none !important;
+        }
+        .dataTables_wrapper .table thead th,
+        .dataTables_wrapper .table thead tr {
+            border-top: none !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -132,7 +151,7 @@
     <script src="{{ static_asset('admin/js/jquery.dataTables.min.js') }}"></script>
     {{--
     <script src="{{ static_asset('admin/datatables-bs5/datatables-bootstrap5.js') }}"></script> --}}
-    <script src="{{ static_asset('admin/js/dataTables.responsive.min.js') }}"></script>
+    {{-- <script src="{{ static_asset('admin/js/dataTables.responsive.min.js') }}"></script> --}}
     <!--====== NiceScroll ======-->
     <script src="{{ static_asset('admin/js/jquery.nicescroll.min.js') }}"></script>
     <!--====== Summernote JS ======-->
@@ -150,45 +169,45 @@
     {!! Toastr::message() !!}
     <script src="{{ static_asset('admin/js/sweetalert211.min.js') }}"></script>
     @if (auth()->check() && auth()->user()->role_id > 1)
-        <script src="{{ static_asset('admin/js/OneSignalSDK.js') }}" defer></script>
+    <script src="{{ static_asset('admin/js/OneSignalSDK.js') }}" defer></script>
     @endif
     @stack('js')
     @if (session()->has('error'))
-        <script>
-            toastr.error("{{ session('error') }}")
-        </script>
+    <script>
+        toastr.error("{{ session('error') }}")
+    </script>
     @endif
     @if (session()->has('danger'))
-        <script>
-            toastr.error("{{ session('danger') }}")
-        </script>
+    <script>
+        toastr.error("{{ session('danger') }}")
+    </script>
     @endif
     @if (session()->has('success'))
-        <script>
-            toastr.success("{{ session('success') }}")
-        </script>
+    <script>
+        toastr.success("{{ session('success') }}")
+    </script>
     @endif
     @if ($errors->any())
-        <script>
-            @foreach ($errors->all() as $error)
+    <script>
+        @foreach ($errors->all() as $error)
                 toastr.error("{{ $error }}");
             @endforeach
-        </script>
+    </script>
     @endif
 
     @php
-        if (Sentinel::check()) {
-            $route = '';
-            $auth = Sentinel::getUser() ?? jwtUser();
-            ;
-            $notification_count = App\Models\NotificationUser::where('user_id', $auth->id)->where('is_read', 0)->count();
-        }
+    if (Sentinel::check()) {
+    $route = '';
+    $auth = Sentinel::getUser() ?? jwtUser();
+    ;
+    $notification_count = App\Models\NotificationUser::where('user_id', $auth->id)->where('is_read', 0)->count();
+    }
     @endphp
 
     @if (setting('is_pusher_notification_active') && Sentinel::check())
-        <script src="{{ static_asset('admin/js/pusher.min.js') }}"></script>
-        <script>
-            var routeUrl = "{{ $route }}";
+    <script src="{{ static_asset('admin/js/pusher.min.js') }}"></script>
+    <script>
+        var routeUrl = "{{ $route }}";
             let notificationCount = {{ $notification_count }};
             const pusher = new Pusher('{{ setting('pusher_app_key') }}', {
                 cluster: '{{ setting('pusher_app_cluster') }}',
@@ -218,7 +237,7 @@
                 $('.has_notifications').text(notificationCount);
                 $('.has_notifications').show();
             });
-        </script>
+    </script>
     @endif
     <script>
         $.each($('ul.sub-menu'), function (index, item) {
@@ -264,15 +283,32 @@
                     },
                     cache: true
                 }
-            }
         }
+    </script>
+    <script>
+        // Override global DataTables defaults for horizontal scroll instead of responsive collapse
+        $.extend(true, $.fn.dataTable.defaults, {
+            responsive: false,
+            initComplete: function() {
+                // 1. Prevent the outer container from scrolling the entire DataTables wrapper (which pushes pagination out of view)
+                var $wrapper = $(this).closest('.dataTables_wrapper');
+                if ($wrapper.parent().hasClass('table-responsive')) {
+                    $wrapper.parent().css('overflow-x', 'visible');
+                }
+                
+                // 2. Ensure the table itself is wrapped in a horizontally scrollable container
+                if ($wrapper.find('> .table-responsive').length === 0 && $wrapper.find('> .row > .col-sm-12 > .table-responsive').length === 0) {
+                    $(this).wrap('<div class="table-responsive" style="overflow-x: auto; width: 100%; margin-bottom: 1rem; border-bottom: 1px solid #e5e9f2;"></div>');
+                }
+            }
+        });
     </script>
     @stack('script')
     @isset($dataTable)
-        {{ $dataTable->scripts() }}
+    {{ $dataTable->scripts() }}
     @endisset
     @isset($datatable)
-        {{ $datatable->scripts() }}
+    {{ $datatable->scripts() }}
     @endisset
     <script>
         $(document).ready(function () {

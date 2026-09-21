@@ -2337,5 +2337,11 @@
     "rider_leaderboard": "Rider Leaderboard",
     "rider_name": "Rider Name",
     "unknown": "Unknown",
-    "delivery_time_set": "Delivery Time Set"
+    "delivery_time_set": "Delivery Time Set",
+    "return_otp_verification": "Return OTP Verification",
+    "verify_return_parcel": "Verify Return Parcel",
+    "merchant_must_provide_otp_to_confirm_return": "Merchant must provide the OTP to confirm return.",
+    "send_resend_otp": "Send / Resend OTP",
+    "enter_otp": "Enter OTP",
+    "verify_and_return": "Verify & Return"
 }

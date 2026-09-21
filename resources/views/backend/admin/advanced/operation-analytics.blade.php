@@ -203,7 +203,7 @@
                 ]
             },
             options: {
-                responsive: true,
+                responsive: false, scrollX: false,
                 maintainAspectRatio: false,
                 scales: {
                     y: {

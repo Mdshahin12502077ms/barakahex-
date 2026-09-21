@@ -79,7 +79,7 @@ class ParcelDataTable extends DataTable
             })
             //////////return item status/////////
             ->addColumn('return_item_status', function ($parcel) {
-                if($parcel->return_item_status){
+                if($parcel->return_item_status || $parcel->status == 'partially-delivered'){
                     return view('admin.parcel.column.return_item_status', compact('parcel'));
                 }else{
                     return '';

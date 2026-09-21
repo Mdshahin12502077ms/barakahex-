@@ -30,6 +30,48 @@
         </div>
     </div>
 </div>
+<!-- Return OTP Modal -->
+<div class="modal fade" id="returnOtpModal" tabindex="-1" aria-labelledby="returnOtpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="returnOtpModalLabel">{{ __('return_otp_verification') }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center mb-4">
+                    <i class="las la-shield-alt text-primary" style="font-size: 3rem;"></i>
+                    <h6 class="mt-2">{{ __('verify_return_parcel') }} <span id="modal-return-parcel-no" class="text-danger fw-bold"></span></h6>
+                    <p class="text-muted small">{{ __('merchant_must_provide_otp_to_confirm_return') }}</p>
+                </div>
+                
+                <div id="return-otp-expired-warning" class="alert alert-danger d-none" role="alert">
+                    <i class="las la-exclamation-circle"></i> {{ __('otp_expired_warning') }} <span id="return-otp-expired-time"></span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <form action="" method="POST" id="resendReturnOtpForm" class="d-inline">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-outline-primary" id="btnResendReturnOtp">
+                            <i class="las la-paper-plane"></i> {{ __('send_resend_otp') }}
+                        </button>
+                    </form>
+                    <span class="badge bg-warning text-dark" id="return-otp-attempts-badge" style="display:none;"></span>
+                </div>
+
+                <form action="" method="POST" id="verifyReturnOtpForm">
+                    @csrf
+                    <div class="form-group mb-3">
+                        <label for="return_otp" class="form-label fw-bold">{{ __('enter_otp') }} <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg text-center fw-bold" id="return_otp" name="otp" required placeholder="----" maxlength="4" style="letter-spacing: 10px; font-size: 1.5rem;">
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg w-100"><i class="las la-check-circle"></i> {{ __('verify_and_return') }}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @push('js')
@@ -56,6 +98,51 @@
                 form.submit();
             }
         });
+    });
+
+    $(document).on('click', '.return-otp-btn', function() {
+        var id = $(this).data('id');
+        var parcelNo = $(this).data('parcel-no');
+        var attempts = $(this).data('otp-attempts');
+        var expired = $(this).data('otp-expired');
+        var expiredAt = $(this).data('otp-expired-at');
+        
+        $('#modal-return-parcel-no').text(parcelNo);
+        
+        // Update form actions
+        var resendUrl = "{{ url('delivery-man/return-task-resend-otp') }}/" + id;
+        var verifyUrl = "{{ url('delivery-man/return-task-verify-otp') }}/" + id;
+        
+        $('#resendReturnOtpForm').attr('action', resendUrl);
+        $('#verifyReturnOtpForm').attr('action', verifyUrl);
+        $('#return_otp').val('');
+        
+        // Handle expiration warning
+        if(expired == '1'){
+            $('#return-otp-expired-warning').removeClass('d-none');
+            $('#return-otp-expired-time').text(expiredAt);
+        } else {
+            $('#return-otp-expired-warning').addClass('d-none');
+        }
+
+        // Handle attempts badge
+        if(attempts > 0){
+            var remaining = 3 - parseInt(attempts);
+            $('#return-otp-attempts-badge').text("Wrong Attempts: " + attempts + " (Remaining: " + remaining + ")").show();
+            if(remaining <= 0) {
+                $('#return-otp-attempts-badge').removeClass('bg-warning').addClass('bg-danger text-white');
+                $('#verifyReturnOtpForm button[type="submit"]').prop('disabled', true);
+            } else {
+                $('#return-otp-attempts-badge').removeClass('bg-danger text-white').addClass('bg-warning text-dark');
+                $('#verifyReturnOtpForm button[type="submit"]').prop('disabled', false);
+            }
+        } else {
+            $('#return-otp-attempts-badge').hide();
+            $('#verifyReturnOtpForm button[type="submit"]').prop('disabled', false);
+        }
+
+        var myModal = new bootstrap.Modal(document.getElementById('returnOtpModal'));
+        myModal.show();
     });
 </script>
 @endpush

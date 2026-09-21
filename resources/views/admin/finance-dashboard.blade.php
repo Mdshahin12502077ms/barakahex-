@@ -680,7 +680,7 @@
                 };
 
                 var options = {
-                    responsive: true,
+                    responsive: false, scrollX: false,
                     maintainAspectRatio: false,
                     scales: {
                         y: {
@@ -792,7 +792,7 @@
                 };
 
                 var options = {
-                    responsive: true,
+                    responsive: false, scrollX: false,
                     maintainAspectRatio: false,
                     scales: {
                         y: {

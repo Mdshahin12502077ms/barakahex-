@@ -376,6 +376,13 @@
     $(document).on('change', '.return_item_status', function () {
         var parcel_id = $(this).data('id');
         var return_item_status = $(this).val();
+        
+        if (return_item_status === 'return_assigned_to_merchant') {
+            $('#return-merchant-parcel-id').val(parcel_id);
+            $('#return-assign-tomerchant').modal('show');
+            return;
+        }
+
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')

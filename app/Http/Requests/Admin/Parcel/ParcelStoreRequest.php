@@ -37,7 +37,7 @@ class ParcelStoreRequest extends FormRequest
      */
     public function rules()
     {
-        //dd($this->all());
+        
         return [
             'merchant' => 'required',
             'customer_name' => 'required',
