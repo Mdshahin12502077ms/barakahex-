@@ -36,6 +36,15 @@
                                             <li><a href="{{ @$value['url'] == 'javascript:void(0)' ? '#' : @$value['url'] }}">{{ @$value['label'] }}</a></li>
                                         @endforeach
                                     @endif
+                                    @php
+                                        $apiDoc = setting('api_documentation');
+                                        if (empty($apiDoc) && file_exists(public_path('Shalbon_Courier_API_Documentation.pdf'))) {
+                                            $apiDoc = 'Shalbon_Courier_API_Documentation.pdf';
+                                        }
+                                    @endphp
+                                    @if($apiDoc)
+                                        <li><a href="{{ asset($apiDoc) }}" target="_blank">{{ __('API Documentation') }}</a></li>
+                                    @endif
                                 </ul>
                             </div>
                         @endif
@@ -99,3 +108,44 @@
     </div>
 </footer>
 <!-- Footer Section End -->
+
+<!-- Mobile Bottom Navigation App-like View -->
+<div class="mobile-bottom-nav d-block d-md-none">
+    <div class="nav-items">
+        <a href="{{ url('/tracking') }}" class="nav-item {{ Request::is('tracking') ? 'active' : '' }}">
+            <i class="fas fa-map-marker-alt"></i>
+            <span>{{ __('Track') }}</span>
+        </a>
+        <a href="{{ route('home') }}" class="nav-item {{ request()->routeIs('home') ? 'active' : '' }}">
+            <i class="fas fa-home"></i>
+            <span>{{ __('Home') }}</span>
+        </a>
+        <a href="{{ url('/#pricing') }}" class="nav-item">
+            <i class="fas fa-calculator"></i>
+            <span>{{ __('Cost') }}</span>
+        </a>
+        @if(\Sentinel::check())
+            @if(\Sentinel::getUser()->user_type == 'staff')
+                <a href="{{ route('staff.profile') }}" class="nav-item {{ Request::is('*profile*') ? 'active' : '' }}">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ __('Profile') }}</span>
+                </a>
+            @elseif(\Sentinel::getUser()->user_type == 'merchant')
+                <a href="{{ route('merchant.profile') }}" class="nav-item {{ Request::is('*profile*') ? 'active' : '' }}">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ __('Profile') }}</span>
+                </a>
+            @else
+                <a href="{{ route('merchant.staff.profile') }}" class="nav-item {{ Request::is('*profile*') ? 'active' : '' }}">
+                    <i class="fas fa-user-circle"></i>
+                    <span>{{ __('Profile') }}</span>
+                </a>
+            @endif
+        @else
+            <a href="{{ route('merchant.dashboard') }}" class="nav-item {{ Request::is('merchant/dashboard') ? 'active' : '' }}">
+                <i class="fas fa-sign-in-alt"></i>
+                <span>{{ __('Login') }}</span>
+            </a>
+        @endif
+    </div>
+</div>

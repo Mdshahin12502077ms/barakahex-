@@ -91,6 +91,16 @@
         </div>
     </div>
 </section>
+@push('style')
+<style>
+    .pricing__form .flex__item .input__group {
+        min-width: 0;
+    }
+    .pricing__form .select2-container {
+        width: 100% !important;
+    }
+</style>
+@endpush
 @push('script')
 <script>
     $(document).ready(function() {

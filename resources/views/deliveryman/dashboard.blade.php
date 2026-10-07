@@ -212,9 +212,9 @@
                                                 <span class="text-truncate d-inline-block" style="max-width: 160px;" title="{{ $parcel->customer_address }}">
                                                     {{ $parcel->customer_address }}
                                                 </span>
-                                                <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($parcel->customer_address) }}" 
-                                                   target="_blank" 
-                                                   class="text-danger" 
+                                                <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($parcel->customer_address) }}"
+                                                   target="_blank"
+                                                   class="text-danger"
                                                    title="{{ __('open_in_google_maps') }}">
                                                     <i class="las la-map-marked-alt font-18"></i>
                                                 </a>
@@ -251,6 +251,8 @@
                             </tbody>
                         </table>
                     </div>
+
+                   
                 </div>
             </div>
         </div>

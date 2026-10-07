@@ -2,14 +2,14 @@
 @import "0-tools/tools-dir";
 
 // Include functions & variables
-@import "../../node_modules/bootstrap/scss/functions";
-@import "../../node_modules/bootstrap/scss/variables";
+@import "../../../node_modules/bootstrap/scss/functions";
+@import "../../../node_modules/bootstrap/scss/variables";
 
 // Map amends on Bootstrap SCSS Map
 @import "0-tools/map-amends";
 
 // Import Bootstrap
-@import "../../node_modules/bootstrap/scss/bootstrap.scss";
+@import "../../../node_modules/bootstrap/scss/bootstrap.scss";
 
 // Base & Layout
 @import "1-base/base-dir";

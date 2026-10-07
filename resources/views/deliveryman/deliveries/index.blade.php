@@ -88,33 +88,33 @@
             <div class="row g-3 align-items-center">
                 <div class="col-lg-6 col-md-6">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control" 
-                               placeholder="{{ __('search_by_parcel_customer_or_phone') }}" 
+                        <input type="text" name="search" class="form-control"
+                               placeholder="{{ __('search_by_parcel_customer_or_phone') }}"
                                value="{{ request('search') }}">
                         <button class="btn sg-btn-primary" type="submit">
                             <i class="las la-search"></i> {{ __('search') }}
                         </button>
                     </div>
                 </div>
-                <div class="col-lg-6 col-md-6">
-                    <div class="d-flex justify-content-md-end gap-2 flex-wrap">
-                        <a href="{{ route('deliveryman.deliveries') }}" 
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="d-flex justify-content-md-end gap-1 flex-wrap">
+                        <a href="{{ route('deliveryman.deliveries') }}"
                            class="btn btn-sm {{ !request('status') || request('status') == 'all' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('all') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 'delivery-assigned']) }}" 
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 'delivery-assigned']) }}"
                            class="btn btn-sm {{ request('status') == 'delivery-assigned' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('processing') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 'delivered']) }}" 
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 'delivered']) }}"
                            class="btn btn-sm {{ request('status') == 'delivered' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('delivered') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 're-schedule-delivery']) }}" 
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 're-schedule-delivery']) }}"
                            class="btn btn-sm {{ request('status') == 're-schedule-delivery' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('rescheduled') }}
                         </a>
-                        <a href="{{ route('deliveryman.deliveries', ['status' => 'cancel']) }}" 
+                        <a href="{{ route('deliveryman.deliveries', ['status' => 'cancel']) }}"
                            class="btn btn-sm {{ request('status') == 'cancel' ? 'sg-btn-primary' : 'sg-btn-outline-primary' }}">
                             {{ __('cancelled') }}
                         </a>
@@ -171,9 +171,9 @@
                                         {{ $parcel->customer_address ?: 'N/A' }}
                                     </span>
                                     @if($parcel->customer_address)
-                                        <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($parcel->customer_address) }}" 
-                                           target="_blank" 
-                                           class="text-danger" 
+                                        <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($parcel->customer_address) }}"
+                                           target="_blank"
+                                           class="text-danger"
                                            title="{{ __('open_in_google_maps') }}">
                                             <i class="las la-map-marked-alt font-18"></i>
                                         </a>
@@ -227,24 +227,24 @@
                                         </form>
 
                                         {{-- Partial Delivery Modal Button --}}
-                                        <button type="button" class="btn btn-sm btn-info text-white" 
-                                                data-bs-toggle="modal" 
+                                        <button type="button" class="btn btn-sm btn-info text-white"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#partialDeliveryModal{{ $parcel->id }}"
                                                 title="{{ __('partially-delivered') }}">
                                             <i class="las la-boxes"></i> {{ __('partially-delivered') }}
                                         </button>
 
                                         {{-- Reschedule Modal Button --}}
-                                        <button type="button" class="btn btn-sm btn-outline-warning" 
-                                                data-bs-toggle="modal" 
+                                        <button type="button" class="btn btn-sm btn-outline-warning"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#rescheduleDeliveryModal{{ $parcel->id }}"
                                                 title="{{ __('reschedule') }}">
                                             <i class="las la-calendar-plus"></i>
                                         </button>
 
                                         {{-- Cancel Modal Button --}}
-                                        <button type="button" class="btn btn-sm btn-outline-danger" 
-                                                data-bs-toggle="modal" 
+                                        <button type="button" class="btn btn-sm btn-outline-danger"
+                                                data-bs-toggle="modal"
                                                 data-bs-target="#cancelDeliveryModal{{ $parcel->id }}"
                                                 title="{{ __('cancel') }}">
                                             <i class="las la-times"></i>

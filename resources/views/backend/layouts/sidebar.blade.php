@@ -6,9 +6,9 @@
         <span class="sidebar-toggler">
             <i class="las la-times"></i>
         </span>
-        <div class="dashboard-logo d-flex justify-content-center align-items-center py-20">
+        <div class="dashboard-logo d-flex justify-content-center bg-white align-items-center py-20">
             <a class="logo" href="{{ route('dashboard') }}">
-                <img style="width: 100% !important;max-height: 38px;"
+                <img style="width: 100% !important;max-height: 40px;"
                     src="{{ setting('admin_logo') && @is_file_exists(setting('admin_logo')['original_image']) ? get_media(setting('admin_logo')['original_image']) : get_media('images/default/logo/logo_light.png') }}"
                     alt="Logo">
             </a>
@@ -35,7 +35,7 @@
                         </li>
                     @endif
 
-                   
+
                     @if (hasPermission('bag_read'))
                         <li class="{{ menuActivation(['admin/bag', 'admin/bag/*'], 'active') }}">
                             <a href="{{ route('bag.index') }}">
@@ -46,7 +46,7 @@
                     @endif
 
                     @if (hasPermission('support_ticket_read'))
-                        <li class="{{ menuActivation(['admin/support-tickets', 'admin/support-tickets/*'], 'active') }}">
+                        <li class="{{ menuActivation(['admin/support-ticket', 'admin/support-ticket/*'], 'active') }}">
                             <a href="{{ Route::has('admin.support-tickets.index') ? route('admin.support-tickets.index') : '#' }}">
                                 <i class="las la-headset"></i>
                                 <span>{{ __('support_tickets') }}</span>
@@ -183,7 +183,7 @@
                                 @endif
                             </ul>
                         </li>
-                   @endif  
+                   @endif
 
 
 
@@ -464,7 +464,7 @@
                                 @endif
 
 
-               
+
                             @if (hasPermission('panel_setting'))
                                 <li><a class="{{ menuActivation('admin/setting/panel-setting', 'active') }}"
                                         href="{{ route('admin.panel-setting') }}">{{ __('admin_panel_setting') }}</a>
@@ -622,7 +622,7 @@
 
                 <!-- #region -->
 
-                
+
 
 
 

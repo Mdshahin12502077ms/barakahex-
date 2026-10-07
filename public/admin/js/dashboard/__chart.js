@@ -4,7 +4,7 @@ const chartItem1 = document.getElementById('statisticsChart1');
 if (chartItem1) {
     var context = chartItem1.getContext('2d');
     var gradientBGColor = context.createLinearGradient(0, 0, 0, 200);
-    gradientBGColor.addColorStop(0.1, '#ff204e4d');
+    gradientBGColor.addColorStop(0.1, '#25AB7C4d');
     gradientBGColor.addColorStop(0.4, '#ffffff30');
     // gradientBGColor.addColorStop(0.1, '#24D6AC60');
     // gradientBGColor.addColorStop(0.4, '#ffffff30');
@@ -16,7 +16,7 @@ if (chartItem1) {
             datasets: [{
                 label: 'Total COD',
                 backgroundColor: gradientBGColor,
-                borderColor: '#FF204E',
+                borderColor: '#25AB7C',
                 // borderColor: '#24D6A5',
                 data: charts.total_cod,
                 fill: true
@@ -388,7 +388,7 @@ if (chartItem7) {
                     label: 'Total Delivery Man',
                     backgroundColor: 'transparent',
                     // borderColor: '#24D6A5',
-                    borderColor: '#FF204E',
+                    borderColor: '#25AB7C',
                     data: charts.delivery_man_list,
                     fill: false
                 }

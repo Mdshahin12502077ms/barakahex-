@@ -33,6 +33,7 @@ class UserSeeder extends Seeder
         $admin = User::create([
             'first_name'        => 'Admin',
             'last_name'         => '',
+            
             'dashboard'         => 'admin',
             'email'             => 'admin@admin.com',
             'permissions'       => $roleSeeder->adminPermissions(),

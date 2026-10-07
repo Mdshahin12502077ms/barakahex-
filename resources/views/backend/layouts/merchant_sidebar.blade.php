@@ -6,7 +6,7 @@
         <span class="sidebar-toggler">
             <i class="las la-times"></i>
         </span>
-        <div class="dashboard-logo d-flex justify-content-center align-items-center ">
+        <div class="dashboard-logo d-flex justify-content-center bg-white align-items-center ">
             <a class="logo" href="{{ route('merchant.dashboard') }}">
                 <img src="{{ setting('admin_logo') && @is_file_exists(setting('admin_logo')['original_image']) ? get_media(setting('admin_logo')['original_image']) : get_media('images/default/logo/logo_light.png') }}"
                     alt="Logo">
@@ -135,7 +135,7 @@
                                     </a>
                             </li>
 
-    
+
 
 
                     <li class="{{ menuActivation(['merchant/company', 'merchant/account/*'], 'active') }}">

@@ -16,7 +16,7 @@
         }
 
         :root {
-            --primary-color: #FF204E;
+            --primary-color: #25AB7C;
             --eye-pupil-color: #00224D;
             --bg-color: #fff;
             --text-color: #000;

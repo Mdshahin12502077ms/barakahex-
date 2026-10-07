@@ -12,7 +12,7 @@
                                 <i class="las la-file-code text-primary me-2"></i>{{ __('API Documentation') }}
                             </h4>
                             <p class="text-muted font-13 mb-0">
-                                {{ __('Barakahex Courier API integration guide & specifications for merchants.') }}
+                                {{ __('Shalbon Courier API integration guide & specifications for merchants.') }}
                             </p>
                         </div>
                         @if (!empty($apiDocumentation))

@@ -527,7 +527,7 @@
                         data: charts.new_parcel
                     }, {
                         label: 'Processing Parcel',
-                        backgroundColor: '#FF204E',
+                        backgroundColor: '#25AB7C',
                         data: charts.processing_parcel,
                     }, {
                         label: 'Delivered Parcel',

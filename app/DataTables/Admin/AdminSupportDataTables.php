@@ -142,7 +142,14 @@ class AdminSupportDataTables extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax([
+                'data' => 'function(d) {
+                    d.status = $("#filter_status").val();
+                    d.priority = $("#filter_priority").val();
+                    d.ticket_type = $("#filter_ticket_type").val();
+                    d.created_at = $("#filter_date").val();
+                }'
+            ])
             ->orderBy(1, 'desc')
             ->selectStyleSingle()
             ->setTableAttribute('style', 'width:100%')

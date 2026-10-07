@@ -13,11 +13,11 @@
   /*--theme-clr-deep-2: #144d3a;  /* Even darker shade, almost blackish green */
 
   
-  --theme-clr: #FF204E;         /* Primary theme color */
-  --theme-clr-rgb: 255 32 78;  /* RGB equivalent of the primary theme color */
-  --theme-clr-light-1: #a6dccb; /* Lighter shade of the primary green color */
-  --theme-clr-deep-1: #A0153E;  /* Darker shade of the primary green color */
-  --theme-clr-deep-2: #5D0E41;  /* Even darker shade, almost blackish green */
+  --theme-clr: #006837;         /* Primary theme color */
+  --theme-clr-rgb: 0 104 55;  /* RGB equivalent of the primary theme color */
+  --theme-clr-light-1: #33865f; /* Lighter shade of the primary green color */
+  --theme-clr-deep-1: #00532c;  /* Darker shade of the primary green color */
+  --theme-clr-deep-2: #003e21;  /* Even darker shade, almost blackish green */
 
 }
 

@@ -173,8 +173,12 @@
                                             <p>{{$parcel->parcel_no}}</p>
                                         </div>
                                         <div class="printCard__box">
+                                          @php
+                                            $type = ucfirst(strtolower(str_replace('_', ' ', $parcel->parcel_type)));
+                                          @endphp
+
                                             <h4>{{__('service')}}:
-                                                {{strtoupper($parcel->parcel_type == "outside_city" ? "sub_urban_area" : $parcel->parcel_type)}}
+                                                {{strtoupper($parcel->parcel_type == "outside_city" ? "sub_urban_area" : $type)}}
                                             </h4>
                                             </h4>
                                         </div>
@@ -246,12 +250,12 @@
     <script src="{{ static_asset('admin/js/jquery.min.js') }}"></script>
     <!--====== Bootstrap & Popper JS ======-->
     <script src="{{ static_asset('admin/js/bootstrap.bundle.min.js') }}"></script>
-    {{--
+
     <script type="text/javascript">
         $(document).ready(function () {
             window.print();
         });
-    </script> --}}
+    </script>
 </body>
 
 </html>

@@ -12655,17 +12655,17 @@ textarea.form-control-lg {
 :root {
   --sg-light: #eeeeee;
   --sg-dark: #111120;
-  --sg-primary: #FF204E;
-  --sg-primary-rgb: 255, 32, 78;
+  --sg-primary: #006837;
+  --sg-primary-rgb: 0, 104, 55;
   --sg-secondary: #434343;
   --sg-link-hover-color: #000000;
-  --sg-btn-hover-color: #FF204E;
-  --sg-btn-hover-border-color: #FF204E;
+  --sg-btn-hover-color: #006837;
+  --sg-btn-hover-border-color: #006837;
   --sg-table-border-color: #d7dde9;
   --sg-body-bg-color: #ffffff;
   --sg-table-header-bg-color: #bababa0d;
-  /* --sg-table-header-bg-color: rgba(255, 32, 78, 0.05); */
-  --sg-sidebar-menu-active: #FF204E;
+  /* --sg-table-header-bg-color: rgba(0, 104, 55, 0.05); */
+  --sg-sidebar-menu-active: #006837;
 }
 /* :root {
   --sg-light: #eeeeee;
@@ -19235,8 +19235,8 @@ input.instructor-search-field.choices__input--cloned {
 }
 
 .action__btn span.btn:hover {
-  border-color: #FF204E !important;
-  color: #FF204E;
+  border-color: #006837 !important;
+  color: #006837;
 }
 
 

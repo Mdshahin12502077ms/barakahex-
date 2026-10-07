@@ -148,7 +148,28 @@
                                         placeholder="{{ __('total_quantity') }}">
                                 </div>
 
-                                <!-- Row 4: District & Thana -->
+                                <!-- Row 4: Customer Address -->
+                                <div class="col-12 mb-3">
+                                    <label class="form-label" for="customer_address">{{ __('customer') . ' ' .
+                                        __('address') }} <span class="text-danger">*</span></label>
+                                    <textarea class="form-control @error('customer_address') is-invalid @enderror"
+                                        id="customer_address" rows="3"
+                                        placeholder="{{ __('recipient') . ' ' . __('address') }}"
+                                        name="customer_address">{{ old('customer_address') != '' ? old('customer_address') : @$parcel->customer_address }}</textarea>
+                                    @error('customer_address')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <div id="address_auto_detect_badge"
+                                        class="badge bg-soft-success text-success mt-2 p-1 px-2 d-none"
+                                        style="font-size: 13px; border: 1px solid #28a745; border-radius: 4px; display: inline-block;">
+                                        <i class="las la-magic me-1"></i> <span id="address_auto_detect_text"></span>
+                                    </div>
+                                    <div id="address_error_msg" class="invalid-feedback d-none">
+                                        Please enter a valid address containing district and thana.
+                                    </div>
+                                </div>
+
+                                <!-- Row 4.1: District & Thana -->
                                 <div class="col-6 mb-3">
                                     <label class="form-label" for="city_to_thana">{{ __('district') }} / District <span
                                             class="text-danger">*</span></label>
@@ -259,28 +280,8 @@
                                     </select>
                                 </div>
 
-                                <!-- Row 7: Customer Address & Note (Both Textareas with exact same rows="3" height!) -->
-                                <div class="col-6 mb-3">
-                                    <label class="form-label" for="customer_address">{{ __('customer') . ' ' .
-                                        __('address') }} <span class="text-danger">*</span></label>
-                                    <textarea class="form-control @error('customer_address') is-invalid @enderror"
-                                        id="customer_address" rows="3"
-                                        placeholder="{{ __('recipient') . ' ' . __('address') }}"
-                                        name="customer_address">{{ old('customer_address') != '' ? old('customer_address') : @$parcel->customer_address }}</textarea>
-                                    @error('customer_address')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                    <div id="address_auto_detect_badge"
-                                        class="badge bg-soft-success text-success mt-2 p-1 px-2 d-none"
-                                        style="font-size: 13px; border: 1px solid #28a745; border-radius: 4px; display: inline-block;">
-                                        <i class="las la-magic me-1"></i> <span id="address_auto_detect_text"></span>
-                                    </div>
-                                    <div id="address_error_msg" class="invalid-feedback d-none">
-                                        Please enter a valid address containing district and thana.
-                                    </div>
-                                </div>
 
-                                <div class="col-6 mb-3">
+                                <!-- Row 7: Note -->
                                     <label class="form-label" for="note">{{ __('note') }}</label>
                                     <textarea class="form-control" id="note" rows="3"
                                         placeholder="{{ __('note') . ' (' . __('optional') . ')' }}"

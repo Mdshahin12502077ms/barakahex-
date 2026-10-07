@@ -35,7 +35,7 @@ header.header {
 			background: $primary-300;
 
 		}
-		
+
 		&:last-of-type {
 			&::after {
 				display: none;
@@ -81,7 +81,7 @@ header.header {
 	transition: $transition;
 
 	@include respond (tabport) {
-		height: 56px;
+		height: 66px;
 	}
 
 	.nav {
@@ -95,7 +95,7 @@ header.header {
 		&__wrapper {
 			@include flexbox($a: center, $jc: space-between);
 			height: 100%;
-	
+
 			.header {
 				&__logo {
 					img {
@@ -103,10 +103,15 @@ header.header {
 						height: auto;
 						display: block;
 						max-width: 120px;
-	
+	                    padding:0 0 10px 0;
 						@include respond(phone-xm) {
 							// max-width: 140px;
 						}
+					}
+					@include respond(tabland) {
+						position: absolute;
+						left: 50%;
+						transform: translateX(-50%);
 					}
 				}
 				&__menu {
@@ -119,12 +124,11 @@ header.header {
 					@include respond(tabland) {
 						position: fixed;
 						width: 100%;
-						// height: 100vh;
-						overflow: auto;
-						padding: 100px 0;
+						height: calc(100vh - 127px);
+						overflow-y: auto;
+						padding: 20px 0 100px 0;
 						background: $white;
 						left: 0;
-						// top: 0;
 						top: 127px;
 						z-index: -1;
 						transform-origin: top;
@@ -134,12 +138,13 @@ header.header {
 					}
 
 					@include respond (tabport) {
-						top: 55px;
+						top: 66px;
+						height: calc(100vh - 66px);
 					}
 					.main__menu {
 						@include flexbox($a: center, $jc: inherit);
 						gap: 48px;
-	
+
 						@include respond (medium) {
 							gap: 22px;
 						}
@@ -150,7 +155,7 @@ header.header {
 						li {
 							position: relative;
 							list-style: none;
-	
+
 							a {
 								font-family: $default;
 								font-size: 16px;
@@ -167,7 +172,7 @@ header.header {
 								@include respond (tabland) {
 									line-height: 22px;
 								}
-	
+
 								&:hover,
 								&.active {
 									color: $primary-500;
@@ -177,7 +182,7 @@ header.header {
 							&.active {
 								a {
 									color: $primary-500;
-	
+
 									&::after {
 										color: $primary-500;
 									}
@@ -195,17 +200,17 @@ header.header {
 			@include flexbox($a: center, $jc: inherit);
 			flex-wrap: nowrap;
 			gap: 15px;
-	
+
 			.meta__list {
 				@include flexbox($a: center, $jc: inherit);
 				gap: 20px;
 				list-style: none;
-	
+
 				@include respond(tabland) {
 					display: none;
 				}
 			}
-	
+
 		}
 	}
 }
@@ -239,19 +244,64 @@ header.header {
 	background-color: transparent;
 	border: none;
 	display: block;
-	width: 100px;
 	cursor: pointer;
+	position: relative;
 
-	&:focus {
-		box-shadow: none;
-		border-color: $primary-500;
-	}
-	&::placeholder {
-		color: $content;
+	.selected {
 		text-transform: capitalize;
+        display: flex;
+        align-items: center;
+        &::after {
+            content: "";
+            border: solid $heading;
+            border-width: 0 2px 2px 0;
+            display: inline-block;
+            padding: 3px;
+            transform: rotate(45deg);
+            margin-left: 8px;
+            margin-bottom: 2px;
+        }
 	}
-	&:hover {
-		border-color: $primary-500;
+
+	.list {
+		position: absolute;
+		top: 100%;
+		left: -10px;
+		min-width: 120px;
+		background: $white;
+		border: 1px solid $border;
+		border-radius: 5px;
+		box-shadow: 0 5px 10px rgba(0,0,0,0.05);
+		z-index: 99;
+		margin-top: 10px;
+		opacity: 0;
+		visibility: hidden;
+		transition: $transition;
+		transform: translateY(10px);
+		padding: 5px 0;
+
+		&.active {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		li {
+			a {
+				display: block;
+				padding: 8px 15px;
+				color: $heading;
+				font-size: 15px;
+				font-weight: $medium;
+				text-transform: capitalize;
+				transition: $transition;
+
+				&:hover {
+					color: $primary-500;
+					background: $primary-50;
+				}
+			}
+		}
 	}
 }
 

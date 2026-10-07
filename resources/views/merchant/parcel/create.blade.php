@@ -138,7 +138,11 @@
                                          
 
 
-                                    <div class="col-6 mb-3">
+                                </div>
+
+                                <!-- Row 3.5: Customer Address -->
+                                <div class="row">
+                                    <div class="col-12 mb-3">
                                         <label class="form-label" for="customer_address">{{ __('customer') . ' ' . __('address') }} <span class="text-danger">*</span></label>
                                         <textarea class="form-control @error('customer_address') is-invalid @enderror"
                                             id="customer_address" rows="3" placeholder="{{ __('recipient') . ' ' . __('address') }}"

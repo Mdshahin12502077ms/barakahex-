@@ -149,7 +149,7 @@
     
         $('#filterBTN').on('click', function (e) {
             e.preventDefault();
-            $('#filterSection').toggleClass('d-none');
+            $('#filterSection').toggleClass('show');
         });
 
      

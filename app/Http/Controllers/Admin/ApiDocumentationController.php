@@ -9,8 +9,8 @@ class ApiDocumentationController extends Controller
 {
     public function apiDocumentation(){
         $apiDocumentation = setting('api_documentation');
-        if (empty($apiDocumentation) && file_exists(public_path('Barakahex_Courier_API_Documentation.pdf'))) {
-            $apiDocumentation = 'Barakahex_Courier_API_Documentation.pdf';
+        if (empty($apiDocumentation) && file_exists(public_path('Shalbon_Courier_API_Documentation.pdf'))) {
+            $apiDocumentation = 'Shalbon_Courier_API_Documentation.pdf';
         }
         return view('merchant.api_documentation', compact('apiDocumentation'));
     }

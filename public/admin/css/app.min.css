@@ -152,15 +152,15 @@ table.result-table {
 :root {
     --bs-light: #eeeeee;
     --bs-dark: #111120;
-    --bs-primary: #25ab7c;
+    --bs-primary: #006837;
     --bs-secondary: #434343;
     --bs-link-hover-color: #000000;
-    --bs-btn-hover-color: #25ab7c;
-    --bs-btn-hover-border-color: #25ab7c;
+    --bs-btn-hover-color: #006837;
+    --bs-btn-hover-border-color: #006837;
     --bs-table-border-color: #d7dde9;
     --bs-body-bg-color: #f5fffb;
     --bs-table-header-bg-color: #e1faf0;
-    --bs-sidebar-menu-active: #25ab7c;
+    --bs-sidebar-menu-active: #006837;
     --bs-gray-100: #f8f9fa;
     --bs-gray-200: #e9ecef;
     --bs-gray-300: #dee2e6;
@@ -224,15 +224,15 @@ table.result-table {
     --bs-highlight-bg: #fff3cd;
     --sg-light: #eeeeee;
     --sg-dark: #111120;
-    --sg-primary: #25ab7c;
+    --sg-primary: #006837;
     --sg-secondary: #434343;
     --sg-link-hover-color: #000000;
-    --sg-btn-hover-color: #25ab7c;
-    --sg-btn-hover-border-color: #25ab7c;
+    --sg-btn-hover-color: #006837;
+    --sg-btn-hover-border-color: #006837;
     --sg-table-border-color: #d7dde9;
     --sg-body-bg-color: #f5fffb;
     --sg-table-header-bg-color: #e1faf0;
-    --sg-sidebar-menu-active: #25ab7c;
+    --sg-sidebar-menu-active: #006837;
 }
 @media (prefers-reduced-motion: no-preference) {
     :root {

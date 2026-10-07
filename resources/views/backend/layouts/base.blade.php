@@ -335,7 +335,7 @@
                 if ($wrapper.parent().hasClass('table-responsive')) {
                     $wrapper.parent().css('overflow-x', 'visible');
                 }
-                
+
                 // 2. Ensure the table itself is wrapped in a horizontally scrollable container
                 if ($wrapper.find('> .table-responsive').length === 0 && $wrapper.find('> .row > .col-sm-12 > .table-responsive').length === 0) {
                     $(this).wrap('<div class="table-responsive" style="overflow-x: auto; width: 100%; margin-bottom: 1rem; border-bottom: 1px solid #e5e9f2;"></div>');
