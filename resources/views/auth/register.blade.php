@@ -36,7 +36,7 @@ body, html {
     overflow: hidden;
 }
 
-.brand-logo { margin-bottom: 40px; display: flex; justify-content: center; width: 100%; }
+.brand-logo { margin-bottom: 41px; display: flex; justify-content: center; width: 100%; }
 .brand-logo a { display: inline-block; }
 .brand-logo img { height: 60px; filter: brightness(0) invert(1);  margin: 0 auto; } /* Force logo to white */
 
