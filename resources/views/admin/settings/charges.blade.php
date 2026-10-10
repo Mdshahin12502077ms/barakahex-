@@ -134,8 +134,7 @@
                                             @foreach ($charges as $charge)
                                             <tr>
                                                 <td>
-                                                    <span class="d-flex justify-content-center">{{ $charge->weight }}</span>
-                                                    <input type="hidden" value="{{ $charge->weight }}" name="weights[]">
+                                                    <input type="number" step="0.01" min="0" class="form-control text-center weight" value="{{ $charge->weight }}" name="weights[]" required>
                                                     <input type="hidden" value="{{ $charge->id }}" name="cod_ids[]">
                                                 </td>
                                                 <td>
@@ -204,7 +203,6 @@
                             var newRow = $(data.view);
                             $('#charge').append(newRow);
                             var last = last_weight++;
-                            newRow.find('#weight').text(last);
                             newRow.find('.weight').val(last);
                         },
                         error: function (xhr, status, error) {

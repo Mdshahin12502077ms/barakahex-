@@ -71,6 +71,9 @@
                             </div>
                         </div>
                     </div>
+                     <!-- #region -->
+
+                     @if(\Sentinel::getUser()->merchant->is_personal == 0)
                     <div class="col-xxl-4 col-xl-4 col-md-6">
                         <div class="statistics-card bg-white redious-border mb-4 p-20 p-sm-30">
                             <div class="analytics clr-3">
@@ -86,6 +89,8 @@
                             </div>
                         </div>
                     </div>
+
+
                     <div class="col-xxl-4 col-xl-4 col-md-6">
                         <div class="statistics-card bg-white redious-border mb-4 p-20 p-sm-30">
                             <div class="analytics clr-1">
@@ -103,6 +108,8 @@
                             </div>
                         </div>
                     </div>
+
+                      @endif
                     <div class="col-xxl-4 col-xl-4 col-md-6">
                         <div class="statistics-card bg-white redious-border mb-4 p-20 p-sm-30">
                             <div class="analytics clr-4">

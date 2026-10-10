@@ -1812,7 +1812,7 @@ header.header {
 }
 @media screen and (max-width: 575px) {
   .banner__section {
-    padding: 120px 0 50px !important;
+    padding: 100px 0 0px !important;
     background-color: #006837;
   }
   .banner__section::before {
@@ -2032,36 +2032,36 @@ header.header {
   line-height: 1.2;
 }
 .mobile-login-card {
-  /* Merchant Card */
+  /* Clean & Standard Modern Corporate Theme */
 }
-.mobile-login-card.card-merchant {
-  background-color: #ffffff;
+.mobile-login-card.card-merchant, .mobile-login-card.card-rider {
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+}
+.mobile-login-card.card-merchant .card-title-text, .mobile-login-card.card-rider .card-title-text {
+  color: #111827;
+  text-shadow: none;
+}
+.mobile-login-card.card-merchant .card-subtitle-text, .mobile-login-card.card-rider .card-subtitle-text {
+  color: #6b7280;
+}
+.mobile-login-card.card-merchant:hover, .mobile-login-card.card-rider:hover {
+  background: #ffffff;
+  border-color: #e5e7eb;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  transform: translateY(-4px);
 }
 .mobile-login-card.card-merchant .icon-wrapper {
-  background-color: #e6f4ea;
-  color: #0d652d;
-}
-.mobile-login-card.card-merchant .card-title-text {
-  color: #1a1a1a;
-}
-.mobile-login-card.card-merchant .card-subtitle-text {
-  color: #666666;
-}
-.mobile-login-card {
-  /* Rider Card */
-}
-.mobile-login-card.card-rider {
-  background-color: #1c252e;
+  background-color: #ecfdf5;
+  color: #059669;
+  box-shadow: none;
 }
 .mobile-login-card.card-rider .icon-wrapper {
-  background-color: #2b3641;
-  color: #ffffff;
-}
-.mobile-login-card.card-rider .card-title-text {
-  color: #ffffff;
-}
-.mobile-login-card.card-rider .card-subtitle-text {
-  color: #a0aab2;
+  background-color: #fef2f2;
+  color: #e11d48;
+  box-shadow: none;
 }
 
 /*********************************

@@ -23,7 +23,7 @@ class MerchantStoreRequest extends FormRequest
      */
     public function rules()
     {
-        
+
         return [
             'first_name'        => 'required|max:50',
             'last_name'         => 'max:50',
@@ -31,12 +31,13 @@ class MerchantStoreRequest extends FormRequest
             'phone_number'      => 'required|unique:users',
             'password'          => 'required|min:6',
             'image_id'          => 'mimes:jpg,JPG,JPEG,jpeg,png,PNG,webp,WEBP|max:5120',
-            'company'           => 'required',
+            'company'           => 'required_if:is_personal,0',
             'balance'           => 'numeric|nullable',
             'vat'               => 'numeric|nullable',
             'trade_license'     => 'mimes:jpg,JPG,JPEG,jpeg,png,PNG,webp,WEBP,pdf|max:5120',
             'nid'               => 'mimes:jpg,JPG,JPEG,jpeg,png,PNG,webp,WEBP,pdf|max:5120',
             'website'           => 'nullable|url',
+            'is_personal'      => 'nullable',
             // 'g-recaptcha-response' => 'sometimes|required|captcha'
         ];
     }

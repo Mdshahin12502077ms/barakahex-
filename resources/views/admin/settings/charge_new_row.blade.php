@@ -1,12 +1,10 @@
 
-
 @php
     $id = uniqid();
 @endphp
 <tr id="row_{{ $id }}">
     <td>
-        <span class="d-flex justify-content-center" id="weight"></span>
-        <input type="hidden" value="" class="form-control weight" name="weights[]">
+        <input type="number" step="0.01" min="0" class="form-control text-center weight" value="" name="weights[]" required>
         <input type="hidden" value="" name="cod_ids[]">
     </td>
     <td>

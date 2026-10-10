@@ -20,6 +20,28 @@
                             <div class="col-md-12">
                                 <div class="card-inner">
                                     <div class="row g-gs">
+                                        <div class="col-md-12">
+                                            <div class="mb-3 account-type-wrapper">
+                                                <label class="form-label">Account Type <span class="text-danger">*</span></label>
+                                                <div class="row">
+                                                    <div class="col-md-3 col-6">
+                                                        <input type="radio" name="is_personal" id="acc_merchant" value="0" checked>
+                                                        <label for="acc_merchant" class="account-type-card w-100">
+                                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2"><path d="M2 9v11a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9"/><path d="M22 9H2l1.66-5.83A2 2 0 0 1 5.58 2h12.84a2 2 0 0 1 1.92 1.17L22 9z"/><path d="M12 22v-9"/></svg>
+                                                            <h5 class="mb-0">Merchant</h5>
+                                                        </label>
+                                                    </div>
+                                                    <div class="col-md-3 col-6">
+                                                        <input type="radio" name="is_personal" id="acc_personal" value="1">
+                                                        <label for="acc_personal" class="account-type-card w-100">
+                                                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                                            <h5 class="mb-0">Personal</h5>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
                                         <div class="col-md-4">
                                             <div class="mb-3">
                                                 <label class="form-label" for="fv-full-name">{{ __('first_name') }} <span
@@ -414,5 +436,4 @@
                     .attr("src", URL.createObjectURL(file));
             });
         </script>
-    @endpush
 @endsection

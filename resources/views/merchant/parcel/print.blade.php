@@ -201,10 +201,16 @@
                                             <strong style="min-width: 50px; max-width: 50px">{{__('from')}}:</strong>
                                             <div>
                                                 <span>{{ (@$parcel->merchant_id == 1802 && $parcel->user->user_type == 'merchant_staff') ? @$parcel->user->first_name . ' ' . @$parcel->user->last_name : $parcel->merchant->user->first_name . ' ' . $parcel->merchant->user->last_name }}</span>
-                                                <span>{{ $parcel->merchant->company }}</span>
+
+                                                @if($parcel->merchant->is_personal == 1)
+                                                    <span>{{ $parcel->merchant->address }}</span>
+                                                @else
+                                                    <span>{{ $parcel->merchant->company }}</span>
+                                                @endif
+
                                                 <span>{{__('mob')}}:
                                                     {{ (@$parcel->merchant_id == 1802 && $parcel->user->user_type == 'merchant_staff') ? $parcel->user->phone_number : $parcel->merchant->phone_number}}</span>
-                                                <span>{{__('email')}}: {{ $parcel->merchant->user->email }}</span>
+                                                {{-- <span>{{__('email')}}: {{ $parcel->merchant->user->email }}</span> --}}
                                             </div>
                                         </div>
                                         <div class="singleAddress">

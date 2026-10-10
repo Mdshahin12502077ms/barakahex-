@@ -1,15 +1,15 @@
 $(document).ready(function () {
-    $(document).on('click', '#download', function() {
-        const csrfToken             = $('meta[name="csrf-token"]').attr('content');
-        const phone_number          = $('#phone_number').val();
-        const merchant_id           = $('#merchant_id').val();
-        const customer_invoice_no   = $('#customer_invoice_no').val();
-        const created_at            = $('#created_at').val();
-        const pickup_date           = $('#pickup_date').val();
-        const delivery_date         = $('#delivery_date').val();
-        const delivered_date        = $('#delivered_date').val();
-        const pickup_man_id         = $('#pickup_man_id').val();
-        const delivery_man_id   = $('#delivery_man_id').val();
+    $(document).on('click', '#download', function () {
+        const csrfToken = $('meta[name="csrf-token"]').attr('content');
+        const phone_number = $('#phone_number').val();
+        const merchant_id = $('#merchant_id').val();
+        const customer_invoice_no = $('#customer_invoice_no').val();
+        const created_at = $('#created_at').val();
+        const pickup_date = $('#pickup_date').val();
+        const delivery_date = $('#delivery_date').val();
+        const delivered_date = $('#delivered_date').val();
+        const pickup_man_id = $('#pickup_man_id').val();
+        const delivery_man_id = $('#delivery_man_id').val();
         const third_party = $('#third_party').val();
         const status = $('#status').val();
         const weight = $('#weight').val();
@@ -40,28 +40,28 @@ $(document).ready(function () {
         axios.post(download_url, dataset, {
             responseType: 'blob'
         })
-        .then(response => {
-            const blob = new Blob([response.data], {
-                type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            .then(response => {
+                const blob = new Blob([response.data], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+                const link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.setAttribute('download', 'delivery-report.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            })
+            .catch(error => {
+                console.error('Error downloading file:', error);
+                alert('Failed to download the report. Please try again.');
             });
-            const link = document.createElement('a');
-            link.href = window.URL.createObjectURL(blob);
-            link.setAttribute('download', 'delivery-report.xlsx');
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        })
-        .catch(error => {
-            console.error('Error downloading file:', error);
-            alert('Failed to download the report. Please try again.');
-        });
 
     });
 
     searchCategory($('#select_category'));
     searchOrganization($('#ins_by_org'));
 
-    $('#filterBTN').click(function() {
+    $('#filterBTN').click(function () {
         $('#filterSection').toggleClass('show');
     });
 
@@ -80,7 +80,7 @@ $(document).ready(function () {
         )
     )
 
-    $(document).on('change', '.filterable', function() {
+    $(document).on('change', '.filterable', function () {
         advancedSearchMapping({
             name: $(this).attr('name'),
             value: $(this).val(),
@@ -133,35 +133,7 @@ $(document).ready(function () {
     initializeSelect2($('#assign_delivery_man'), $('#assign-delivery'), "Select Delivery Man");
     initializeSelect2($('#re-schedule-delivery-assign-man'), $('#re-schedule-delivery-assign-form'), "Select Delivery Hero");
     initializeSelect2($('#return_assigned_delivery_man'), $('#return-assign-tomerchant'), "Select Delivery Hero");
-
-    $('#assign_pickup_man_').select2({
-        dropdownParent: $('#assign-pickup'),
-        placeholder: "Select Pickup Man",
-        minimumInputLength: 2,
-        ajax: {
-            type: "GET",
-            dataType: 'json',
-            url: $('#assign_pickup_man_').data('url') ?? delivery_man_search_url,
-            data: function (params) {
-                return {
-                    q: params.term,
-                }
-            },
-            delay: 400,
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            processResults: function (data) {
-                return {
-                    results: data
-                }
-            },
-            cache: true
-        }
-
-    })
-
-
+    initializeSelect2($('#assign_pickup_man_'), $('#assign-pickup'), "Select Pickup Man");
 
 });
 const refreshDataTable = () => {
@@ -170,15 +142,15 @@ const refreshDataTable = () => {
 
 $(document).ready(function () {
     function initializeFlatpickr(selector) {
-      flatpickr(selector, {
-        dateFormat: "Y-m-d",
-        static: true,
-      });
+        flatpickr(selector, {
+            dateFormat: "Y-m-d",
+            static: true,
+        });
     }
     $('#re-schedule-pickup').on('shown.bs.modal', function () {
-      initializeFlatpickr(".reschedule-pickup-date");
+        initializeFlatpickr(".reschedule-pickup-date");
     });
     $('#re-schedule-delivery').on('shown.bs.modal', function () {
-      initializeFlatpickr(".reschedule-date");
+        initializeFlatpickr(".reschedule-date");
     });
-  });
+});

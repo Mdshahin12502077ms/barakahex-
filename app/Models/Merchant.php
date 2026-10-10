@@ -22,6 +22,7 @@ class Merchant extends Model
         'branch_id',
         'pickup_man_id',
         'delivery_man_id',
+        'is_personal',
     ];
 
     protected $casts = [

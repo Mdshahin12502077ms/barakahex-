@@ -16,7 +16,7 @@
                     alt="Logo">
             </a>
         </div>
-        <nav class="side-nav">
+        <nav class="side-nav" style="max-height: calc(105% - 150px);">
             <ul>
                 <li class="{{ menuActivation(['delivery-man/dashboard'], 'active') }}">
                     <a href="{{ route('deliveryman.dashboard') }}">

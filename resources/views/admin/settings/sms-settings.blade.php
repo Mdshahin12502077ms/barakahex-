@@ -16,12 +16,7 @@
                         </div>
                         <div class="bg-white redious-border p-20 p-sm-30">
                             <div class="row align-items-center g-20">
-                                @include('admin.system_setting.payment_gateways.twilio')
-                                @include('admin.system_setting.payment_gateways.fast_2sms')
-                                @include('admin.system_setting.payment_gateways.reve_systems')
-                                @include('admin.system_setting.payment_gateways.mimo')
-                                @include('admin.system_setting.payment_gateways.nexmo')
-                                @include('admin.system_setting.payment_gateways.ssl_wireless')
+                               
                                 @include('admin.system_setting.payment_gateways.sms_net_bd')
                             </div>
                         </div>

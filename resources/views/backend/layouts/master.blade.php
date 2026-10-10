@@ -31,5 +31,5 @@
             @yield('mainContent')
         </div>
     </main>
-    @include('backend.layouts.footer')
+   @include('backend.layouts.footer')
 @endsection

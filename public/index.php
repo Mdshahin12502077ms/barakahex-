@@ -21,8 +21,8 @@ header('Access-Control-Allow-Headers:*');
 if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {//send back preflight request response
     return '';
 }
-if (file_exists(__DIR__.'/storage/framework/maintenance.php')) {
-    require __DIR__.'/storage/framework/maintenance.php';
+if (file_exists(__DIR__.'/../storage/framework/maintenance.php')) {
+    require __DIR__.'/../storage/framework/maintenance.php';
 }
 
 /*
@@ -36,7 +36,7 @@ if (file_exists(__DIR__.'/storage/framework/maintenance.php')) {
 |
 */
 
-require __DIR__.'/vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 /*
 |--------------------------------------------------------------------------
@@ -49,7 +49,7 @@ require __DIR__.'/vendor/autoload.php';
 |
 */
 
-$app      = require_once __DIR__.'/bootstrap/app.php';
+$app      = require_once __DIR__.'/../bootstrap/app.php';
 
 $kernel   = $app->make(Kernel::class);
 

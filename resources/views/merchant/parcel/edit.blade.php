@@ -25,9 +25,12 @@
                     <input type="hidden" name="id" value="{{ $parcel->id }}">
                     <div class="row bg-white">
                         <div class="col-md-8">
+                            @php
+                                $user = Sentinel::getUser();
+                            @endphp
                             <div class="card redious-border p-20 p-sm-30 pt-sm-30">
                                 <div class="row g-gs">
-                                    <div class="col-6 mb-3">
+                                    <div class="col-6 mb-3 @if($user->merchant->is_personal == 1) col-md-12 @else col-md-6 @endif">
                                         <label class="form-label" for="customer_invoice_no">{{ __('invoice') }}#</label>
                                         <input type="text"
                                             class="form-control @error('customer_invoice_no') is-invalid @enderror"
@@ -40,6 +43,7 @@
                                             </div>
                                         @endif
                                     </div>
+                                    @if($user->merchant->is_personal == 0)
                                     <div class="col-6 mb-3">
                                         <label class="form-label" for="area">{{ __('shop') }}
                                         </label>
@@ -58,6 +62,7 @@
                                             </div>
                                         @endif
                                     </div>
+                                    @endif
                                     <div class="col-6 mb-3">
                                         <label class="form-label"
                                             for="customer_name">{{ __('customer') . ' ' . __('name') }}

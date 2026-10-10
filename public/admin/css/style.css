@@ -413,3 +413,54 @@ ul.login-BTN {
         font-weight: 500;
     }
 }
+
+/* Premium Account Type Radio Cards */
+/* Account Type Segmented Toggle */
+.account-type-wrapper input[type="radio"] {
+    display: none;
+}
+.account-type-wrapper .row {
+    background-color: #f1f5f9;
+    padding: 5px;
+    border-radius: 8px;
+    margin: 0;
+}
+.account-type-wrapper .col-6 {
+    padding: 0 2px;
+}
+.account-type-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    padding: 10px 15px;
+    background: transparent;
+    border-radius: 6px;
+    color: #64748b;
+    margin: 0;
+    border: none;
+    box-shadow: none;
+}
+.account-type-card svg {
+    width: 20px;
+    height: 20px;
+    color: currentColor;
+    margin: 0;
+}
+.account-type-card h5 {
+    font-size: 15px;
+    margin: 0 !important;
+    font-weight: 500;
+    color: currentColor;
+}
+.account-type-wrapper input[type="radio"]:checked + .account-type-card {
+    background-color: #ffffff;
+    color: #0fac81;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+}
+.account-type-card:hover {
+    color: #0fac81;
+}

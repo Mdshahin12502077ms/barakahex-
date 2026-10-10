@@ -20,7 +20,7 @@
                     <!-- Header Toggle End -->
                     <div class="header__logo">
                         <a href="{{ route('home') }}">
-                            <img class="mx-auto d-block"
+                            <img class="mx-auto d-block" style="max-width:150px"
                                  src="{{ setting('dark_logo') && @is_file_exists(setting('dark_logo')['original_image']) ? get_media(setting('dark_logo')['original_image']) : get_media('images/default/logo/logo_dark.png') }}"
                         </a>
                     </div>

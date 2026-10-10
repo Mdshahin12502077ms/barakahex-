@@ -43,48 +43,7 @@ trait SmsSenderTrait
                 return $e->getMessage();
             }
 
-        } 
-        
-        //////////sms_net_bd//////////// start
-        
-        
-    elseif ($provider == 'sms_net_bd') {
-
-            $apiKey = setting('sms_net_bd_api_key') ?: 'NTEMxl49ikpYLeieqfYwIn25aEpfc5WLVAbIm1n6';
-            $numbers = is_array($phone_number) ? implode(',', $phone_number) : $phone_number;
-
-            $curl = curl_init();
-
-            curl_setopt_array($curl, array(
-                CURLOPT_URL            => 'https://api.sms.net.bd/sendsms',
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_SSL_VERIFYPEER => false,
-                CURLOPT_CUSTOMREQUEST  => 'POST',
-                CURLOPT_POSTFIELDS     => array(
-                    'api_key' => $apiKey,
-                    'msg'     => $sms_body,
-                    'to'      => $numbers
-                ),
-            ));
-
-            $response = curl_exec($curl);
-            curl_close($curl);
-          
-            $res = json_decode($response, true);
-            if (isset($res['error']) && $res['error'] == 0) {
-                return true;
-            } else {
-                \Log::error('SMS.NET.BD Error: ' . ($res['msg'] ?? $response));
-                return false;
-            }
-        }
-
-        
-        
-        
-        
-        
-        elseif ($provider == 'nexmo') {
+        } elseif ($provider == 'nexmo') {
 
             try {
                 $basic    = new \Vonage\Client\Credentials\Basic(setting('nexmo_sms_key'), setting('nexmo_sms_secret_key'));
@@ -229,6 +188,29 @@ trait SmsSenderTrait
             $err      = \curl_error($curl);
 
             \curl_close($curl);
+
+            return true;
+        }elseif ($provider == 'mram') {
+
+            $url = "https://sms.mram.com.bd/smsapi";
+
+            $data = [
+                "api_key"  => setting('mram_api_key'),
+                "type"     => "text",
+                "contacts" => is_array($phone_number) ? implode(',', $phone_number) : $phone_number,
+                "senderid" => setting('mram_sender_id'),
+                "msg"      => $sms_body,
+            ];
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+
+            $response = curl_exec($ch);
+            curl_close($ch);
 
             return true;
         }

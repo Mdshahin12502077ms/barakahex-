@@ -17,7 +17,7 @@
                     alt="Logo">
             </a>
         </div>
-        <nav class="side-nav">
+        <nav class="side-nav" style="max-height: calc(105% - 150px);">
             <ul>
                 <li class="{{ menuActivation(['dashboard', 'dashboard/*'], 'active') }}">
                     <a href="{{ route('dashboard') }}">
@@ -650,11 +650,13 @@
                         </ul>
                     </li>
                 @endif
+                <li>
+                    <a href="{{ $user->user_type == 'merchant' ? route('merchant.logout') : ($user->user_type == 'merchant_staff' ? route('merchant.staff.logout') : route('logout')) }}">
+                        <i class="las la-sign-out-alt"></i>
+                        <span>{{ __('logout') }}</span>
+                    </a>
+                </li>
             </ul>
         </nav>
-        <div class="footer_copyright">
-            <div class="version">{{ __('version') }} <span>{{ setting('version_code') }}</span></div>
-            <p>{{ setting('admin_panel_copyright_text', app()->getLocale()) }}</p>
-        </div>
     </div>
 </header>

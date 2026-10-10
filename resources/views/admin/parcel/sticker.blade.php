@@ -114,7 +114,7 @@
         </div>
         <div class="p-1 d-flex justify-content-between bb gp">
             <p class="mb-0">{{ __('invoice') }}: {{ $parcel->customer_invoice_no }}</p>
-            <p class="mb-0">Cash Due: {{ format_price($parcel->price) }}</p>
+            <p class="mb-0">Payable Amount: {{ format_price($parcel->price) }}</p>
         </div>
         <div class="codes">
             <p class="p-1 bg-dark text-white mt-1 text-wrap">{{ __('Note') }}: {{ $parcel->note }}</p>

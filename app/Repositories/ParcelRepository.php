@@ -78,7 +78,7 @@ class ParcelRepository implements ParcelInterface
 
     public function chargeDetails($request)
     {
-   
+
        $packaging_charge = number_format(0, 2);
     if ($request->packaging != 'no') {
         $packaging_charge = settingHelper('package_and_charges')->where('id', $request->packaging)->first()->charge;
@@ -181,7 +181,7 @@ class ParcelRepository implements ParcelInterface
 
     public function store($request)
     {
-        
+
        DB::beginTransaction();
 try {
 
@@ -331,7 +331,18 @@ try {
         }
     }
 
+
+    if($merchant->is_personal==0){
     $parcel->shop_id = $request->shop != '' ? $request->shop : ($merchant->shops->where('default', true)->first() ? $merchant->shops->where('default', true)->first()->id : null);
+    }
+
+    else{
+
+        $shop = $merchant->shops->where('default', true)->first();
+        
+        $parcel->shop_id =$shop->id;
+    }
+
     $parcel->user_id = $request->created_by != "" ? $request->created_by : (Sentinel::getUser() ? Sentinel::getUser()->id : ($merchant->user_id ?? 1));
 
     $destBranchId = $request->destination_branch_id ?? $request->transfer_branch_select_id;
@@ -391,14 +402,14 @@ try {
     endif;
 
     $parcel->save();
-    
+
     if($parcel->status=="pickup-assigned" || $parcel->status=="pending"){
        $this->etaCalculationService->updateParcelETA($parcel);
     }
-    
+
     $this->parcelEvent($parcel->id, 'parcel_create_event');
-    
-   
+
+
     if ($merchant && $merchant->pickup_man_id) {
         $request->merge([
             'id' => $parcel->id,
@@ -449,7 +460,7 @@ try {
                 $location = 'third_party_booking';
             endif;
 
-        
+
             $merchant = $this->merchants->get($request->merchant);
             $system_charge = Charge::all()->toArray();
             $foundCharge = null;
@@ -699,7 +710,7 @@ try {
             $parcel->third_party_id = $request->third_party != '' ? $request->third_party : null;
             $parcel->delivery_fee = DeliveryMan::find($request->delivery_man)->delivery_fee;
             $parcel->save();
-            
+
             // ETA Calculation Update
             $this->etaCalculationService->updateParcelETA($parcel);
 
@@ -849,10 +860,10 @@ try {
             }
 
             $parcel->save();
-            
+
             // ETA Calculation Update
             $this->etaCalculationService->updateParcelETA($parcel);
-            
+
             DB::commit();
             return true;
         } catch (\Exception $e) {
@@ -1473,7 +1484,7 @@ try {
         $parcel = $this->get($parcel_id);
         $parcel_event = new ParcelEvent();
 
-      
+
         $actionMap = [
             'parcel_create_event'                        => 'status_change',
             'parcel_update_event'                        => 'status_change',
@@ -1823,7 +1834,7 @@ try {
                 ]);
             } catch (\Exception $logEx) {
             }
-             
+
             try{
                 if($parcel->merchant && $parcel->merchant->phone_number){
                     $merchant_sms_body = "Your parcel (ID: {$parcel->parcel_no}) has been partially delivered. Accepted: {$parcel->delivered_quantity} pcs, Returned: {$parcel->return_quantity} pcs.";

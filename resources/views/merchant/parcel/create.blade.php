@@ -28,10 +28,17 @@
                     @csrf
                     <div class="row">
                         <div class="col-md-8">
+
+                            @php
+
+                                 $user=Sentinel::getUser();
+
+
+                            @endphp
                             <div class="card bg-white redious-border p-20 p-sm-30 pt-sm-30">
                                 <!-- Row 1: Invoice# & Shop -->
                                 <div class="row">
-                                    <div class="col-6 mb-3">
+                                    <div class="col-6 mb-3 @if($user->merchant->is_personal == 0) col-md-6 @else col-md-12 @endif">
                                         <label class="form-label" for="customer_invoice_no">{{ __('invoice') }}#</label>
                                         <input type="text"
                                             class="form-control @error('customer_invoice_no') is-invalid @enderror"
@@ -44,6 +51,12 @@
                                             </div>
                                         @endif
                                     </div>
+                                     <!-- #region -->
+
+
+                                  <!-- #region -->
+
+                                  @if($user->merchant->is_personal == 0)
                                     <div class="col-6 mb-3">
                                         <label class="form-label" for="area">{{ __('shop') }}</label>
                                         <select
@@ -62,6 +75,8 @@
                                             </div>
                                         @endif
                                     </div>
+                                   @endif
+
                                 </div>
 
                                 <!-- Row 2: Customer Name & Customer Phone -->
@@ -131,11 +146,11 @@
                                             <input type="number" min="1" name="total_quantity" id="total_quantity" class="form-control" value="{{ old('total_quantity', 1) }}" placeholder="{{ __('total_quantity') }}">
                                         </div>
 
-                                   
 
 
 
-                                         
+
+
 
 
                                 </div>
@@ -254,7 +269,7 @@
                                         @endif
                                     </div>
 
-                                    
+
                                 </div>
 
                                 <!-- Row 6: Note & Packaging -->
@@ -489,9 +504,9 @@
 $(document).ready(function () {
     $('#transfer_to_branch').on('change', function () {
         if ($(this).is(':checked')) {
-            $('#transfer_branch_wrapper').removeClass('d-none'); 
+            $('#transfer_branch_wrapper').removeClass('d-none');
         } else {
-            $('#transfer_branch_wrapper').addClass('d-none');    
+            $('#transfer_branch_wrapper').addClass('d-none');
             $('select[name="destination_branch_id"]').val('').trigger('change');
         }
     });

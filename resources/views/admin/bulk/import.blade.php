@@ -107,7 +107,13 @@
                                                     </select>
                                                 </div>
                                             @endif
-                                            <div class="mb-3">
+                                            @php
+                                                $isPersonal = false;
+                                                if (Sentinel::getUser()->user_type == 'merchant') {
+                                                    $isPersonal = Sentinel::getUser()->merchant?->is_personal == 1;
+                                                }
+                                            @endphp
+                                            <div class="mb-3 {{ $isPersonal ? 'd-none' : '' }}">
                                                 <label class="form-label" for="shop">{{ __('Shop') }}
                                                     <span class="text-danger">*</span></label>
                                                 <select

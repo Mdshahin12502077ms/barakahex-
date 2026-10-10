@@ -16,7 +16,7 @@
                     alt="Logo">
             </a>
         </div>
-        <nav class="side-nav">
+        <nav class="side-nav" style="max-height: calc(105% - 150px);">
             <ul>
                 <li>
                     <a href="{{ route('merchant.dashboard') }}">
@@ -54,13 +54,14 @@
                 @endif
 
                 @if (Sentinel::getUser()->user_type == 'merchant')
+                     @if(\Sentinel::getUser()->merchant->is_personal == 0)
                     <li class="{{ menuActivation(['merchant/staffs', 'merchant/staff/*'], 'active') }}">
                         <a href="{{ route('merchant.staffs') }}">
                             <i class="icon las la-users"></i>
                             <span>{{ __('staffs') }}</span>
                         </a>
                     </li>
-
+                  @endif
 
                     <li class="{{ menuActivation(['merchant/charge'], 'active') }}">
                         <a href="{{ route('merchant.charge') }}">
@@ -68,12 +69,14 @@
                             <span>{{ __('charge') }}</span>
                         </a>
                     </li>
+                    @if (optional(Sentinel::getUser()->merchant)->is_personal != 1)
                     <li class="{{ menuActivation(['merchant/shops'], 'active') }}">
                         <a href="{{ route('merchant.shops') }}">
                             <i class="las la-store"></i>
                             <span>{{ __('shops') }}</span>
                         </a>
                     </li>
+                    @endif
                     {{-- <li
                         class="{{ menuActivation(['merchant/products*', 'merchant/warehouse*', 'merchant/stock/index', 'merchant/stock/stock_in'], 'active') }}">
                         --}}
@@ -195,6 +198,12 @@
                         </li>
                     @endif
                 @endif
+                <li>
+                    <a href="{{ $user->user_type == 'merchant' ? route('merchant.logout') : ($user->user_type == 'merchant_staff' ? route('merchant.staff.logout') : route('logout')) }}">
+                        <i class="las la-sign-out-alt"></i>
+                        <span>{{ __('logout') }}</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </div>

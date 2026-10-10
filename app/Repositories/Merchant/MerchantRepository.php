@@ -196,7 +196,12 @@ class MerchantRepository implements MerchantInterface
             // -------- Merchant --------
             $merchant = new Merchant();
             $merchant->user_id = $userId;
-            $merchant->company = $request['company'];
+            $merchant->is_personal = $request['is_personal'] ?? 0;
+            if ($merchant->is_personal == 1) {
+                $merchant->company = $request['first_name'] . ' ' . $request['last_name'];
+            } else {
+                $merchant->company = $request['company'];
+            }
             $merchant->vat = $request['vat'] == '' ? 0.00 : $request['vat'];
             $merchant->phone_number = $request['phone_number'];
             $merchant->city = $request['city'];
@@ -229,7 +234,9 @@ class MerchantRepository implements MerchantInterface
 
             // -------- Other Related Data --------
             $this->saveMerchantPaymentAccount($merchant->id);
-            $this->saveMerchantShop($merchant->id, $request);
+            if($request['is_personal'] == 1){
+                $this->saveMerchantShop($merchant->id, $request);
+            }
         } catch (\Throwable $e) {
 
             Log::error('Save Merchant Failed', [
@@ -269,7 +276,14 @@ class MerchantRepository implements MerchantInterface
 
         $merchant = Merchant::find($request->merchant_id);
 
-        $merchant->company = $request['company'];
+        $merchant->is_personal = $request['is_personal'] ?? $merchant->is_personal;
+
+        if ($merchant->is_personal == 1) {
+            $merchant->company = $request['first_name'] . ' ' . $request['last_name'];
+        } else {
+            $merchant->company = $request['company'];
+        }
+
         $merchant->vat = $request['vat'] == '' ? 0.00 : $request['vat'];
         $merchant->phone_number = $request['phone_number'];
         $merchant->city = $request['city'];
@@ -297,6 +311,17 @@ class MerchantRepository implements MerchantInterface
         $merchant->charges = $charges;
 
         $merchant->save();
+
+        if ($merchant->is_personal == 1) {
+            $shop = Shop::where('merchant_id', $merchant->id)->where('default', 1)->first();
+            if ($shop) {
+                $shop->shop_name = $merchant->company;
+                $shop->contact_number = $merchant->phone_number;
+                $shop->shop_phone_number = $merchant->phone_number;
+                $shop->address = $merchant->address;
+                $shop->save();
+            }
+        }
 
         if ($merchant->merchantAccount) {
             if ($merchant->merchantAccount->payment_withdraw_id == null && $merchant->merchantAccount->is_paid == false):
@@ -497,6 +522,7 @@ class MerchantRepository implements MerchantInterface
 
             $data['phone_number'] = preg_replace('/^(\+88|88|-)/', '', $data['phone_number']);
             $temp->company = $data['company'];
+            $temp->is_personal = $data['is_personal'] ?? 0;
             $temp->first_name = $data['first_name'];
             $temp->last_name = $data['last_name'];
             $temp->address = $data['address'];
@@ -510,7 +536,7 @@ class MerchantRepository implements MerchantInterface
             $temp->platform = $this->getPlatForm(\Request::header('user-agent'));
             $temp->user_agent = \Request::header('user-agent');
 
-            $sms_body = __('hello') . ' ' . $temp->first_name . ', ' . __('use') . ' ' . $temp->otp . ' ' . __('to_verify_your_phone_number_on') . ' ' . setting('company_name');
+            $sms_body = __('Dear Sir,') . ' ' . __('use') . ' ' . $temp->otp . ' ' . __('to_verify_your_phone_number_on') . ' ' . setting('company_name');
 
             if ($result = $this->test($sms_body, $temp->phone_number, 'otp', setting('active_sms_provider'))):
                 $temp->save();
@@ -665,8 +691,12 @@ class MerchantRepository implements MerchantInterface
             // Create a temporary array to mimic TempStore structure for reusability of registerMerchant
             $temp = [];
             $temp['company'] = $data['company'];
+            $temp['is_personal'] = $data['is_personal'] ?? 0;
+            $temp['first_name'] = $data['first_name'];
+            $temp['last_name'] = $data['last_name'];
             $temp['phone_number'] = $data['phone_number'];
             $temp['address'] = $data['address'];
+            $temp['branch_id'] = $data['branch_id'] ?? null;
 
             $this->registerMerchant($temp, $user->id);
 
@@ -715,7 +745,12 @@ class MerchantRepository implements MerchantInterface
 
             $merchant = new Merchant();
             $merchant->user_id = $user_id;
-            $merchant->company = $data['company'];
+            $merchant->is_personal = $data['is_personal'] ?? 0;
+            if ($merchant->is_personal == 1) {
+                $merchant->company = $data['first_name'] . ' ' . $data['last_name'];
+            } else {
+                $merchant->company = $data['company'];
+            }
             $merchant->phone_number = $data['phone_number'];
             $merchant->address = $data['address'];
             $merchant->vat = 0.00;
@@ -783,11 +818,13 @@ class MerchantRepository implements MerchantInterface
                 throw new \Exception('Default branch not found.');
             }
 
+            $merchant = Merchant::find($merchant_id);
+
             $merchant_shop = new Shop();
             $merchant_shop->merchant_id = $merchant_id;
-            $merchant_shop->shop_name = $request['company'];
+            $merchant_shop->shop_name = $merchant->company;
             $merchant_shop->contact_number = $request['phone_number'];
-            $merchant_shop->pickup_branch_id = $request['pickup_branch'] ?? $default_branch->id;
+            $merchant_shop->pickup_branch_id = $request['pickup_branch'] ?? $request['branch_id'] ?? $default_branch->id;
             $merchant_shop->shop_phone_number = $request['phone_number'];
             $merchant_shop->address = $request['address'];
             $merchant_shop->default = 1;
@@ -838,6 +875,18 @@ class MerchantRepository implements MerchantInterface
             }
 
             $merchant->save();
+
+            if ($merchant->is_personal == 1) {
+                $shop = Shop::where('merchant_id', $merchant->id)->where('default', 1)->first();
+                if ($shop) {
+                    $shop->shop_name = $merchant->company;
+                    $shop->contact_number = $merchant->phone_number;
+                    $shop->shop_phone_number = $merchant->phone_number;
+                    $shop->address = $merchant->address;
+                    $shop->save();
+                }
+            }
+
             DB::commit();
             return true;
         } catch (\Exception $e) {

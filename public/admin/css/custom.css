@@ -665,7 +665,7 @@
         text-decoration: none;
         font-size: 12px;
     }
-    
+
     .floating-home i {
         font-size: 28px;
     }
@@ -673,5 +673,34 @@
         margin-top: -2px;
         font-weight: 500;
     }
+}
+
+/* Account Type Radio Cards */
+.account-type-wrapper input[type="radio"] {
+    display: none;
+}
+.account-type-card {
+    border: 2px solid #e5e5e5;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    padding: 10px;
+    background: #fff;
+}
+.account-type-card:hover {
+    border-color: #007bff;
+    background-color: #f8fbff;
+}
+.account-type-wrapper input[type="radio"]:checked + .account-type-card {
+    border-color: #007bff;
+    background-color: #eaf3ff;
+}
+.account-type-card svg {
+    color: #666;
+}
+.account-type-wrapper input[type="radio"]:checked + .account-type-card svg,
+.account-type-wrapper input[type="radio"]:checked + .account-type-card h5 {
+    color: #007bff;
 }
 
